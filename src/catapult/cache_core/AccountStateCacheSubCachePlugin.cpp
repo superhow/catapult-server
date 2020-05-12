@@ -46,7 +46,7 @@ namespace catapult { namespace cache {
 			addresses.insert(address);
 		}
 
-		cache().init(std::move(addresses));
+		cache().init(HighValueAccounts(std::move(addresses)));
 	}
 
 	AccountStateCacheSubCachePlugin::AccountStateCacheSubCachePlugin(

@@ -48,6 +48,9 @@ namespace catapult { namespace chain {
 
 		auto context = CreateObserverContext(executionContext, blockElement.Block.Height, observers::NotifyMode::Commit);
 		ObserveAll(executionContext.Observer, context, entityInfos);
+
+		// commit tracked balances
+		// executionContext.State.Cache.sub<cache::AccountStateCache>().commitTrackedBalances(blockElement.Block.Height);
 	}
 
 	void RollbackBlock(const model::BlockElement& blockElement, const BlockExecutionContext& executionContext) {

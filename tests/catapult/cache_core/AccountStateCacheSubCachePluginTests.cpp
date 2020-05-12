@@ -159,8 +159,9 @@ namespace catapult { namespace cache {
 
 			// Assert: all addresses were saved
 			auto view = cache.createView();
-			EXPECT_EQ(numAccounts, view->highValueAddresses().size());
-			EXPECT_EQ(model::AddressSet(addresses.cbegin(), addresses.cend()), view->highValueAddresses());
+			const auto& highValueAddresses = view->highValueAccounts().addresses();
+			EXPECT_EQ(numAccounts, highValueAddresses.size());
+			EXPECT_EQ(model::AddressSet(addresses.cbegin(), addresses.cend()), highValueAddresses);
 		}
 	}
 

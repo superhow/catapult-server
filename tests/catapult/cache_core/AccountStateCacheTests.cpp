@@ -1089,7 +1089,7 @@ namespace catapult { namespace cache {
 		};
 		auto viewAction = [](const auto&, const auto& view) {
 			// Act + Assert:
-			EXPECT_TRUE(view->highValueAddresses().empty());
+			EXPECT_TRUE(view->highValueAccounts().addresses().empty());
 		};
 
 		// - add 0/3 with sufficient balance
@@ -1107,7 +1107,7 @@ namespace catapult { namespace cache {
 		};
 		auto viewAction = [](const auto& addresses, const auto& view) {
 			// Act + Assert:
-			EXPECT_EQ(model::AddressSet({ addresses[0], addresses[2] }), view->highValueAddresses());
+			EXPECT_EQ(model::AddressSet({ addresses[0], addresses[2] }), view->highValueAccounts().addresses());
 		};
 
 		// - add 2/3 accounts with sufficient balance
@@ -1129,7 +1129,7 @@ namespace catapult { namespace cache {
 		};
 		auto viewAction = [](const auto&, const auto& view) {
 			// Act + Assert:
-			EXPECT_TRUE(view->highValueAddresses().empty());
+			EXPECT_TRUE(view->highValueAccounts().addresses().empty());
 		};
 
 		RunHighValueAddressesTest({}, deltaAction, viewAction);
@@ -1149,7 +1149,7 @@ namespace catapult { namespace cache {
 		};
 		auto viewAction = [](const auto& addresses, const auto& view) {
 			// Act + Assert:
-			EXPECT_EQ(model::AddressSet({ addresses[0] }), view->highValueAddresses());
+			EXPECT_EQ(model::AddressSet({ addresses[0] }), view->highValueAccounts().addresses());
 		};
 
 		// - add 1/3 accounts with sufficient balance
@@ -1172,7 +1172,7 @@ namespace catapult { namespace cache {
 		};
 		auto viewAction = [](const auto& addresses, const auto& view) {
 			// Act + Assert:
-			EXPECT_EQ(model::AddressSet({ addresses[0], addresses[2] }), view->highValueAddresses());
+			EXPECT_EQ(model::AddressSet({ addresses[0], addresses[2] }), view->highValueAccounts().addresses());
 		};
 
 		// - add 2/3 accounts with sufficient balance
@@ -1202,7 +1202,7 @@ namespace catapult { namespace cache {
 		};
 		auto viewAction = [](const auto& addresses, const auto& view) {
 			// Act + Assert:
-			EXPECT_EQ(model::AddressSet({ addresses[0], addresses[2], addresses[4] }), view->highValueAddresses());
+			EXPECT_EQ(model::AddressSet({ addresses[0], addresses[2], addresses[4] }), view->highValueAccounts().addresses());
 		};
 
 		// - add 3/5 accounts with sufficient balance [3 match]
@@ -1247,7 +1247,7 @@ namespace catapult { namespace cache {
 			EXPECT_TRUE(highValueAddresses.Removed.empty());
 		}
 
-		EXPECT_EQ(model::AddressSet({ addresses[0], addresses[2], addresses[4] }), cache.createView()->highValueAddresses());
+		EXPECT_EQ(model::AddressSet({ addresses[0], addresses[2], addresses[4] }), cache.createView()->highValueAccounts().addresses());
 	}
 
 	// endregion
@@ -1261,11 +1261,11 @@ namespace catapult { namespace cache {
 		auto addressSet = model::AddressSet(addresses.cbegin(), addresses.cend());
 
 		// Act:
-		cache.init(model::AddressSet(addressSet));
+		cache.init(HighValueAccounts(addressSet));
 
 		// Assert:
 		auto view = cache.createView();
-		EXPECT_EQ(addressSet, view->highValueAddresses());
+		EXPECT_EQ(addressSet, view->highValueAccounts().addresses());
 	}
 
 	// endregion

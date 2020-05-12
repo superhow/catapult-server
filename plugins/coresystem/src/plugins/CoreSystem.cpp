@@ -66,7 +66,7 @@ namespace catapult { namespace plugins {
 					return cache.sub<AccountStateCache>().createView()->size();
 				});
 				counters.emplace_back(utils::DiagnosticCounterId("ACNTST C HVA"), [&cache]() {
-					return cache.sub<AccountStateCache>().createView()->highValueAddresses().size();
+					return cache.sub<AccountStateCache>().createView()->highValueAccounts().addresses().size();
 				});
 			});
 		}
