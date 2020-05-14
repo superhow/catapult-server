@@ -37,7 +37,7 @@ namespace catapult { namespace cache {
 		explicit HighValueAccounts(model::AddressSet&& addresses);
 
 	public:
-		/// Gets high value addresses.
+		/// Gets the high value addresses.
 		const model::AddressSet& addresses() const;
 
 	private:
@@ -51,13 +51,13 @@ namespace catapult { namespace cache {
 
 	public:
 		/// Creates an updater around \a options and a\ existing \a addresses.
-		explicit HighValueAccountsUpdater(AccountStateCacheTypes::Options options, const model::AddressSet& addresses);
+		HighValueAccountsUpdater(AccountStateCacheTypes::Options options, const model::AddressSet& addresses);
 
 	public:
-		/// Gets (current) high value addresses.
+		/// Gets the (current) high value addresses.
 		const model::AddressSet& currentAddresses() const;
 
-		/// Gets (removed) high value addresses.
+		/// Gets the (removed) high value addresses.
 		const model::AddressSet& removedAddresses() const;
 
 	public:

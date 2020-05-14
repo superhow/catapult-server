@@ -68,6 +68,8 @@ namespace catapult { namespace state {
 		EXPECT_EQ(Amount(67), history.balance(Height(99)));
 	}
 
+	// endregion
+
 	// region anyAtLeast
 
 	TEST(TEST_CLASS, AnyAtLeastReturnsFalseWhenEmpty) {
@@ -98,8 +100,6 @@ namespace catapult { namespace state {
 		EXPECT_FALSE(history.anyAtLeast(Amount(1000)));
 		EXPECT_FALSE(history.anyAtLeast(Amount(10000)));
 	}
-
-	// endregion
 
 	// endregion
 

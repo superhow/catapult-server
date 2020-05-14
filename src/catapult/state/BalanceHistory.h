@@ -36,7 +36,7 @@ namespace catapult { namespace state {
 		/// Gets the balance at \a height.
 		Amount balance(Height height) const;
 
-		// /// Returns \c true if any historical balance is at least \a amount.
+		/// Returns \c true if any historical balance is at least \a amount.
 		bool anyAtLeast(Amount amount) const;
 
 	public:
