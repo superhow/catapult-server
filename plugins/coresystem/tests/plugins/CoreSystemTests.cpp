@@ -111,7 +111,6 @@ namespace catapult { namespace plugins {
 					"TotalTransactionsObserver",
 					"HighValueAccountObserver", // commit mode BEFORE RecalculateImportancesObserver
 
-
 					// key link transactions
 					"VotingKeyLinkObserver",
 					"VrfKeyLinkObserver"
