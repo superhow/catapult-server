@@ -94,8 +94,8 @@ namespace catapult { namespace cache {
 		HighValueAccountsUpdater updater(CreateOptions(), addresses);
 
 		// Assert:
-		EXPECT_EQ(3u, updater.currentAddresses().size());
-		EXPECT_EQ(addresses, updater.currentAddresses());
+		EXPECT_EQ(3u, updater.addresses().size());
+		EXPECT_EQ(addresses, updater.addresses());
 
 		EXPECT_TRUE(updater.removedAddresses().empty());
 	}
@@ -162,8 +162,8 @@ namespace catapult { namespace cache {
 			updater.update(deltas.deltas());
 
 			// Assert:
-			EXPECT_EQ(4u, updater.currentAddresses().size());
-			EXPECT_EQ(Pick(addedAddresses, { 0, 2, 4, 5 }), updater.currentAddresses());
+			EXPECT_EQ(4u, updater.addresses().size());
+			EXPECT_EQ(Pick(addedAddresses, { 0, 2, 4, 5 }), updater.addresses());
 
 			EXPECT_TRUE(updater.removedAddresses().empty());
 		}
@@ -181,8 +181,8 @@ namespace catapult { namespace cache {
 			updater.update(deltas.deltas());
 
 			// Assert:
-			EXPECT_EQ(4u, updater.currentAddresses().size());
-			EXPECT_EQ(Pick(addedAddresses, { 0, 2, 4, 5 }), updater.currentAddresses());
+			EXPECT_EQ(4u, updater.addresses().size());
+			EXPECT_EQ(Pick(addedAddresses, { 0, 2, 4, 5 }), updater.addresses());
 
 			EXPECT_EQ(2u, updater.removedAddresses().size());
 			EXPECT_EQ(Pick(addedAddresses, { 1, 3 }), updater.removedAddresses());
@@ -217,7 +217,7 @@ namespace catapult { namespace cache {
 		updater.update(deltas.deltas());
 
 		// Assert:
-		EXPECT_TRUE(updater.currentAddresses().empty());
+		EXPECT_TRUE(updater.addresses().empty());
 
 		EXPECT_TRUE(updater.removedAddresses().empty());
 	}
@@ -234,7 +234,7 @@ namespace catapult { namespace cache {
 		updater.update(deltas.deltas());
 
 		// Assert:
-		EXPECT_TRUE(updater.currentAddresses().empty());
+		EXPECT_TRUE(updater.addresses().empty());
 
 		EXPECT_EQ(4u, updater.removedAddresses().size());
 		EXPECT_EQ(Pick(addedAddresses, { 0, 1, 2, 3 }), updater.removedAddresses());
@@ -264,8 +264,8 @@ namespace catapult { namespace cache {
 		updater.update(deltas.deltas());
 
 		// Assert:
-		EXPECT_EQ(3u, updater.currentAddresses().size());
-		EXPECT_EQ(Pick(addedAddresses, { 0, 4, 5 }), updater.currentAddresses());
+		EXPECT_EQ(3u, updater.addresses().size());
+		EXPECT_EQ(Pick(addedAddresses, { 0, 4, 5 }), updater.addresses());
 
 		EXPECT_EQ(2u, updater.removedAddresses().size());
 		EXPECT_EQ(Pick(addedAddresses, { 1, 2 }), updater.removedAddresses());
@@ -292,8 +292,8 @@ namespace catapult { namespace cache {
 		EXPECT_EQ(Pick(addedAddresses, { 0, 2, 4, 5 }), accounts.addresses());
 
 		// - updater is reset
-		EXPECT_EQ(3u, updater.currentAddresses().size());
-		EXPECT_EQ(addresses, updater.currentAddresses());
+		EXPECT_EQ(3u, updater.addresses().size());
+		EXPECT_EQ(addresses, updater.addresses());
 
 		EXPECT_TRUE(updater.removedAddresses().empty());
 	}

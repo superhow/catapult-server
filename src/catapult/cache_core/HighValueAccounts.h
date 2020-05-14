@@ -55,9 +55,9 @@ namespace catapult { namespace cache {
 
 	public:
 		/// Gets the (current) high value addresses.
-		const model::AddressSet& currentAddresses() const;
+		const model::AddressSet& addresses() const;
 
-		/// Gets the (removed) high value addresses.
+		/// Gets the (removed) high value addresses relative to the initial addresses.
 		const model::AddressSet& removedAddresses() const;
 
 	public:

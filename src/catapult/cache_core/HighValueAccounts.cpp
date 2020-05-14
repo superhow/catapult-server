@@ -91,7 +91,7 @@ namespace catapult { namespace cache {
 			, m_current(addresses)
 	{}
 
-	const model::AddressSet& HighValueAccountsUpdater::currentAddresses() const {
+	const model::AddressSet& HighValueAccountsUpdater::addresses() const {
 		return m_current;
 	}
 

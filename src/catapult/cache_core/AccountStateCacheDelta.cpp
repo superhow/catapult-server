@@ -194,7 +194,7 @@ namespace catapult { namespace cache {
 	BasicAccountStateCacheDelta::HighValueAddressesTuple BasicAccountStateCacheDelta::highValueAddresses() const {
 		HighValueAccountsUpdater updater(m_options, m_highValueAccounts.addresses());
 		updater.update(m_pStateByAddress->deltas());
-		return { updater.currentAddresses(), updater.removedAddresses() };
+		return { updater.addresses(), updater.removedAddresses() };
 	}
 
 	void BasicAccountStateCacheDelta::updateHighValueAccounts(Height /*height*/) {
