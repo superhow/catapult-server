@@ -56,7 +56,6 @@ namespace catapult { namespace cache {
 			, m_pStateByAddress(accountStateSets.pPrimary)
 			, m_pKeyToAddress(accountStateSets.pKeyLookupMap)
 			, m_options(options)
-			, m_highValueAccounts(highValueAccounts)
 			, m_pKeyLookupAdapter(std::move(pKeyLookupAdapter))
 			, m_highValueAccountsUpdater(m_options, highValueAccounts.addresses())
 	{}
@@ -192,13 +191,12 @@ namespace catapult { namespace cache {
 	}
 
 	BasicAccountStateCacheDelta::HighValueAddressesTuple BasicAccountStateCacheDelta::highValueAddresses() const {
-		HighValueAccountsUpdater updater(m_options, m_highValueAccounts.addresses());
-		updater.update(m_pStateByAddress->deltas());
-		return { updater.addresses(), updater.removedAddresses() };
+		return HighValueAddressesTuple(m_highValueAccountsUpdater.addresses(), m_highValueAccountsUpdater.removedAddresses());
 	}
 
-	void BasicAccountStateCacheDelta::updateHighValueAccounts(Height /*height*/) {
-
+	void BasicAccountStateCacheDelta::updateHighValueAccounts(Height height) {
+		m_highValueAccountsUpdater.setHeight(height);
+		m_highValueAccountsUpdater.update(m_pStateByAddress->deltas());
 	}
 
 	HighValueAccounts BasicAccountStateCacheDelta::detachHighValueAccounts() {

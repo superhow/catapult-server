@@ -91,12 +91,20 @@ namespace catapult { namespace cache {
 			, m_current(addresses)
 	{}
 
+	Height HighValueAccountsUpdater::height() const {
+		return m_height;
+	}
+
 	const model::AddressSet& HighValueAccountsUpdater::addresses() const {
 		return m_current;
 	}
 
 	const model::AddressSet& HighValueAccountsUpdater::removedAddresses() const {
 		return m_removed;
+	}
+
+	void HighValueAccountsUpdater::setHeight(Height height) {
+		m_height = height;
 	}
 
 	void HighValueAccountsUpdater::update(const deltaset::DeltaElements<MemorySetType>& deltas) {

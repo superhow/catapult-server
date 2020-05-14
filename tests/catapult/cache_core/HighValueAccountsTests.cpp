@@ -94,6 +94,29 @@ namespace catapult { namespace cache {
 		HighValueAccountsUpdater updater(CreateOptions(), addresses);
 
 		// Assert:
+		EXPECT_EQ(Height(), updater.height());
+
+		EXPECT_EQ(3u, updater.addresses().size());
+		EXPECT_EQ(addresses, updater.addresses());
+
+		EXPECT_TRUE(updater.removedAddresses().empty());
+	}
+
+	// endregion
+
+	// region updater - setHeight
+
+	TEST(TEST_CLASS, Updater_CanSetHeight) {
+		// Arrange:
+		auto addresses = GenerateRandomAddresses(3);
+		HighValueAccountsUpdater updater(CreateOptions(), addresses);
+
+		// Act:
+		updater.setHeight(Height(7));
+
+		// Assert:
+		EXPECT_EQ(Height(7), updater.height());
+
 		EXPECT_EQ(3u, updater.addresses().size());
 		EXPECT_EQ(addresses, updater.addresses());
 

@@ -73,6 +73,7 @@ namespace catapult { namespace cache {
 				auto& delta = cacheDelta.template sub<AccountStateCache>();
 				auto balances = { Amount(1'000'000), Amount(500'000), Amount(750'000), Amount(1'250'000) };
 				auto addresses = AddAccountsWithBalances(delta, balances);
+				delta.updateHighValueAccounts(Height(1));
 
 				std::vector<uint8_t> buffer;
 				mocks::MockMemoryStream stream(buffer);

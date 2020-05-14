@@ -141,11 +141,18 @@ namespace catapult { namespace cache {
 		/// Tuple composed of information about high value addresses that is returned by highValueAddresses.
 		struct HighValueAddressesTuple {
 		public:
+			/// Creates a tuple around \a current and \a removed.
+			HighValueAddressesTuple(const model::AddressSet& current, const model::AddressSet& removed)
+					: Current(current)
+					, Removed(removed)
+			{}
+
+		public:
 			/// Addresses of accounts that are high value after application of all delta changes.
-			model::AddressSet Current;
+			const model::AddressSet& Current;
 
 			/// Addresses of accounts that were high value but are no longer high value after application of all delta changes.
-			model::AddressSet Removed;
+			const model::AddressSet& Removed;
 		};
 
 		/// Gets all high value addresses.
@@ -185,7 +192,6 @@ namespace catapult { namespace cache {
 		AccountStateCacheTypes::KeyLookupMapTypes::BaseSetDeltaPointerType m_pKeyToAddress;
 
 		const AccountStateCacheTypes::Options& m_options;
-		const HighValueAccounts& m_highValueAccounts;
 		std::unique_ptr<AccountStateCacheDeltaMixins::KeyLookupAdapter> m_pKeyLookupAdapter;
 		HighValueAccountsUpdater m_highValueAccountsUpdater;
 

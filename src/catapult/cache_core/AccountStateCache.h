@@ -56,11 +56,10 @@ namespace catapult { namespace cache {
 
 		/// Commits all pending changes to the underlying storage.
 		/// \note This hides AccountStateBasicCache::commit.
-		void commit(const CacheDeltaType& delta) {
-			// high value addresses need to be captured before committing because committing clears the deltas
-			auto highValueAddresses = delta.highValueAddresses().Current;
+		void commit(CacheDeltaType& delta) {
+			auto pHighValueAccounts = delta.detachHighValueAccounts();
 			AccountStateBasicCache::commit(delta);
-			*m_pHighValueAccounts = HighValueAccounts(highValueAddresses);
+			*m_pHighValueAccounts = std::move(pHighValueAccounts);
 		}
 
 	private:

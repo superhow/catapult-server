@@ -54,6 +54,9 @@ namespace catapult { namespace cache {
 		HighValueAccountsUpdater(AccountStateCacheTypes::Options options, const model::AddressSet& addresses);
 
 	public:
+		/// Gets the height of the update operation.
+		Height height() const;
+
 		/// Gets the (current) high value addresses.
 		const model::AddressSet& addresses() const;
 
@@ -61,6 +64,9 @@ namespace catapult { namespace cache {
 		const model::AddressSet& removedAddresses() const;
 
 	public:
+		/// Sets the \a height of the update operation.
+		void setHeight(Height height);
+
 		/// Updates high value accounts based on changes described in \a deltas.
 		void update(const deltaset::DeltaElements<MemorySetType>& deltas);
 
@@ -73,5 +79,6 @@ namespace catapult { namespace cache {
 		const model::AddressSet& m_original;
 		model::AddressSet m_current;
 		model::AddressSet m_removed;
+		Height m_height;
 	};
 }}
