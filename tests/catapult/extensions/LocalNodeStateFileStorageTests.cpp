@@ -69,6 +69,8 @@ namespace catapult { namespace extensions {
 
 				pAccountState->Balances.credit(Harvesting_Mosaic_Id, Amount(10));
 				test::RandomFillAccountData(i, *pAccountState);
+
+				cacheDelta.updateHighValueAccounts(Height(1));
 			}
 		}
 
