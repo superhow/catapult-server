@@ -347,9 +347,8 @@ namespace catapult { namespace cache {
 		EXPECT_EQ(4u, accounts.addresses().size());
 		EXPECT_EQ(Pick(addedAddresses, { 0, 2, 4, 5 }), accounts.addresses());
 
-		// - updater is reset
-		EXPECT_EQ(3u, updater.addresses().size());
-		EXPECT_EQ(addresses, updater.addresses());
+		// - updater is cleared
+		EXPECT_TRUE(updater.addresses().empty());
 
 		EXPECT_TRUE(updater.removedAddresses().empty());
 	}

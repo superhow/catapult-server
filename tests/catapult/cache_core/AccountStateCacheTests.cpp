@@ -1042,7 +1042,7 @@ namespace catapult { namespace cache {
 
 	// endregion
 
-	// region highValueAddresses
+	// region highValueAddresses / updateHighValueAccounts
 
 	namespace {
 		std::vector<Address> AddAccountsWithBalances(AccountStateCacheDelta& delta, const std::vector<Amount>& balances) {
@@ -1263,6 +1263,53 @@ namespace catapult { namespace cache {
 		}
 
 		EXPECT_EQ(model::AddressSet({ addresses[0], addresses[2], addresses[4] }), GetHighValueAddresses(*cache.createView()));
+	}
+
+	// endregion
+
+	// region updateHighValueAccounts / detachHighValueAccounts
+
+	TEST(TEST_CLASS, UpdateHighValueAccountsProcessesAccounts) {
+		// Arrange: set min balance to 1M
+		auto options = Default_Cache_Options;
+		options.MinHarvesterBalance = Amount(1'000'000);
+		AccountStateCache cache(CacheConfiguration(), options);
+
+		// - prepare delta with 2/3 accounts with sufficient balance
+		auto delta = cache.createDelta();
+		auto addresses = AddAccountsWithBalances(*delta, { Amount(1'100'000), Amount(900'000), Amount(1'000'000) });
+
+		// Sanity: before udpate, delta reports no addresses
+		EXPECT_TRUE(delta->highValueAddresses().Current.empty());
+
+		// Act:
+		delta->updateHighValueAccounts(Height(1));
+
+		// Assert:
+		EXPECT_EQ(model::AddressSet({ addresses[0], addresses[2] }), delta->highValueAddresses().Current);
+	}
+
+	TEST(TEST_CLASS, DetachHighValueAccountsIsDestructive) {
+		// Arrange: set min balance to 1M
+		auto options = Default_Cache_Options;
+		options.MinHarvesterBalance = Amount(1'000'000);
+		AccountStateCache cache(CacheConfiguration(), options);
+
+		// - prepare delta with 2/3 accounts with sufficient balance
+		auto delta = cache.createDelta();
+		auto addresses = AddAccountsWithBalances(*delta, { Amount(1'100'000), Amount(900'000), Amount(1'000'000) });
+		delta->updateHighValueAccounts(Height(1));
+
+		// Sanity: before detach, delta reports correct addresses
+		EXPECT_EQ(model::AddressSet({ addresses[0], addresses[2] }), delta->highValueAddresses().Current);
+
+		// Act:
+		auto detachedAccounts = delta->detachHighValueAccounts();
+
+		// Assert:
+		EXPECT_TRUE(delta->highValueAddresses().Current.empty());
+
+		EXPECT_EQ(model::AddressSet({ addresses[0], addresses[2] }), detachedAccounts.addresses());
 	}
 
 	// endregion
