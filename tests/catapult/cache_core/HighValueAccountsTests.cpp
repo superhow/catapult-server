@@ -240,7 +240,7 @@ namespace catapult { namespace cache {
 		EXPECT_EQ(Pick(addedAddresses, { 0, 1, 2, 3 }), updater.removedAddresses());
 	}
 
-	TEST(TEST_CLASS, Updater_HarvesterEligible_CanProcessMixed) {
+	TEST(TEST_CLASS, Updater_HarvesterEligible_CanProcessMixedViaSingleUpdate) {
 		// Arrange: add seven [5 match {0, 2, 4, 5, 6}]
 		test::DeltaElementsTestUtils::Wrapper<MemorySetType> deltas;
 		auto addedAddresses = AddAccountsWithBalances(deltas.Added, {
@@ -261,6 +261,39 @@ namespace catapult { namespace cache {
 		HighValueAccountsUpdater updater(CreateOptions(), addresses);
 
 		// Act:
+		updater.update(deltas.deltas());
+
+		// Assert:
+		EXPECT_EQ(3u, updater.addresses().size());
+		EXPECT_EQ(Pick(addedAddresses, { 0, 4, 5 }), updater.addresses());
+
+		EXPECT_EQ(2u, updater.removedAddresses().size());
+		EXPECT_EQ(Pick(addedAddresses, { 1, 2 }), updater.removedAddresses());
+	}
+
+	TEST(TEST_CLASS, Updater_HarvesterEligible_CanProcessMixedViaMultipleUpdates) {
+		// Arrange: add seven [5 match {0, 2, 4, 5, 6}]
+		test::DeltaElementsTestUtils::Wrapper<MemorySetType> deltas;
+		auto addedAddresses = AddAccountsWithBalances(deltas.Added, {
+			Amount(1'100'000), Amount(900'000), Amount(1'000'000), Amount(800'000), Amount(1'200'000), Amount(1'400'000), Amount(1'300'000)
+		});
+
+		model::AddressSet addresses(addedAddresses.cbegin(), addedAddresses.cbegin() + 3);
+		HighValueAccountsUpdater updater(CreateOptions(), addresses);
+
+		// Act:
+		updater.update(deltas.deltas());
+
+		// - modify three [4 match {0, 1, 4, 6}]
+		deltas.Copied.insert(*deltas.Added.find(addedAddresses[1])).first->second.Balances.credit(Harvesting_Mosaic_Id, Amount(100'000));
+		deltas.Copied.insert(*deltas.Added.find(addedAddresses[2])).first->second.Balances.debit(Harvesting_Mosaic_Id, Amount(1));
+		deltas.Copied.insert(*deltas.Added.find(addedAddresses[5])).first->second.Balances.debit(Harvesting_Mosaic_Id, Amount(300'000));
+		updater.update(deltas.deltas());
+
+		// - delete three [3 match {0, 4, 5}]
+		deltas.Removed.insert(*deltas.Added.find(addedAddresses[1]));
+		deltas.Removed.insert(*deltas.Added.find(addedAddresses[3]));
+		deltas.Removed.insert(*deltas.Added.find(addedAddresses[6]));
 		updater.update(deltas.deltas());
 
 		// Assert:
