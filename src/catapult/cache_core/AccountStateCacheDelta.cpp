@@ -58,6 +58,7 @@ namespace catapult { namespace cache {
 			, m_options(options)
 			, m_highValueAccounts(highValueAccounts)
 			, m_pKeyLookupAdapter(std::move(pKeyLookupAdapter))
+			, m_highValueAccountsUpdater(m_options, highValueAccounts.addresses())
 	{}
 
 	model::NetworkIdentifier BasicAccountStateCacheDelta::networkIdentifier() const {
@@ -194,5 +195,13 @@ namespace catapult { namespace cache {
 		HighValueAccountsUpdater updater(m_options, m_highValueAccounts.addresses());
 		updater.update(m_pStateByAddress->deltas());
 		return { updater.currentAddresses(), updater.removedAddresses() };
+	}
+
+	void BasicAccountStateCacheDelta::updateHighValueAccounts(Height /*height*/) {
+
+	}
+
+	HighValueAccounts BasicAccountStateCacheDelta::detachHighValueAccounts() {
+		return m_highValueAccountsUpdater.detachView();
 	}
 }}

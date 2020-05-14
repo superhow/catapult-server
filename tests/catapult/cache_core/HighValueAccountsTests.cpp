@@ -280,7 +280,7 @@ namespace catapult { namespace cache {
 		test::DeltaElementsTestUtils::Wrapper<MemorySetType> deltas;
 		auto addedAddresses = AddAccountsWithBalances(deltas.Added, GetHarvesterEligibleTestBalances());
 
-		model::AddressSet addresses(addedAddresses.cbegin(), addedAddresses.cbegin() + 4);
+		model::AddressSet addresses(addedAddresses.cbegin(), addedAddresses.cbegin() + 3);
 		HighValueAccountsUpdater updater(CreateOptions(), addresses);
 		updater.update(deltas.deltas());
 
@@ -290,6 +290,12 @@ namespace catapult { namespace cache {
 		// Assert:
 		EXPECT_EQ(4u, accounts.addresses().size());
 		EXPECT_EQ(Pick(addedAddresses, { 0, 2, 4, 5 }), accounts.addresses());
+
+		// - updater is reset
+		EXPECT_EQ(3u, updater.currentAddresses().size());
+		EXPECT_EQ(addresses, updater.currentAddresses());
+
+		EXPECT_TRUE(updater.removedAddresses().empty());
 	}
 
 	// endregion

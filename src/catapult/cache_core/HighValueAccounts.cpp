@@ -113,7 +113,12 @@ namespace catapult { namespace cache {
 	}
 
 	HighValueAccounts HighValueAccountsUpdater::detachView() {
-		return HighValueAccounts(std::move(m_current));
+		auto accounts = HighValueAccounts(std::move(m_current));
+
+		m_current = m_original;
+		m_removed.clear();
+
+		return accounts;
 	}
 
 	// endregion
