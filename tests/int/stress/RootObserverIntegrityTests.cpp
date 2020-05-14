@@ -72,10 +72,12 @@ namespace catapult { namespace extensions {
 
 				// seed the "nemesis" / transfer account (this account is used to fund all other accounts)
 				auto delta = m_cache.createDelta();
-				auto& accountStateCache = delta.sub<cache::AccountStateCache>();
-				accountStateCache.addAccount(m_specialAccountKey, Height(1));
-				auto& accountState = accountStateCache.find(m_specialAccountKey).get();
+				auto& accountStateCacheDelta = delta.sub<cache::AccountStateCache>();
+				accountStateCacheDelta.addAccount(m_specialAccountKey, Height(1));
+
+				auto& accountState = accountStateCacheDelta.find(m_specialAccountKey).get();
 				accountState.Balances.credit(Harvesting_Mosaic_Id, GetTotalChainBalance(numAccounts));
+
 				m_cache.commit(Height());
 			}
 
@@ -147,6 +149,7 @@ namespace catapult { namespace extensions {
 				else
 					chain::RollbackBlock(blockElement, blockExecutionContext);
 
+				delta.sub<cache::AccountStateCache>().updateHighValueAccounts(Height());
 				m_cache.commit(height);
 			}
 
