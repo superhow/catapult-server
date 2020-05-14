@@ -92,6 +92,7 @@ namespace catapult { namespace plugins {
 
 				// transient observers
 				names.push_back("RecalculateImportancesObserver");
+				names.push_back("HighValueAccountObserver"); // rollback mode AFTER RecalculateImportancesObserver
 				names.push_back("BlockStatisticObserver");
 				names.push_back("BlockStatisticPruningObserver");
 				return names;
@@ -108,6 +109,8 @@ namespace catapult { namespace plugins {
 					"TransactionFeeActivityObserver",
 					"HarvestFeeObserver",
 					"TotalTransactionsObserver",
+					"HighValueAccountObserver", // commit mode BEFORE RecalculateImportancesObserver
+
 
 					// key link transactions
 					"VotingKeyLinkObserver",

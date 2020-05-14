@@ -43,11 +43,8 @@ namespace catapult { namespace cache {
 		}
 
 		model::AddressSet GenerateRandomAddresses(size_t count) {
-			model::AddressSet addresses;
-			for (auto i = 0u; i < count; ++i)
-				addresses.insert(test::GenerateRandomAddress());
-
-			return addresses;
+			auto addresses = test::GenerateRandomAddresses(count);
+			return model::AddressSet(addresses.cbegin(), addresses.cend());
 		}
 	}
 

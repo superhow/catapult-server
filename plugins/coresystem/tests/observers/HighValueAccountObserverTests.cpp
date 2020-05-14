@@ -1,100 +1,103 @@
-// /**
-// *** Copyright (c) 2016-present,
-// *** Jaguar0625, gimre, BloodyRookie, Tech Bureau, Corp. All rights reserved.
-// ***
-// *** This file is part of Catapult.
-// ***
-// *** Catapult is free software: you can redistribute it and/or modify
-// *** it under the terms of the GNU Lesser General Public License as published by
-// *** the Free Software Foundation, either version 3 of the License, or
-// *** (at your option) any later version.
-// ***
-// *** Catapult is distributed in the hope that it will be useful,
-// *** but WITHOUT ANY WARRANTY; without even the implied warranty of
-// *** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// *** GNU Lesser General Public License for more details.
-// ***
-// *** You should have received a copy of the GNU Lesser General Public License
-// *** along with Catapult. If not, see <http://www.gnu.org/licenses/>.
-// **/
+/**
+*** Copyright (c) 2016-present,
+*** Jaguar0625, gimre, BloodyRookie, Tech Bureau, Corp. All rights reserved.
+***
+*** This file is part of Catapult.
+***
+*** Catapult is free software: you can redistribute it and/or modify
+*** it under the terms of the GNU Lesser General Public License as published by
+*** the Free Software Foundation, either version 3 of the License, or
+*** (at your option) any later version.
+***
+*** Catapult is distributed in the hope that it will be useful,
+*** but WITHOUT ANY WARRANTY; without even the implied warranty of
+*** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+*** GNU Lesser General Public License for more details.
+***
+*** You should have received a copy of the GNU Lesser General Public License
+*** along with Catapult. If not, see <http://www.gnu.org/licenses/>.
+**/
 
-// #include "src/observers/Observers.h"
-// #include "tests/test/plugins/AccountObserverTestContext.h"
-// #include "tests/test/plugins/ObserverTestUtils.h"
-// #include "tests/TestHarness.h"
+#include "src/observers/Observers.h"
+#include "tests/test/core/NotificationTestUtils.h"
+#include "tests/test/plugins/AccountObserverTestContext.h"
+#include "tests/test/plugins/ObserverTestUtils.h"
+#include "tests/test/core/AddressTestUtils.h"
+#include "tests/TestHarness.h"
 
-// namespace catapult { namespace observers {
+namespace catapult { namespace observers {
 
-// #define TEST_CLASS TransactionFeeActivityObserverTests
+#define TEST_CLASS HighValueAccountObserverTests
 
-// 	DEFINE_COMMON_OBSERVER_TESTS(TransactionFeeActivity,)
+	DEFINE_COMMON_OBSERVER_TESTS(HighValueAccount, NotifyMode::Commit)
 
-// 	namespace {
-// 		constexpr auto Notification_Height = Height(100);
-// 		constexpr auto Importance_Height = model::ImportanceHeight(98);
+	namespace {
+		constexpr auto Harvesting_Mosaic_Id = MosaicId(9876);
+		constexpr auto Min_Harvester_Balance = Amount(1'000'000);
 
-// 		class TestContext : public test::AccountObserverTestContext {
-// 		public:
-// 			explicit TestContext(NotifyMode notifyMode)
-// 					: test::AccountObserverTestContext(notifyMode, Notification_Height, CreateBlockChainConfiguration())
-// 			{}
+		class TestContext : public test::AccountObserverTestContext {
+		public:
+			explicit TestContext(NotifyMode notifyMode)
+					: test::AccountObserverTestContext(notifyMode, Height(123), CreateBlockChainConfiguration())
+			{}
 
-// 		public:
-// 			auto addAccount(const Key& publicKey, Amount totalFeesPaid) {
-// 				auto& accountStateCache = cache().sub<cache::AccountStateCache>();
-// 				accountStateCache.addAccount(publicKey, Height(123));
+		public:
+			auto highValueAddresses() {
+				return cache().sub<cache::AccountStateCache>().highValueAddresses().Current;
+			}
 
-// 				auto accountStateIter = accountStateCache.find(publicKey);
-// 				if (Amount(0) != totalFeesPaid) {
-// 					accountStateIter.get().ActivityBuckets.update(Importance_Height, [totalFeesPaid](auto& bucket) {
-// 						bucket.TotalFeesPaid = totalFeesPaid;
-// 					});
-// 				}
+		public:
+			void addAccount(const Address& address, Amount balance) {
+				auto& accountStateCache = cache().sub<cache::AccountStateCache>();
+				accountStateCache.addAccount(address, Height(123));
 
-// 				return accountStateIter;
-// 			}
+				auto accountStateIter = accountStateCache.find(address);
+				accountStateIter.get().Balances.credit(Harvesting_Mosaic_Id, balance);
+			}
 
-// 		private:
-// 			static model::BlockChainConfiguration CreateBlockChainConfiguration() {
-// 				auto config = model::BlockChainConfiguration::Uninitialized();
-// 				config.ImportanceGrouping = 2;
-// 				return config;
-// 			}
-// 		};
+		private:
+			static model::BlockChainConfiguration CreateBlockChainConfiguration() {
+				auto config = model::BlockChainConfiguration::Uninitialized();
+				config.HarvestingMosaicId = Harvesting_Mosaic_Id;
+				config.MinHarvesterBalance = Min_Harvester_Balance;
+				return config;
+			}
+		};
+	}
 
-// 		void RunTest(NotifyMode notifyMode, Amount initialTotalFeesPaid, Amount fee, Amount expectedTotalFeesPaid) {
-// 			// Arrange:
-// 			TestContext context(notifyMode);
-// 			auto pObserver = CreateTransactionFeeActivityObserver();
+	TEST(TEST_CLASS, HighValueAccountsAreUpdatedWhenModeMatches) {
+		// Arrange:
+		auto addresses = test::GenerateRandomAddresses(3);
+		TestContext context(NotifyMode::Commit);
 
-// 			auto signerPublicKey = test::GenerateRandomByteArray<Key>();
-// 			auto signerAccountStateIter = context.addAccount(signerPublicKey, initialTotalFeesPaid);
+		context.addAccount(addresses[0], Min_Harvester_Balance);
+		context.addAccount(addresses[1], Min_Harvester_Balance - Amount(1));
+		context.addAccount(addresses[2], Min_Harvester_Balance + Amount(1));
 
-// 			auto notification = model::TransactionFeeNotification(signerPublicKey, 0, fee, Amount(222));
+		auto pObserver = CreateHighValueAccountObserver(NotifyMode::Commit);
 
-// 			// Act:
-// 			test::ObserveNotification(*pObserver, notification, context);
+		// Act:
+		test::ObserveNotification(*pObserver, test::CreateBlockNotification(), context);
 
-// 			// Assert:
-// 			const auto& activityBucket = signerAccountStateIter.get().ActivityBuckets.get(Importance_Height);
-// 			EXPECT_EQ(expectedTotalFeesPaid, activityBucket.TotalFeesPaid);
-// 		}
-// 	}
+		// Assert: modes match, so high value accounts should be updated
+		EXPECT_EQ(model::AddressSet({ addresses[0], addresses[2] }), context.highValueAddresses());
+	}
 
-// 	TEST(TEST_CLASS, TotalFeesPaidIsNotUpdatedWhenNotificationFeeIsZero_Commit) {
-// 		RunTest(NotifyMode::Commit, Amount(333), Amount(0), Amount(333));
-// 	}
+	TEST(TEST_CLASS, HighValueAccountsAreNotUpdatedWhenModeDoesNotMatch) {
+		// Arrange:
+		auto addresses = test::GenerateRandomAddresses(3);
+		TestContext context(NotifyMode::Commit);
 
-// 	TEST(TEST_CLASS, TotalFeesPaidIsNotUpdatedWhenNotificationFeeIsZero_Rollback) {
-// 		RunTest(NotifyMode::Rollback, Amount(333), Amount(0), Amount(333));
-// 	}
+		context.addAccount(addresses[0], Min_Harvester_Balance);
+		context.addAccount(addresses[1], Min_Harvester_Balance - Amount(1));
+		context.addAccount(addresses[2], Min_Harvester_Balance + Amount(1));
 
-// 	TEST(TEST_CLASS, TotalFeesPaidIsUpdatedWhenNotificationFeeIsNonzero_Commit) {
-// 		RunTest(NotifyMode::Commit, Amount(333), Amount(100), Amount(433));
-// 	}
+		auto pObserver = CreateHighValueAccountObserver(NotifyMode::Rollback);
 
-// 	TEST(TEST_CLASS, TotalFeesPaidIsUpdatedWhenNotificationFeeIsNonzero_Rollback) {
-// 		RunTest(NotifyMode::Rollback, Amount(333), Amount(100), Amount(233));
-// 	}
+		// Act:
+		test::ObserveNotification(*pObserver, test::CreateBlockNotification(), context);
 
-// }}
+		// Assert: modes don't match, so high value accounts should be unchanged
+		EXPECT_EQ(model::AddressSet(), context.highValueAddresses());
+	}
+}}
