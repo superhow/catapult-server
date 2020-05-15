@@ -43,7 +43,9 @@ namespace catapult { namespace validators {
 		auto cache = test::CreateEmptyCatapultCache();
 		auto cacheView = cache.createView();
 		auto readOnlyCache = cacheView.toReadOnly();
-		auto context = ValidatorContext(Height(1234), Timestamp(987), networkInfo, CreateResolverContext(), readOnlyCache);
+
+		auto notificationContext = model::NotificationContext(Height(1234), networkInfo, CreateResolverContext());
+		auto context = ValidatorContext(notificationContext, Timestamp(987), readOnlyCache);
 
 		// Assert:
 		EXPECT_EQ(Height(1234), context.Height);

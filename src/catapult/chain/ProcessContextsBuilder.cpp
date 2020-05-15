@@ -75,8 +75,11 @@ namespace catapult { namespace chain {
 		if (!m_pReadOnlyCache)
 			CATAPULT_THROW_INVALID_ARGUMENT("buildValidatorContext requires CatapultCacheView or CatapultCacheDelta");
 
-		const auto& network = m_executionContextConfig.Network;
+		return validators::ValidatorContext(buildNotificationContext(), m_blockTime, *m_pReadOnlyCache);
+	}
+
+	model::NotificationContext ProcessContextsBuilder::buildNotificationContext() {
 		auto resolverContext = m_executionContextConfig.ResolverContextFactory(*m_pReadOnlyCache);
-		return validators::ValidatorContext(m_height, m_blockTime, network, resolverContext, *m_pReadOnlyCache);
+		return model::NotificationContext(m_height, m_executionContextConfig.Network, resolverContext);
 	}
 }}

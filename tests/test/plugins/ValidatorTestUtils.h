@@ -33,7 +33,7 @@ namespace catapult { namespace test {
 			Height height,
 			const model::NetworkInfo& network,
 			const cache::ReadOnlyCatapultCache& cache) {
-		return validators::ValidatorContext(height, Timestamp(0), network, CreateResolverContextXor(), cache);
+		return validators::ValidatorContext(model::NotificationContext(height, network, CreateResolverContextXor()), Timestamp(0), cache);
 	}
 
 	/// Creates a validator context around \a height and \a cache.

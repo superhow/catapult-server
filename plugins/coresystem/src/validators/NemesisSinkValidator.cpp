@@ -19,7 +19,6 @@
 **/
 
 #include "Validators.h"
-#include "catapult/model/NetworkIdentifier.h"
 #include "catapult/validators/ValidatorContext.h"
 
 namespace catapult { namespace validators {

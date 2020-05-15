@@ -28,7 +28,7 @@ namespace catapult { namespace validators {
 
 #define TEST_CLASS AddressValidatorTests
 
-	DEFINE_COMMON_VALIDATOR_TESTS(Address, model::NetworkIdentifier())
+	DEFINE_COMMON_VALIDATOR_TESTS(Address,)
 
 	namespace {
 		constexpr auto Network_Identifier = static_cast<model::NetworkIdentifier>(0xC8);
@@ -64,11 +64,13 @@ namespace catapult { namespace validators {
 			auto cacheView = cache.createView();
 			auto readOnlyCache = cacheView.toReadOnly();
 
-			auto resolverContext = CreateResolverContextXor();
-			auto validatorContext = ValidatorContext(Height(1), Timestamp(0), model::NetworkInfo(), resolverContext, readOnlyCache);
+			auto networkInfo = model::NetworkInfo();
+			networkInfo.Identifier = Network_Identifier;
+			auto notificationContext = model::NotificationContext(Height(1), networkInfo, CreateResolverContextXor());
+			auto validatorContext = ValidatorContext(notificationContext, Timestamp(0), readOnlyCache);
 
 			model::AccountAddressNotification notification(UnresolveXor(address));
-			auto pValidator = CreateAddressValidator(Network_Identifier);
+			auto pValidator = CreateAddressValidator();
 
 			// Act:
 			auto result = test::ValidateNotification(*pValidator, notification, validatorContext);

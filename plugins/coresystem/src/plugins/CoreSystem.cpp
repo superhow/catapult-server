@@ -147,7 +147,7 @@ namespace catapult { namespace plugins {
 
 		manager.addStatefulValidatorHook([&config](auto& builder) {
 			builder
-				.add(validators::CreateAddressValidator(config.Network.Identifier))
+				.add(validators::CreateAddressValidator())
 				.add(validators::CreateDeadlineValidator(config.MaxTransactionLifetime))
 				.add(validators::CreateNemesisSinkValidator())
 				.add(validators::CreateEligibleHarvesterValidator())
