@@ -23,22 +23,9 @@
 #include "AccountStateCacheStorage.h"
 #include "catapult/cache/SubCachePluginAdapter.h"
 
-#include "catapult/cache/SummaryAwareSubCachePluginAdapter.h"
+// #include "catapult/cache/SummaryAwareSubCachePluginAdapter.h"
 
 namespace catapult { namespace cache {
-
-	/// CacheStorage implementation for saving and loading summary account state cache data.
-	class AccountStateCacheSummaryCacheStorage : public SummaryCacheStorage<AccountStateCache> {
-	public:
-		using SummaryCacheStorage<AccountStateCache>::SummaryCacheStorage;
-
-	public:
-		void saveAll(const CatapultCacheView& cacheView, io::OutputStream& output) const override;
-
-		void saveSummary(const CatapultCacheDelta& cacheDelta, io::OutputStream& output) const override;
-
-		void loadAll(io::InputStream& input, size_t) override;
-	};
 
 	/// Specialized account state cache sub cache plugin.
 	class AccountStateCacheSubCachePlugin : public SubCachePluginAdapter<AccountStateCache, AccountStateCacheStorage> {

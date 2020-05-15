@@ -19,12 +19,13 @@
 **/
 
 #include "AccountStateCacheSubCachePlugin.h"
+#include "catapult/cache/SummaryAwareSubCachePluginAdapter.h"
 
 namespace catapult { namespace cache {
 
-	// region AccountStateCacheSummaryCacheStorage
-
 	namespace {
+		// region serialization utils
+
 		void WriteAddresses(const model::AddressSet& addresses, io::OutputStream& output) {
 			io::Write64(output, addresses.size());
 			for (const auto& address : addresses)
@@ -45,23 +46,36 @@ namespace catapult { namespace cache {
 
 			return addresses;
 		}
-	}
 
-	void AccountStateCacheSummaryCacheStorage::saveAll(const CatapultCacheView&, io::OutputStream&) const {
-		CATAPULT_THROW_INVALID_ARGUMENT("AccountStateCacheSummaryCacheStorage does not support saveAll");
-	}
+		// endregion
 
-	void AccountStateCacheSummaryCacheStorage::saveSummary(const CatapultCacheDelta& cacheDelta, io::OutputStream& output) const {
-		WriteAddresses(cacheDelta.sub<AccountStateCache>().highValueAddresses().Current, output);
-	}
+		// region AccountStateCacheSummaryCacheStorage
 
-	void AccountStateCacheSummaryCacheStorage::loadAll(io::InputStream& input, size_t) {
-		cache().init(HighValueAccounts(ReadAddresses(input)));
-	}
+		class AccountStateCacheSummaryCacheStorage : public SummaryCacheStorage<AccountStateCache> {
+		public:
+			using SummaryCacheStorage<AccountStateCache>::SummaryCacheStorage;
 
-	// endregion
+		public:
+			void saveAll(const CatapultCacheView&, io::OutputStream&) const override {
+				CATAPULT_THROW_INVALID_ARGUMENT("AccountStateCacheSummaryCacheStorage does not support saveAll");
+			}
 
-	namespace {
+			void saveSummary(const CatapultCacheDelta& cacheDelta, io::OutputStream& output) const override {
+				WriteAddresses(cacheDelta.sub<AccountStateCache>().highValueAddresses().Current, output);
+			}
+
+			void loadAll(io::InputStream& input, size_t) override {
+				cache().init(HighValueAccounts(ReadAddresses(input)));
+			}
+		};
+
+		// endregion
+
+		// region AccountStateFullCacheStorage
+
+		// custom AccountStateFullCacheStorage is needed because historical balances are computed and cannot be directly
+		// calculated from account state since only cumulative balances are stored within state
+
 		class AccountStateFullCacheStorage : public CacheStorage {
 		public:
 			AccountStateFullCacheStorage(std::unique_ptr<CacheStorage>&& pStorage, AccountStateCache& cache)
@@ -93,6 +107,8 @@ namespace catapult { namespace cache {
 			std::unique_ptr<CacheStorage> m_pStorage;
 			AccountStateCache& m_cache;
 		};
+
+		// endregion
 	}
 
 	// region AccountStateCacheSubCachePlugin
