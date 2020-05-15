@@ -25,15 +25,6 @@
 
 namespace catapult { namespace cache {
 
-	/// CacheStorage implementation for saving and loading summary block statistic cache data.
-	class BlockStatisticCacheSummaryCacheStorage : public CacheStorageAdapter<BlockStatisticCache, BlockStatisticCacheStorage> {
-	public:
-		using CacheStorageAdapter<BlockStatisticCache, BlockStatisticCacheStorage>::CacheStorageAdapter;
-
-	public:
-		void saveSummary(const CatapultCacheDelta& cacheDelta, io::OutputStream& output) const override;
-	};
-
 	/// Specialized block statistic cache sub cache plugin.
 	class BlockStatisticCacheSubCachePlugin : public SubCachePluginAdapter<BlockStatisticCache, BlockStatisticCacheStorage> {
 	public:

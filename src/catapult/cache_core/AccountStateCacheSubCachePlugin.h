@@ -23,8 +23,6 @@
 #include "AccountStateCacheStorage.h"
 #include "catapult/cache/SubCachePluginAdapter.h"
 
-// #include "catapult/cache/SummaryAwareSubCachePluginAdapter.h"
-
 namespace catapult { namespace cache {
 
 	/// Specialized account state cache sub cache plugin.
