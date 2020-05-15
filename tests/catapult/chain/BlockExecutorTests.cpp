@@ -35,6 +35,15 @@ namespace catapult { namespace chain {
 	namespace {
 		constexpr auto CreateResolverContext = test::CreateResolverContextWithCustomDoublingMosaicResolver;
 
+		constexpr auto Network_Identifier = static_cast<model::NetworkIdentifier>(33);
+
+		chain::BlockExecutionContext CreateExecutionContext(const observers::EntityObserver& observer, observers::ObserverState& state) {
+			model::NetworkInfo networkInfo;
+			networkInfo.Identifier = Network_Identifier;
+
+			return { networkInfo, CreateResolverContext(), observer, state };
+		}
+
 		void FixHashes(model::BlockElement& blockElement) {
 			auto start = blockElement.Block.Signature[0];
 			blockElement.EntityHash = { { start } };
@@ -74,7 +83,7 @@ namespace catapult { namespace chain {
 					observers::ObserverState& state) {
 				auto blockElement = test::BlockToBlockElement(block);
 				FixHashes(blockElement);
-				ExecuteBlock(blockElement, { observer, CreateResolverContext(), state });
+				ExecuteBlock(blockElement, CreateExecutionContext(observer, state));
 			}
 		};
 
@@ -99,7 +108,7 @@ namespace catapult { namespace chain {
 					observers::ObserverState& state) {
 				auto blockElement = test::BlockToBlockElement(block);
 				FixHashes(blockElement);
-				RollbackBlock(blockElement, { observer, CreateResolverContext(), state });
+				RollbackBlock(blockElement, CreateExecutionContext(observer, state));
 			}
 		};
 
@@ -119,6 +128,7 @@ namespace catapult { namespace chain {
 			for (const auto& context : contexts) {
 				EXPECT_EQ(&state.Cache, &context.Cache);
 				EXPECT_EQ(height, context.Height);
+				EXPECT_EQ(Network_Identifier, context.Network.Identifier);
 				EXPECT_EQ(mode, context.Mode);
 
 				// - appropriate resolvers were passed down
@@ -247,7 +257,7 @@ namespace catapult { namespace chain {
 			EXPECT_TRUE(accountStateCache.contains(address));
 
 			// Act: trigger a rollback
-			RollbackBlock(model::BlockElement(*pBlock), { observer, CreateResolverContext(), state });
+			RollbackBlock(model::BlockElement(*pBlock), CreateExecutionContext(observer, state));
 
 			// Assert: the account queued for removal should have been removed
 			EXPECT_EQ(2u, accountStateCache.size());

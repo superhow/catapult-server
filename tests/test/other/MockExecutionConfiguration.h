@@ -329,6 +329,7 @@ namespace catapult { namespace test {
 
 				// - context (use resolver call to implicitly test creation of ResolverContext)
 				EXPECT_EQ(expectedHeight, params.Context.Height) << message;
+				EXPECT_EQ(Mock_Execution_Configuration_Network_Identifier, params.Context.Network.Identifier) << message;
 				if (isRollbackExecution(i))
 					EXPECT_EQ(observers::NotifyMode::Rollback, params.Context.Mode) << message;
 				else
@@ -362,8 +363,8 @@ namespace catapult { namespace test {
 
 				// - context (use resolver call to implicitly test creation of ResolverContext)
 				EXPECT_EQ(expectedHeight, params.Context.Height) << message;
-				EXPECT_EQ(expectedBlockTime, params.Context.BlockTime) << message;
 				EXPECT_EQ(Mock_Execution_Configuration_Network_Identifier, params.Context.Network.Identifier) << message;
+				EXPECT_EQ(expectedBlockTime, params.Context.BlockTime) << message;
 				EXPECT_EQ(MosaicId(22), params.Context.Resolvers.resolve(UnresolvedMosaicId(11))) << message;
 
 				// - cache contents + sequence (NumStatistics is incremented by each observer call)

@@ -216,7 +216,7 @@ namespace catapult { namespace extensions {
 		auto observerState = config.EnableVerifiableReceipts
 				? observers::ObserverState(m_cacheDelta, blockStatementBuilder)
 				: observers::ObserverState(m_cacheDelta);
-		chain::ExecuteBlock(nemesisBlockElement, { *m_pObserver, resolverContext, observerState });
+		chain::ExecuteBlock(nemesisBlockElement, { config.Network, resolverContext, *m_pObserver, observerState });
 
 		// 4. check the funded balances are reasonable
 		if (Verbosity::On == verbosity)

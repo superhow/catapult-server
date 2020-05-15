@@ -171,14 +171,14 @@ namespace catapult { namespace sync {
 			};
 
 			auto pUndoObserver = utils::UniqueToShared(extensions::CreateUndoEntityObserver(pluginManager));
-			syncHandlers.UndoBlock = [&rollbackInfo, &pluginManager, pUndoObserver](
+			syncHandlers.UndoBlock = [networkInfo = blockChainConfig.Network, &rollbackInfo, &pluginManager, pUndoObserver](
 					const auto& blockElement,
 					auto& observerState,
 					auto undoBlockType) {
 				rollbackInfo.modifier().increment();
 				auto readOnlyCache = observerState.Cache.toReadOnly();
 				auto resolverContext = pluginManager.createResolverContext(readOnlyCache);
-				UndoBlock(blockElement, { *pUndoObserver, resolverContext, observerState }, undoBlockType);
+				UndoBlock(blockElement, { networkInfo, resolverContext, *pUndoObserver, observerState }, undoBlockType);
 			};
 			syncHandlers.Processor = CreateSyncProcessor(blockChainConfig, extensions::CreateExecutionConfiguration(pluginManager));
 

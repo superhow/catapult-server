@@ -236,7 +236,7 @@ namespace catapult { namespace local {
 				observers::NotificationObserverAdapter observer(
 						m_pluginManager.createObserver(),
 						m_pluginManager.createNotificationPublisher());
-				chain::BlockExecutionContext executionContext{ observer, resolverContext, observerState };
+				chain::BlockExecutionContext executionContext{ m_config.BlockChain.Network, resolverContext, observer, observerState };
 
 				CATAPULT_LOG(debug) << " - rolling back blocks";
 				for (auto height = chainHeight; height >= startHeight; height = height - Height(1))

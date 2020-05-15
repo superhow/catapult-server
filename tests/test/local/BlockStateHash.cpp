@@ -57,7 +57,7 @@ namespace catapult { namespace test {
 		// 4. execute block
 		chain::ExecuteBlock(
 				BlockToBlockElement(block, GetNemesisGenerationHashSeed()),
-				{ entityObserver, resolverContext, observerState });
+				{ pluginManager.config().Network, resolverContext, entityObserver, observerState });
 		return cache.calculateStateHash(block.Height).StateHash;
 	}
 }}

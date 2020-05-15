@@ -135,11 +135,14 @@ namespace catapult { namespace extensions {
 				observers::NotificationObserverAdapter rootObserver(
 						m_pPluginManager->createObserver(),
 						m_pPluginManager->createNotificationPublisher());
-				auto resolverContext = test::CreateResolverContextXor();
 
 				auto delta = m_cache.createDelta();
 				auto observerState = observers::ObserverState(delta);
-				auto blockExecutionContext = chain::BlockExecutionContext(rootObserver, resolverContext, observerState);
+				auto blockExecutionContext = chain::BlockExecutionContext(
+						m_pPluginManager->config().Network,
+						test::CreateResolverContextXor(),
+						rootObserver,
+						observerState);
 
 				// Act: use BlockExecutor to execute all transactions and blocks
 				if (NotifyMode::Commit == mode)

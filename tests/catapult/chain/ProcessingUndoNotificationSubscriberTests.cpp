@@ -40,6 +40,7 @@ namespace catapult { namespace chain {
 		constexpr auto Notification_Type_All_2 = MakeTestNotificationType(model::NotificationChannel::All, 2);
 		constexpr auto Notification_Type_All_3 = MakeTestNotificationType(model::NotificationChannel::All, 3);
 
+		constexpr auto Network_Identifier = static_cast<model::NetworkIdentifier>(33);
 		constexpr auto CreateResolverContext = test::CreateResolverContextWithCustomDoublingMosaicResolver;
 
 		class TestContext {
@@ -47,7 +48,10 @@ namespace catapult { namespace chain {
 			explicit TestContext(observers::NotifyMode executeMode = observers::NotifyMode::Commit)
 					: m_cache({})
 					, m_cacheDelta(m_cache.createDelta())
-					, m_observerContext(observers::ObserverState(m_cacheDelta), Height(123), executeMode, CreateResolverContext())
+					, m_observerContext(
+							model::NotificationContext(Height(123), CreateNetworkInfo(), CreateResolverContext()),
+							observers::ObserverState(m_cacheDelta),
+							executeMode)
 					, m_sub(m_observer, m_observerContext) {
 				CATAPULT_LOG(debug) << "preparing test context with execute mode " << executeMode;
 			}
@@ -72,6 +76,7 @@ namespace catapult { namespace chain {
 
 					// - height should be the same but mode should be reversed
 					EXPECT_EQ(m_observerContext.Height, observerContext.Height) << message;
+					EXPECT_EQ(Network_Identifier, observerContext.Network.Identifier) << message;
 					auto expectedUndoMode = observers::NotifyMode::Commit == m_observerContext.Mode
 							? observers::NotifyMode::Rollback
 							: observers::NotifyMode::Commit;
@@ -88,6 +93,13 @@ namespace catapult { namespace chain {
 
 				for (auto i = 0u; i < expectedHashes.size(); ++i)
 					EXPECT_EQ(expectedHashes[i], m_observer.notificationHashes()[i]) << "observer notification hash at " << i;
+			}
+
+		private:
+			static model::NetworkInfo CreateNetworkInfo() {
+				model::NetworkInfo networkInfo;
+				networkInfo.Identifier = Network_Identifier;
+				return networkInfo;
 			}
 
 		private:

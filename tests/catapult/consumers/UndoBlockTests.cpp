@@ -36,6 +36,15 @@ namespace catapult { namespace consumers {
 	namespace {
 		constexpr auto CreateResolverContext = test::CreateResolverContextWithCustomDoublingMosaicResolver;
 
+		constexpr auto Network_Identifier = static_cast<model::NetworkIdentifier>(33);
+
+		chain::BlockExecutionContext CreateExecutionContext(const observers::EntityObserver& observer, observers::ObserverState& state) {
+			model::NetworkInfo networkInfo;
+			networkInfo.Identifier = Network_Identifier;
+
+			return { networkInfo, CreateResolverContext(), observer, state };
+		}
+
 		std::vector<uint8_t> GetExpectedVersions(uint8_t numTransactions, uint8_t seed) {
 			std::vector<uint8_t> versions;
 			versions.push_back(seed); // block should be processed after all transactions, so it should be undone first
@@ -62,6 +71,7 @@ namespace catapult { namespace consumers {
 			for (const auto& context : contexts) {
 				EXPECT_EQ(&state.Cache, &context.Cache);
 				EXPECT_EQ(height, context.Height);
+				EXPECT_EQ(Network_Identifier, context.Network.Identifier);
 				EXPECT_EQ(mode, context.Mode);
 
 				// - appropriate resolvers were passed down
@@ -95,7 +105,7 @@ namespace catapult { namespace consumers {
 		// Arrange:
 		RunStateHashDisabledTest([](const auto& blockElement, const auto& observer, auto& state) {
 			// Act:
-			UndoBlock(blockElement, { observer, CreateResolverContext(), state }, UndoBlockType::Rollback);
+			UndoBlock(blockElement, CreateExecutionContext(observer, state), UndoBlockType::Rollback);
 
 			// Assert:
 			EXPECT_EQ(8u, observer.versions().size());
@@ -110,7 +120,7 @@ namespace catapult { namespace consumers {
 		// Arrange:
 		RunStateHashDisabledTest([](const auto& blockElement, const auto& observer, auto& state) {
 			// Act:
-			UndoBlock(blockElement, { observer, CreateResolverContext(), state }, UndoBlockType::Common);
+			UndoBlock(blockElement, CreateExecutionContext(observer, state), UndoBlockType::Common);
 
 			// Assert:
 			EXPECT_TRUE(observer.versions().empty());
@@ -160,7 +170,7 @@ namespace catapult { namespace consumers {
 		// Arrange:
 		RunStateHashEnabledTest([](const auto& blockElement, const auto& observer, auto& state) {
 			// Act:
-			UndoBlock(blockElement, { observer, CreateResolverContext(), state }, UndoBlockType::Rollback);
+			UndoBlock(blockElement, CreateExecutionContext(observer, state), UndoBlockType::Rollback);
 
 			// Assert:
 			EXPECT_EQ(8u, observer.versions().size());
@@ -178,7 +188,7 @@ namespace catapult { namespace consumers {
 		// Arrange:
 		RunStateHashEnabledTest([](const auto& blockElement, const auto& observer, auto& state) {
 			// Act:
-			UndoBlock(blockElement, { observer, CreateResolverContext(), state }, UndoBlockType::Common);
+			UndoBlock(blockElement, CreateExecutionContext(observer, state), UndoBlockType::Common);
 
 			// Assert:
 			EXPECT_TRUE(observer.versions().empty());

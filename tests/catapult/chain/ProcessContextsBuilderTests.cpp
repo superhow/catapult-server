@@ -59,7 +59,7 @@ namespace catapult { namespace chain {
 			static model::NetworkInfo CreateNetworkInfo() {
 				model::NetworkInfo networkInfo;
 				networkInfo.Identifier = static_cast<model::NetworkIdentifier>(33);
-				networkInfo.NodeEqualityStrategy = static_cast<model::NodeIdentityEqualityStrategy>(44);
+				// networkInfo.NodeEqualityStrategy = static_cast<model::NodeIdentityEqualityStrategy>(44);
 				return networkInfo;
 			}
 		};
@@ -73,6 +73,7 @@ namespace catapult { namespace chain {
 		void AssertObserverContext(const TestContext& context, const observers::ObserverContext& observerContext) {
 			// Assert: check basic fields
 			EXPECT_EQ(Height(111), observerContext.Height);
+			EXPECT_EQ(static_cast<model::NetworkIdentifier>(33), observerContext.Network.Identifier);
 			EXPECT_EQ(observers::NotifyMode::Commit, observerContext.Mode);
 
 			// - check resolver wiring
@@ -166,8 +167,8 @@ namespace catapult { namespace chain {
 		void AssertValidatorContext(const TestContext& context, const validators::ValidatorContext& validatorContext) {
 			// Assert: check basic fields
 			EXPECT_EQ(Height(111), validatorContext.Height);
-			EXPECT_EQ(Timestamp(222), validatorContext.BlockTime);
 			EXPECT_EQ(static_cast<model::NetworkIdentifier>(33), validatorContext.Network.Identifier);
+			EXPECT_EQ(Timestamp(222), validatorContext.BlockTime);
 
 			// - check resolver wiring
 			auto resolveResult = validatorContext.Resolvers.resolve(UnresolvedMosaicId(444));

@@ -55,7 +55,7 @@ namespace catapult { namespace tools { namespace nemgen {
 		auto resolverContext = pluginManager.createResolverContext(readOnlyCache);
 
 		// 5. execute block
-		chain::ExecuteBlock(blockElement, { entityObserver, resolverContext, observerState });
+		chain::ExecuteBlock(blockElement, { config.BlockChain.Network, resolverContext, entityObserver, observerState });
 		auto pBlockStatement = blockStatementBuilder.build();
 		auto cacheStateHashInfo = pCacheDelta->calculateStateHash(blockElement.Block.Height);
 		auto blockReceiptsHash = config.BlockChain.EnableVerifiableReceipts

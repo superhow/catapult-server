@@ -72,8 +72,8 @@ namespace catapult { namespace chain {
 					auto message = "validator at " + std::to_string(i);
 					// - context (use resolver call to implicitly test creation of ResolverContext)
 					EXPECT_EQ(height, params.Context.Height) << message;
-					EXPECT_EQ(timestamp, params.Context.BlockTime) << message;
 					EXPECT_EQ(test::Mock_Execution_Configuration_Network_Identifier, params.Context.Network.Identifier) << message;
+					EXPECT_EQ(timestamp, params.Context.BlockTime) << message;
 					EXPECT_EQ(MosaicId(22), params.Context.Resolvers.resolve(UnresolvedMosaicId(11))) << message;
 
 					// - cache contents + sequence (NumStatistics is incremented by each observer call)
@@ -90,6 +90,7 @@ namespace catapult { namespace chain {
 					auto message = "observer at " + std::to_string(i);
 					// - context (use resolver call to implicitly test creation of ResolverContext)
 					EXPECT_EQ(height, params.Context.Height) << message;
+					EXPECT_EQ(test::Mock_Execution_Configuration_Network_Identifier, params.Context.Network.Identifier) << message;
 					EXPECT_EQ(observers::NotifyMode::Commit, params.Context.Mode) << message;
 					EXPECT_EQ(MosaicId(22), params.Context.Resolvers.resolve(UnresolvedMosaicId(11))) << message;
 

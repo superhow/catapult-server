@@ -62,13 +62,10 @@ namespace catapult { namespace chain {
 		if (!m_pCacheDelta)
 			CATAPULT_THROW_INVALID_ARGUMENT("buildObserverContext requires CatapultCacheDelta");
 
-		auto notifyMode = observers::NotifyMode::Commit;
-		auto resolverContext = m_executionContextConfig.ResolverContextFactory(*m_pReadOnlyCache);
-
 		auto observerState = m_pBlockStatementBuilder
 				? observers::ObserverState(*m_pCacheDelta, *m_pBlockStatementBuilder)
 				: observers::ObserverState(*m_pCacheDelta);
-		return observers::ObserverContext(observerState, m_height, notifyMode, resolverContext);
+		return observers::ObserverContext(buildNotificationContext(), observerState, observers::NotifyMode::Commit);
 	}
 
 	validators::ValidatorContext ProcessContextsBuilder::buildValidatorContext() {
