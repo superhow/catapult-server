@@ -25,6 +25,7 @@ namespace catapult { namespace cache {
 
 	void AccountStateCacheStorage::LoadInto(const ValueType& accountState, DestinationType& cacheDelta) {
 		cacheDelta.addAccount(accountState);
+		cacheDelta.updateHighValueAccounts(Height(1));
 	}
 
 	void AccountStateCacheStorage::Purge(const ValueType& accountState, DestinationType& cacheDelta) {

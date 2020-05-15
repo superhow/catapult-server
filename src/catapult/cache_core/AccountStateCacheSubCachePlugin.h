@@ -21,6 +21,8 @@
 #pragma once
 #include "AccountStateCache.h"
 #include "AccountStateCacheStorage.h"
+#include "catapult/cache/SubCachePluginAdapter.h"
+
 #include "catapult/cache/SummaryAwareSubCachePluginAdapter.h"
 
 namespace catapult { namespace cache {
@@ -38,13 +40,16 @@ namespace catapult { namespace cache {
 		void loadAll(io::InputStream& input, size_t) override;
 	};
 
-	using BaseAccountStateCacheSubCachePlugin =
-		SummaryAwareSubCachePluginAdapter<AccountStateCache, AccountStateCacheStorage, AccountStateCacheSummaryCacheStorage>;
-
 	/// Specialized account state cache sub cache plugin.
-	class AccountStateCacheSubCachePlugin : public BaseAccountStateCacheSubCachePlugin {
+	class AccountStateCacheSubCachePlugin : public SubCachePluginAdapter<AccountStateCache, AccountStateCacheStorage> {
+	private:
+		using BaseType = SubCachePluginAdapter<AccountStateCache, AccountStateCacheStorage>;
+
 	public:
 		/// Creates a plugin around \a config and \a options.
 		AccountStateCacheSubCachePlugin(const CacheConfiguration& config, const AccountStateCacheTypes::Options& options);
+
+	public:
+		std::unique_ptr<CacheStorage> createStorage() override;
 	};
 }}
