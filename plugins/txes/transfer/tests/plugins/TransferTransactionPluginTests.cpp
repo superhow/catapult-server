@@ -64,7 +64,7 @@ namespace catapult { namespace plugins {
 				typename test::TransactionPluginTestUtils<TTraits>::PublishTestBuilder& builder,
 				const typename TTraits::TransactionType& transaction) {
 			builder.template addExpectation<InternalPaddingNotification>([&transaction](const auto& notification) {
-				auto expectedPadding = transaction.TransferTransactionBody_Reserved1 << 4 | transaction.TransferTransactionBody_Reserved2;
+				auto expectedPadding = transaction.TransferTransactionBody_Reserved1 << 8 | transaction.TransferTransactionBody_Reserved2;
 				EXPECT_EQ(expectedPadding, notification.Padding);
 			});
 			builder.template addExpectation<AccountAddressNotification>([&transaction](const auto& notification) {
