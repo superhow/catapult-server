@@ -32,7 +32,7 @@ namespace catapult { namespace test {
 			const observers::ObserverState& state,
 			Height height,
 			observers::NotifyMode mode) {
-		auto notificationContext = model::NotificationContext(height, model::NetworkInfo(),  CreateResolverContextXor());
+		auto notificationContext = model::NotificationContext(height, model::NetworkInfo(), CreateResolverContextXor());
 		return observers::ObserverContext(notificationContext, state, mode);
 	}
 
