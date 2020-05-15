@@ -28,7 +28,7 @@ namespace catapult { namespace validators {
 	/// Contextual information passed to stateful validators.
 	struct PLUGIN_API_DEPENDENCY ValidatorContext : public model::NotificationContext {
 	public:
-		/// Creates a validator context around \a blockTime, \a cache and \a notificationContext.
+		/// Creates a validator context around \a notificationContext, \a blockTime and \a cache.
 		ValidatorContext(
 				const model::NotificationContext& notificationContext,
 				Timestamp blockTime,

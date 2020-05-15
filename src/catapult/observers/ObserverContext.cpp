@@ -61,15 +61,13 @@ namespace catapult { namespace observers {
 		}
 	}
 
-	ObserverContext::ObserverContext(
-			const ObserverState& state,
-			catapult::Height height,
-			NotifyMode mode,
-			const model::ResolverContext& resolvers)
-			: Cache(state.Cache)
-			, Height(height)
+	ObserverContext::ObserverContext(const model::NotificationContext& notificationContext, const ObserverState& state, NotifyMode mode)
+			: NotificationContext(
+					notificationContext.Height,
+					notificationContext.Network,
+					BindConditional(notificationContext.Resolvers, state.pBlockStatementBuilder))
+			, Cache(state.Cache)
 			, Mode(mode)
-			, Resolvers(BindConditional(resolvers, state.pBlockStatementBuilder))
 			, m_statementBuilder(CreateObserverStatementBuilder(state.pBlockStatementBuilder))
 	{}
 

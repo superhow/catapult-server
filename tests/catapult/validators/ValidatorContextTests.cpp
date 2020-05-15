@@ -35,23 +35,24 @@ namespace catapult { namespace validators {
 	}
 
 	TEST(TEST_CLASS, CanCreateValidatorContextAroundParameters) {
-		// Act:
+		// Arrange:
 		model::NetworkInfo networkInfo;
 		networkInfo.Identifier = static_cast<model::NetworkIdentifier>(0xAD);
-		networkInfo.NodeEqualityStrategy = static_cast<model::NodeIdentityEqualityStrategy>(0xC3);
 
 		auto cache = test::CreateEmptyCatapultCache();
 		auto cacheView = cache.createView();
 		auto readOnlyCache = cacheView.toReadOnly();
 
+		// Act:
 		auto notificationContext = model::NotificationContext(Height(1234), networkInfo, CreateResolverContext());
 		auto context = ValidatorContext(notificationContext, Timestamp(987), readOnlyCache);
 
 		// Assert:
-		EXPECT_EQ(Height(1234), context.Height);
 		EXPECT_EQ(Timestamp(987), context.BlockTime);
-		EXPECT_EQ(static_cast<model::NetworkIdentifier>(0xAD), context.Network.Identifier);
 		EXPECT_EQ(&readOnlyCache, &context.Cache);
+
+		EXPECT_EQ(Height(1234), context.Height);
+		EXPECT_EQ(static_cast<model::NetworkIdentifier>(0xAD), context.Network.Identifier);
 
 		// - resolvers are copied into context and wired up correctly
 		EXPECT_EQ(MosaicId(48), context.Resolvers.resolve(UnresolvedMosaicId(24)));

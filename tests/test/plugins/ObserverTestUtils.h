@@ -32,7 +32,8 @@ namespace catapult { namespace test {
 			const observers::ObserverState& state,
 			Height height,
 			observers::NotifyMode mode) {
-		return observers::ObserverContext(state, height, mode, CreateResolverContextXor());
+		auto notificationContext = model::NotificationContext(height, model::NetworkInfo(),  CreateResolverContextXor());
+		return observers::ObserverContext(notificationContext, state, mode);
 	}
 
 	/// Creates an observer context around \a cache at \a height with specified \a mode.
