@@ -20,6 +20,7 @@
 
 #pragma once
 #include "sdk/src/extensions/ConversionExtensions.h"
+#include "catapult/model/Address.h"
 #include "catapult/observers/ObserverContext.h"
 #include "plugins/txes/lock_shared/tests/test/LockInfoCacheTestUtils.h"
 #include "tests/test/core/ResolverTestUtils.h"
@@ -71,7 +72,7 @@ namespace catapult { namespace observers {
 						EXPECT_EQ(TTraits::Debit_Receipt_Type, receipt.Type);
 						EXPECT_EQ(notification.Mosaic.MosaicId, test::UnresolveXor(receipt.Mosaic.MosaicId));
 						EXPECT_EQ(notification.Mosaic.Amount, receipt.Mosaic.Amount);
-						EXPECT_EQ(notification.Signer, receipt.TargetPublicKey);
+						EXPECT_EQ(model::PublicKeyToAddress(notification.Signer, model::NetworkIdentifier::Zero), receipt.TargetAddress);
 					});
 		}
 

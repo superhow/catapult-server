@@ -22,6 +22,7 @@
 #include "src/cache/SecretLockInfoCache.h"
 #include "src/model/SecretLockReceiptType.h"
 #include "src/state/SecretLockInfo.h"
+#include "catapult/model/Address.h"
 
 namespace catapult { namespace observers {
 
@@ -55,7 +56,8 @@ namespace catapult { namespace observers {
 			cache.insert(CreateLockInfo(notification.Signer, mosaicId, endHeight, notification, context.Resolvers));
 
 			auto receiptType = model::Receipt_Type_LockSecret_Created;
-			model::BalanceChangeReceipt receipt(receiptType, notification.Signer, mosaicId, notification.Mosaic.Amount);
+			auto targetAddress = model::PublicKeyToAddress(notification.Signer, context.Network.Identifier);
+			model::BalanceChangeReceipt receipt(receiptType, targetAddress, mosaicId, notification.Mosaic.Amount);
 			context.StatementBuilder().addReceipt(receipt);
 		} else {
 			cache.remove(model::CalculateSecretLockInfoHash(notification.Secret, context.Resolvers.resolve(notification.Recipient)));

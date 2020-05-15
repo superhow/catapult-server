@@ -19,6 +19,7 @@
 **/
 
 #include "src/observers/Observers.h"
+#include "catapult/model/Address.h"
 #include "catapult/model/InflationCalculator.h"
 #include "tests/test/cache/BalanceTransferTestUtils.h"
 #include "tests/test/core/AccountStateTestUtils.h"
@@ -95,7 +96,7 @@ namespace catapult { namespace observers {
 			EXPECT_EQ(model::Receipt_Type_Harvest_Fee, receipt.Type) << message;
 			EXPECT_EQ(Currency_Mosaic_Id, receipt.Mosaic.MosaicId) << message;
 			EXPECT_EQ(expectedAmount, receipt.Mosaic.Amount) << message;
-			EXPECT_EQ(expectedKey, receipt.TargetPublicKey) << message;
+			EXPECT_EQ(model::PublicKeyToAddress(expectedKey, model::NetworkIdentifier::Zero), receipt.TargetAddress) << message;
 		}
 
 		template<typename TAction>

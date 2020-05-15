@@ -563,7 +563,7 @@ namespace catapult { namespace extensions {
 			auto receiptMosaicId = Harvesting_Mosaic_Id;
 			blockStatementBuilder.addReceipt(model::BalanceChangeReceipt(
 					receiptType,
-					nemesisBlock.SignerPublicKey,
+					model::PublicKeyToAddress(nemesisBlock.SignerPublicKey, model::NetworkIdentifier::Mijin_Test),
 					receiptMosaicId,
 					Amount()));
 

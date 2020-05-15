@@ -20,6 +20,7 @@
 
 #pragma once
 #include "catapult/cache_core/AccountStateCache.h"
+#include "catapult/model/Address.h"
 
 namespace catapult { namespace observers {
 
@@ -35,8 +36,9 @@ namespace catapult { namespace observers {
 		};
 
 		std::vector<std::unique_ptr<model::BalanceChangeReceipt>> receipts;
-		auto receiptAppender = [&receipts, receiptType](const auto& publicKey, auto mosaicId, auto amount) {
-			receipts.push_back(std::make_unique<model::BalanceChangeReceipt>(receiptType, publicKey, mosaicId, amount));
+		auto receiptAppender = [&context, &receipts, receiptType](const auto& publicKey, auto mosaicId, auto amount) {
+			auto targetAddress = model::PublicKeyToAddress(publicKey, context.Network.Identifier);
+			receipts.push_back(std::make_unique<model::BalanceChangeReceipt>(receiptType, targetAddress, mosaicId, amount));
 		};
 
 		auto& lockInfoCache = context.Cache.template sub<TLockInfoCache>();
