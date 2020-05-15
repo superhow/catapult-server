@@ -21,6 +21,7 @@
 #include "Observers.h"
 #include "catapult/cache_core/AccountStateCache.h"
 #include "catapult/cache_core/AccountStateCacheUtils.h"
+#include "catapult/model/Address.h"
 #include "catapult/model/InflationCalculator.h"
 #include "catapult/model/Mosaic.h"
 
@@ -41,17 +42,13 @@ namespace catapult { namespace observers {
 				auto& cache = m_context.Cache.sub<cache::AccountStateCache>();
 				auto feeMosaic = model::Mosaic{ m_currencyMosaicId, amount };
 				cache::ProcessForwardedAccountState(cache, address, [&feeMosaic, &context = m_context](auto& accountState) {
-					ApplyFee(accountState, context.Mode, feeMosaic, context.StatementBuilder());
+					ApplyFee(accountState, context, feeMosaic);
 				});
 			}
 
 		private:
-			static void ApplyFee(
-					state::AccountState& accountState,
-					NotifyMode notifyMode,
-					const model::Mosaic& feeMosaic,
-					ObserverStatementBuilder& statementBuilder) {
-				if (NotifyMode::Rollback == notifyMode) {
+			static void ApplyFee(state::AccountState& accountState, ObserverContext& context, const model::Mosaic& feeMosaic) {
+				if (NotifyMode::Rollback == context.Mode) {
 					accountState.Balances.debit(feeMosaic.MosaicId, feeMosaic.Amount);
 					return;
 				}
@@ -60,8 +57,8 @@ namespace catapult { namespace observers {
 
 				// add fee receipt
 				auto receiptType = model::Receipt_Type_Harvest_Fee;
-				model::BalanceChangeReceipt receipt(receiptType, accountState.PublicKey, feeMosaic.MosaicId, feeMosaic.Amount);
-				statementBuilder.addReceipt(receipt);
+				model::BalanceChangeReceipt receipt(receiptType, accountState.Address, feeMosaic.MosaicId, feeMosaic.Amount);
+				context.StatementBuilder().addReceipt(receipt);
 			}
 
 		private:

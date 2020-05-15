@@ -20,6 +20,7 @@
 
 #pragma once
 #include "ObserverTypes.h"
+#include "catapult/model/Address.h"
 #include "catapult/model/Receipt.h"
 
 namespace catapult { namespace observers {
@@ -37,8 +38,7 @@ namespace catapult { namespace observers {
 			auto mosaicId = context.Resolvers.resolve(notification.MosaicId);
 			auto recipient = context.Resolvers.resolve(notification.Recipient);
 			auto effectiveAmount = Amount(notification.Amount.unwrap() * context.Cache.dependentState().DynamicFeeMultiplier.unwrap());
-			auto targetPublicKey = notification.Sender.template copyTo<Key>();
-			model::BalanceTransferReceipt receipt(receiptType, targetPublicKey, recipient, mosaicId, effectiveAmount);
+			model::BalanceTransferReceipt receipt(receiptType, notification.Sender(), recipient, mosaicId, effectiveAmount);
 			context.StatementBuilder().addReceipt(receipt);
 		});
 	}

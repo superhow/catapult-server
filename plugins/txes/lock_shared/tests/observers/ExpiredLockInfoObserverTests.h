@@ -20,6 +20,7 @@
 
 #pragma once
 #include "catapult/cache_core/AccountStateCache.h"
+#include "catapult/model/Address.h"
 #include "tests/test/core/NotificationTestUtils.h"
 #include "tests/test/plugins/ObserverTestUtils.h"
 #include "tests/TestHarness.h"
@@ -109,7 +110,7 @@ namespace catapult { namespace observers {
 				EXPECT_EQ(TTraits::Receipt_Type, receipt.Type) << message;
 				EXPECT_EQ(expectedReceipt.MosaicId, receipt.Mosaic.MosaicId) << message;
 				EXPECT_EQ(expectedReceipt.LockAmount, receipt.Mosaic.Amount) << message;
-				EXPECT_EQ(expectedReceipt.OwnerAddress.template copyTo<Key>(), receipt.TargetPublicKey) << message;
+				EXPECT_EQ(expectedReceipt.OwnerAddress, receipt.TargetAddress) << message;
 				++i;
 			}
 		}

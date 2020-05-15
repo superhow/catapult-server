@@ -20,6 +20,7 @@
 
 #pragma once
 #include "catapult/cache_core/AccountStateCache.h"
+#include "catapult/model/Address.h"
 
 namespace catapult { namespace observers {
 
@@ -47,7 +48,7 @@ namespace catapult { namespace observers {
 		lockInfo.Status = state::LockStatus::Used;
 		accountState.Balances.credit(lockInfo.MosaicId, lockInfo.Amount);
 
-		model::BalanceChangeReceipt receipt(TTraits::Receipt_Type, accountState.PublicKey, lockInfo.MosaicId, lockInfo.Amount);
+		model::BalanceChangeReceipt receipt(TTraits::Receipt_Type, accountState.Address, lockInfo.MosaicId, lockInfo.Amount);
 		context.StatementBuilder().addReceipt(receipt);
 	}
 }}
