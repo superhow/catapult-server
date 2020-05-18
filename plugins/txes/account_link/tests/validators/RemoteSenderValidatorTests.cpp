@@ -32,12 +32,12 @@ namespace catapult { namespace validators {
 	DEFINE_COMMON_VALIDATOR_TESTS(RemoteSender,)
 
 	namespace {
-		void AddAccount(cache::CatapultCache& cache, const Key& accountKey, state::AccountType accountType) {
+		void AddAccount(cache::CatapultCache& cache, const Address& accountAddress, state::AccountType accountType) {
 			auto cacheDelta = cache.createDelta();
 			auto& accountStateCacheDelta = cacheDelta.sub<cache::AccountStateCache>();
 
-			accountStateCacheDelta.addAccount(accountKey, Height(1));
-			auto accountStateIter = accountStateCacheDelta.find(accountKey);
+			accountStateCacheDelta.addAccount(accountAddress, Height(1));
+			auto accountStateIter = accountStateCacheDelta.find(accountAddress);
 			auto& accountState = accountStateIter.get();
 			accountState.AccountType = accountType;
 
@@ -46,16 +46,16 @@ namespace catapult { namespace validators {
 
 		void AssertValidation(
 				ValidationResult expectedResult,
-				const Key& accountKey,
+				const Address& accountAddress,
 				state::AccountType accountType,
-				const Key& notificationKey) {
+				const Address& notificationAddress) {
 			// Arrange:
 			auto cache = test::CoreSystemCacheFactory::Create(model::BlockChainConfiguration::Uninitialized());
-			AddAccount(cache, accountKey, accountType);
+			AddAccount(cache, accountAddress, accountType);
 
 			auto pValidator = CreateRemoteSenderValidator();
 			auto entityType = static_cast<model::EntityType>(0x4201);
-			auto notification = model::TransactionNotification(notificationKey, Hash256(), entityType, Timestamp());
+			auto notification = model::TransactionNotification(notificationAddress, Hash256(), entityType, Timestamp());
 
 			// Act:
 			auto result = test::ValidateNotification(*pValidator, notification, cache);
@@ -67,34 +67,34 @@ namespace catapult { namespace validators {
 
 	TEST(TEST_CLASS, FailureWhenAccountIsRemoteAndSigner) {
 		// Arrange:
-		auto accountKey = test::GenerateRandomByteArray<Key>();
+		auto accountAddress = test::GenerateRandomByteArray<Address>();
 
 		// Assert:
-		AssertValidation(Failure_AccountLink_Remote_Account_Signer_Prohibited, accountKey, state::AccountType::Remote, accountKey);
+		AssertValidation(Failure_AccountLink_Remote_Account_Signer_Prohibited, accountAddress, state::AccountType::Remote, accountAddress);
 	}
 
 	TEST(TEST_CLASS, SuccessWhenSignerIsUnknown) {
 		// Arrange:
-		auto accountKey = test::GenerateRandomByteArray<Key>();
-		auto notificationKey = test::GenerateRandomByteArray<Key>();
+		auto accountAddress = test::GenerateRandomByteArray<Address>();
+		auto notificationAddress = test::GenerateRandomByteArray<Address>();
 
 		// Assert:
-		AssertValidation(ValidationResult::Success, accountKey, state::AccountType::Remote, notificationKey);
+		AssertValidation(ValidationResult::Success, accountAddress, state::AccountType::Remote, notificationAddress);
 	}
 
 	TEST(TEST_CLASS, SuccessWhenAccountIsMainAndSigner) {
 		// Arrange:
-		auto accountKey = test::GenerateRandomByteArray<Key>();
+		auto accountAddress = test::GenerateRandomByteArray<Address>();
 
 		// Assert:
-		AssertValidation(ValidationResult::Success, accountKey, state::AccountType::Main, accountKey);
+		AssertValidation(ValidationResult::Success, accountAddress, state::AccountType::Main, accountAddress);
 	}
 
 	TEST(TEST_CLASS, SuccessWhenAccountIsUnlinkedAndSigner) {
 		// Arrange:
-		auto accountKey = test::GenerateRandomByteArray<Key>();
+		auto accountAddress = test::GenerateRandomByteArray<Address>();
 
 		// Assert:
-		AssertValidation(ValidationResult::Success, accountKey, state::AccountType::Unlinked, accountKey);
+		AssertValidation(ValidationResult::Success, accountAddress, state::AccountType::Unlinked, accountAddress);
 	}
 }}

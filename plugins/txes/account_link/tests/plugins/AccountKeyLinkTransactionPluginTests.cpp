@@ -52,7 +52,8 @@ namespace catapult { namespace plugins {
 				EXPECT_EQ(transaction.LinkAction, notification.LinkAction);
 			});
 			builder.template addExpectation<AddressInteractionNotification>([&transaction](const auto& notification) {
-				EXPECT_EQ(transaction.SignerPublicKey, notification.Source);
+				auto sourceAddress = PublicKeyToAddress(transaction.SignerPublicKey, transaction.Network);
+				EXPECT_EQ(sourceAddress, notification.Source);
 				EXPECT_EQ(transaction.Type, notification.TransactionType);
 				EXPECT_EQ(UnresolvedAddressSet(), notification.ParticipantsByAddress);
 				EXPECT_EQ(utils::KeySet{ transaction.LinkedPublicKey }, notification.ParticipantsByKey);

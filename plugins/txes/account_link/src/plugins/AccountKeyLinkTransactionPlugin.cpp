@@ -30,7 +30,7 @@ namespace catapult { namespace plugins {
 
 	namespace {
 		template<typename TTransaction>
-		void Publish(const TTransaction& transaction, const PublishContext&, NotificationSubscriber& sub) {
+		void Publish(const TTransaction& transaction, const PublishContext& context, NotificationSubscriber& sub) {
 			if (LinkAction::Link == transaction.LinkAction) {
 				// NewRemoteAccountNotification must be raised before AccountPublicKeyNotification because the latter adds account to cache
 				sub.notify(NewRemoteAccountNotification(transaction.LinkedPublicKey));
@@ -38,7 +38,7 @@ namespace catapult { namespace plugins {
 			}
 
 			sub.notify(KeyLinkActionNotification(transaction.LinkAction));
-			sub.notify(AddressInteractionNotification(transaction.SignerPublicKey, transaction.Type, {}, { transaction.LinkedPublicKey }));
+			sub.notify(AddressInteractionNotification(context.SignerAddress, transaction.Type, {}, { transaction.LinkedPublicKey }));
 			sub.notify(RemoteAccountKeyLinkNotification(transaction.SignerPublicKey, transaction.LinkedPublicKey, transaction.LinkAction));
 		}
 	}
