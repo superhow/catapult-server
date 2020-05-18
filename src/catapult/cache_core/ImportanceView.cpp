@@ -49,13 +49,12 @@ namespace catapult { namespace cache {
 		}
 
 		template<typename TAction>
-		bool FindAccountStateWithImportance(const ReadOnlyAccountStateCache& cache, const Key& publicKey, Height height, TAction action) {
-			auto accountStateKeyIter = cache.find(publicKey);
-			if (accountStateKeyIter.tryGet())
-				return ForwardIfAccountHasImportanceAtHeight(accountStateKeyIter.get(), cache, height, action);
-
-			// if state could not be accessed by public key, try searching by address
-			auto accountStateAddressIter = cache.find(model::PublicKeyToAddress(publicKey, cache.networkIdentifier()));
+		bool FindAccountStateWithImportance(
+				const ReadOnlyAccountStateCache& cache,
+				const Address& address,
+				Height height,
+				TAction action) {
+			auto accountStateAddressIter = cache.find(address);
 			if (accountStateAddressIter.tryGet())
 				return ForwardIfAccountHasImportanceAtHeight(accountStateAddressIter.get(), cache, height, action);
 
@@ -66,23 +65,23 @@ namespace catapult { namespace cache {
 	ImportanceView::ImportanceView(const ReadOnlyAccountStateCache& cache) : m_cache(cache)
 	{}
 
-	bool ImportanceView::tryGetAccountImportance(const Key& publicKey, Height height, Importance& importance) const {
-		return FindAccountStateWithImportance(m_cache, publicKey, height, [&importance](const auto& accountState) {
+	bool ImportanceView::tryGetAccountImportance(const Address& address, Height height, Importance& importance) const {
+		return FindAccountStateWithImportance(m_cache, address, height, [&importance](const auto& accountState) {
 			importance = accountState.ImportanceSnapshots.current();
 			return true;
 		});
 	}
 
-	Importance ImportanceView::getAccountImportanceOrDefault(const Key& publicKey, Height height) const {
+	Importance ImportanceView::getAccountImportanceOrDefault(const Address& address, Height height) const {
 		Importance importance;
-		return tryGetAccountImportance(publicKey, height, importance) ? importance : Importance(0);
+		return tryGetAccountImportance(address, height, importance) ? importance : Importance(0);
 	}
 
-	bool ImportanceView::canHarvest(const Key& publicKey, Height height) const {
+	bool ImportanceView::canHarvest(const Address& address, Height height) const {
 		auto mosaicId = m_cache.harvestingMosaicId();
 		auto minHarvesterBalance = m_cache.minHarvesterBalance();
 		auto maxHarvesterBalance = m_cache.maxHarvesterBalance();
-		return FindAccountStateWithImportance(m_cache, publicKey, height, [mosaicId, minHarvesterBalance, maxHarvesterBalance](
+		return FindAccountStateWithImportance(m_cache, address, height, [mosaicId, minHarvesterBalance, maxHarvesterBalance](
 				const auto& accountState) {
 			auto currentImportance = accountState.ImportanceSnapshots.current();
 			if (Importance(0) == currentImportance)

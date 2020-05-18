@@ -32,14 +32,14 @@ namespace catapult { namespace cache {
 		explicit ImportanceView(const ReadOnlyAccountStateCache& cache);
 
 	public:
-		/// Tries to populate \a importance with the importance for \a publicKey at \a height.
-		bool tryGetAccountImportance(const Key& publicKey, Height height, Importance& importance) const;
+		/// Tries to populate \a importance with the importance for \a address at \a height.
+		bool tryGetAccountImportance(const Address& address, Height height, Importance& importance) const;
 
-		/// Gets the importance for \a publicKey at \a height or a default importance if no importance is set.
-		Importance getAccountImportanceOrDefault(const Key& publicKey, Height height) const;
+		/// Gets the importance for \a address at \a height or a default importance if no importance is set.
+		Importance getAccountImportanceOrDefault(const Address& address, Height height) const;
 
-		/// Returns \c true if \a publicKey can harvest at \a height.
-		bool canHarvest(const Key& publicKey, Height height) const;
+		/// Returns \c true if \a address can harvest at \a height.
+		bool canHarvest(const Address& address, Height height) const;
 
 	private:
 		const ReadOnlyAccountStateCache& m_cache;
