@@ -109,12 +109,10 @@ namespace catapult { namespace mocks {
 
 			auto pMosaics = reinterpret_cast<const UnresolvedMosaic*>(mockTransaction.DataPtr());
 			for (auto i = 0u; i < mockTransaction.Data.Size / sizeof(UnresolvedMosaic); ++i) {
-				const auto& sender = mockTransaction.SignerPublicKey;
-
 				// forcibly XOR recipient even though PublicKeyToAddress always returns resolved address
 				// in order to force tests to use XOR resolver context with Publish_Transfers
-				auto recipient = PublicKeyToAddress(mockTransaction.RecipientPublicKey, NetworkIdentifier::Mijin_Test);
-				sub.notify(BalanceTransferNotification(sender, test::UnresolveXor(recipient), pMosaics[i].MosaicId, pMosaics[i].Amount));
+				auto recipient = test::UnresolveXor(PublicKeyToAddress(mockTransaction.RecipientPublicKey, NetworkIdentifier::Mijin_Test));
+				sub.notify(BalanceTransferNotification(context.SignerAddress, recipient, pMosaics[i].MosaicId, pMosaics[i].Amount));
 			}
 		}
 

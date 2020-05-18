@@ -109,7 +109,7 @@ namespace catapult { namespace model {
 
 	public:
 		/// Sender.
-		const Address& Sender;
+		Address Sender;
 
 		/// Mosaic id.
 		UnresolvedMosaicId MosaicId;
@@ -213,7 +213,7 @@ namespace catapult { namespace model {
 				Difficulty difficulty,
 				BlockFeeMultiplier feeMultiplier)
 				: Notification(Notification_Type, sizeof(BlockNotification))
-				, Signer(signer)
+				, Harvester(harvester)
 				, Beneficiary(beneficiary)
 				, Timestamp(timestamp)
 				, Difficulty(difficulty)
@@ -258,7 +258,7 @@ namespace catapult { namespace model {
 		/// Creates a transaction notification around \a sender, \a transactionHash, \a transactionType and \a deadline.
 		TransactionNotification(const Address& sender, const Hash256& transactionHash, EntityType transactionType, Timestamp deadline)
 				: Notification(Notification_Type, sizeof(TransactionNotification))
-				, Signer(signer)
+				, Sender(sender)
 				, TransactionHash(transactionHash)
 				, TransactionType(transactionType)
 				, Deadline(deadline)
@@ -311,7 +311,7 @@ namespace catapult { namespace model {
 		/// Creates a transaction fee notification around \a sender, \a transactionSize, \a fee and \a maxFee.
 		TransactionFeeNotification(const Address& sender, uint32_t transactionSize, Amount fee, Amount maxFee)
 				: Notification(Notification_Type, sizeof(TransactionFeeNotification))
-				, Signer(signer)
+				, Sender(sender)
 				, TransactionSize(transactionSize)
 				, Fee(fee)
 				, MaxFee(maxFee)
@@ -439,7 +439,7 @@ namespace catapult { namespace model {
 		/// Creates a notification around \a owner, \a mosaicId and optional \a propertyFlagMask.
 		MosaicRequiredNotification(const Address& owner, MosaicId mosaicId, uint8_t propertyFlagMask = 0)
 				: Notification(Notification_Type, sizeof(MosaicRequiredNotification))
-				, Signer(signer)
+				, Owner(owner)
 				, MosaicId(mosaicId)
 				, PropertyFlagMask(propertyFlagMask)
 				, ProvidedMosaicType(MosaicType::Resolved)
@@ -448,7 +448,7 @@ namespace catapult { namespace model {
 		/// Creates a notification around \a owner, \a mosaicId and optional \a propertyFlagMask.
 		MosaicRequiredNotification(const Address& owner, UnresolvedMosaicId mosaicId, uint8_t propertyFlagMask = 0)
 				: Notification(Notification_Type, sizeof(MosaicRequiredNotification))
-				, Signer(signer)
+				, Owner(owner)
 				, UnresolvedMosaicId(mosaicId)
 				, PropertyFlagMask(propertyFlagMask)
 				, ProvidedMosaicType(MosaicType::Unresolved)

@@ -37,6 +37,14 @@ namespace catapult { namespace model {
 				utils::to_underlying_type(mocks::PluginOptionFlags::Custom_Buffers)
 				| utils::to_underlying_type(mocks::PluginOptionFlags::Publish_Custom_Notifications));
 
+		Address GetSignerAddress(const VerifiableEntity& entity) {
+			return PublicKeyToAddress(entity.SignerPublicKey, entity.Network);
+		}
+
+		Address GetBeneficiaryAddress(const Block& block) {
+			return PublicKeyToAddress(block.BeneficiaryPublicKey, block.Network);
+		}
+
 		template<typename TEntity, typename TAssertSubFunc>
 		void PublishAll(const TEntity& entity, PublicationMode mode, TAssertSubFunc assertSub) {
 			// Arrange:
@@ -197,8 +205,8 @@ namespace catapult { namespace model {
 		// Act:
 		PublishOne<BlockNotification>(*pBlock, [&block = *pBlock](const auto& notification) {
 			// Assert:
-			EXPECT_EQ(block.SignerPublicKey, notification.Signer);
-			EXPECT_EQ(block.BeneficiaryPublicKey, notification.Beneficiary);
+			EXPECT_EQ(GetSignerAddress(block), notification.Harvester);
+			EXPECT_EQ(GetBeneficiaryAddress(block), notification.Beneficiary);
 			EXPECT_EQ(Timestamp(123), notification.Timestamp);
 			EXPECT_EQ(Difficulty(575), notification.Difficulty);
 			EXPECT_EQ(BlockFeeMultiplier(3), notification.FeeMultiplier);
@@ -217,8 +225,8 @@ namespace catapult { namespace model {
 		// Act:
 		PublishOne<BlockNotification>(*pBlock, [&block = *pBlock](const auto& notification) {
 			// Assert:
-			EXPECT_EQ(block.SignerPublicKey, notification.Signer);
-			EXPECT_EQ(block.BeneficiaryPublicKey, notification.Beneficiary);
+			EXPECT_EQ(GetSignerAddress(block), notification.Harvester);
+			EXPECT_EQ(GetBeneficiaryAddress(block), notification.Beneficiary);
 			EXPECT_EQ(Timestamp(432), notification.Timestamp);
 			EXPECT_EQ(Difficulty(575), notification.Difficulty);
 			EXPECT_EQ(BlockFeeMultiplier(3), notification.FeeMultiplier);
@@ -333,10 +341,10 @@ namespace catapult { namespace model {
 		pTransaction->Deadline = Timestamp(454);
 
 		// Act:
-		PublishOne<TransactionNotification>(*pTransaction, hash, [&signer = pTransaction->SignerPublicKey, &hash](
-				const auto& notification) {
+		auto signerAddress = GetSignerAddress(*pTransaction);
+		PublishOne<TransactionNotification>(*pTransaction, hash, [&signerAddress, &hash](const auto& notification) {
 			// Assert:
-			EXPECT_EQ(signer, notification.Signer);
+			EXPECT_EQ(signerAddress, notification.Sender);
 			EXPECT_EQ(hash, notification.TransactionHash);
 			EXPECT_EQ(static_cast<EntityType>(mocks::MockTransaction::Entity_Type), notification.TransactionType);
 			EXPECT_EQ(Timestamp(454), notification.Deadline);
@@ -364,7 +372,7 @@ namespace catapult { namespace model {
 		// Act:
 		PublishOne<TransactionFeeNotification>(*pTransaction, [&transaction = *pTransaction](const auto& notification) {
 			// Assert: max fee is used when there is no associated block
-			EXPECT_EQ(transaction.SignerPublicKey, notification.Signer);
+			EXPECT_EQ(GetSignerAddress(transaction), notification.Sender);
 			EXPECT_EQ(transaction.Size, notification.TransactionSize);
 			EXPECT_EQ(Amount(765), notification.Fee);
 			EXPECT_EQ(Amount(765), notification.MaxFee);
@@ -385,7 +393,7 @@ namespace catapult { namespace model {
 		// Act:
 		PublishOne<TransactionFeeNotification>(weakEntityInfo, [&transaction = *pTransaction](const auto& notification) {
 			// Assert: calculated fee is used when there is associated block
-			EXPECT_EQ(transaction.SignerPublicKey, notification.Signer);
+			EXPECT_EQ(GetSignerAddress(transaction), notification.Sender);
 			EXPECT_EQ(transaction.Size, notification.TransactionSize);
 			EXPECT_EQ(Amount(4 * 234), notification.Fee);
 			EXPECT_EQ(Amount(765), notification.MaxFee);
@@ -399,9 +407,10 @@ namespace catapult { namespace model {
 		pTransaction->MaxFee = Amount(765);
 
 		// Act:
-		PublishOne<BalanceDebitNotification>(*pTransaction, [&signer = pTransaction->SignerPublicKey](const auto& notification) {
+		auto signerAddress = GetSignerAddress(*pTransaction);
+		PublishOne<BalanceDebitNotification>(*pTransaction, [&signerAddress](const auto& notification) {
 			// Assert:
-			EXPECT_EQ(signer, notification.Sender);
+			EXPECT_EQ(signerAddress, notification.Sender);
 			EXPECT_EQ(Currency_Mosaic_Id, notification.MosaicId);
 			EXPECT_EQ(Amount(765), notification.Amount);
 		});

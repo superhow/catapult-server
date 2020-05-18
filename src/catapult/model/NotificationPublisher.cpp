@@ -29,13 +29,18 @@
 namespace catapult { namespace model {
 
 	namespace {
+		Address GetSignerAddress(const VerifiableEntity& entity) {
+			return PublicKeyToAddress(entity.SignerPublicKey, entity.Network);
+		}
+
 		void RequireKnown(EntityType entityType) {
 			if (BasicEntityType::Other == ToBasicEntityType(entityType))
 				CATAPULT_THROW_RUNTIME_ERROR_1("NotificationPublisher only supports Block and Transaction entities", entityType);
 		}
 
 		BlockNotification CreateBlockNotification(const Block& block) {
-			return { block.SignerPublicKey, block.BeneficiaryPublicKey, block.Timestamp, block.Difficulty, block.FeeMultiplier };
+			auto beneficiaryAddress = PublicKeyToAddress(block.BeneficiaryPublicKey, block.Network);
+			return { GetSignerAddress(block), beneficiaryAddress, block.Timestamp, block.Difficulty, block.FeeMultiplier };
 		}
 
 		class BasicNotificationPublisher : public NotificationPublisher {
@@ -139,10 +144,11 @@ namespace catapult { namespace model {
 						<< "+   transaction.Size: " << transaction.Size << std::endl
 						<< "+   transaction.Type: " << transaction.Type;
 
-				sub.notify(TransactionNotification(transaction.SignerPublicKey, hash, transaction.Type, transaction.Deadline));
+				auto signerAddress = GetSignerAddress(transaction);
+				sub.notify(TransactionNotification(signerAddress, hash, transaction.Type, transaction.Deadline));
 				sub.notify(TransactionDeadlineNotification(transaction.Deadline, attributes.MaxLifetime));
-				sub.notify(TransactionFeeNotification(transaction.SignerPublicKey, transaction.Size, fee, transaction.MaxFee));
-				sub.notify(BalanceDebitNotification(transaction.SignerPublicKey, m_feeMosaicId, fee));
+				sub.notify(TransactionFeeNotification(signerAddress, transaction.Size, fee, transaction.MaxFee));
+				sub.notify(BalanceDebitNotification(signerAddress, m_feeMosaicId, fee));
 
 				// raise a signature notification
 				sub.notify(SignatureNotification(
