@@ -45,10 +45,10 @@ namespace catapult { namespace state {
 
 	public:
 		/// Gets the source public key.
-		const Key& sourcePublicKey() const;
+		const Address& sourceAddress() const;
 
 		/// Gets the target public key.
-		const Key& targetPublicKey() const;
+		const Address& targetAddress() const;
 
 		/// Gets the scoped metadata key.
 		uint64_t scopedMetadataKey() const;
