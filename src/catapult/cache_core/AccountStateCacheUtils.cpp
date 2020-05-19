@@ -23,8 +23,11 @@
 
 namespace catapult { namespace cache {
 
-	void ProcessForwardedAccountState(AccountStateCacheDelta& cache, const Key& publicKey, const consumer<state::AccountState&>& action) {
-		auto accountStateIter = cache.find(publicKey);
+	void ProcessForwardedAccountState(
+			AccountStateCacheDelta& cache,
+			const Address& address,
+			const consumer<state::AccountState&>& action) {
+		auto accountStateIter = cache.find(address);
 		auto& accountState = accountStateIter.get();
 
 		if (state::AccountType::Remote != accountState.AccountType) {
