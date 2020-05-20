@@ -19,8 +19,8 @@
 **/
 
 #include "catapult/observers/RentalFeeObserver.h"
-#include "tests/test/plugins/ObserverTestUtils.h"
 #include "catapult/model/Address.h"
+#include "tests/test/plugins/ObserverTestUtils.h"
 #include "tests/TestHarness.h"
 
 namespace catapult { namespace observers {
