@@ -98,7 +98,7 @@ namespace catapult { namespace model {
 			if (Address_Encoded_Size != encoded.size())
 				return false;
 
-			Address decoded;
+			PaddedAddress decoded;
 			return utils::TryBase32Decode(PadAddressString(encoded), decoded)
 					&& IsValidAddress(decoded.copyTo<Address>(), networkIdentifierAccessor(decoded[0]))
 					&& 0 == decoded[PaddedAddress::Size - 1];
