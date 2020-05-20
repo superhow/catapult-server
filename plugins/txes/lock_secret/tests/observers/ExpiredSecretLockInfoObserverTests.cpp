@@ -160,10 +160,6 @@ namespace catapult { namespace observers {
 	TEST(TEST_CLASS, ObserverCreatesReceiptsOnCommit) {
 		// Arrange:
 		auto blockHarvester = test::GenerateRandomByteArray<Address>();
-		auto keys = test::GenerateRandomDataVector<Key>(2);
-		if (keys[0] > keys[1])
-			std::swap(keys[0], keys[1]);
-
 		std::vector<SeedTuple> expiringSeeds{
 			{ Address{ { 9 } }, MosaicId(111), Amount(333), Amount(33) },
 			{ Address{ { 4 } }, MosaicId(222), Amount(222), Amount(88) },
