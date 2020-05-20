@@ -163,6 +163,9 @@ namespace catapult { namespace mocks {
 	/// Gets the address of the recipient of \a transaction.
 	Address GetRecipientAddress(const MockTransaction& transaction);
 
+	/// Gets the address of the recipient of \a transaction.
+	Address GetRecipientAddress(const EmbeddedMockTransaction& transaction);
+
 	/// Creates a mock transaction with variable data composed of \a dataSize random bytes.
 	std::unique_ptr<MockTransaction> CreateMockTransaction(uint16_t dataSize);
 
@@ -178,7 +181,7 @@ namespace catapult { namespace mocks {
 	std::unique_ptr<MockTransaction> CreateMockTransactionWithSignerAndRecipient(const Key& signer, const Key& recipient);
 
 	/// Extracts public keys of additional accounts that must approve \a transaction.
-	utils::KeySet ExtractAdditionalRequiredCosignatories(const EmbeddedMockTransaction& transaction);
+	model::AddressSet ExtractAdditionalRequiredCosignatories(const EmbeddedMockTransaction& transaction);
 
 	/// Mock transaction plugin options.
 	enum class PluginOptionFlags : uint8_t {

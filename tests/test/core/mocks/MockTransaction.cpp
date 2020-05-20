@@ -41,6 +41,10 @@ namespace catapult { namespace mocks {
 		return GetRecipientAddressT(transaction);
 	}
 
+	Address GetRecipientAddress(const EmbeddedMockTransaction& transaction) {
+		return GetRecipientAddressT(transaction);
+	}
+
 	namespace {
 		template<typename TMockTransaction>
 		std::unique_ptr<TMockTransaction> CreateMockTransactionT(uint16_t dataSize) {
@@ -86,8 +90,8 @@ namespace catapult { namespace mocks {
 		return pTransaction;
 	}
 
-	utils::KeySet ExtractAdditionalRequiredCosignatories(const EmbeddedMockTransaction& transaction) {
-		return { Key{ { 1 } }, transaction.RecipientPublicKey, Key{ { 2 } } };
+	AddressSet ExtractAdditionalRequiredCosignatories(const EmbeddedMockTransaction& transaction) {
+		return { Address{ { 1 } }, GetRecipientAddress(transaction), Address{ { 2 } } };
 	}
 
 	bool IsPluginOptionFlagSet(PluginOptionFlags options, PluginOptionFlags flag) {
@@ -120,7 +124,7 @@ namespace catapult { namespace mocks {
 			for (auto i = 0u; i < mockTransaction.Data.Size / sizeof(UnresolvedMosaic); ++i) {
 				// forcibly XOR recipient even though PublicKeyToAddress always returns resolved address
 				// in order to force tests to use XOR resolver context with Publish_Transfers
-				auto recipient = test::UnresolveXor(GetRecipientAddressT(mockTransaction));
+				auto recipient = test::UnresolveXor(GetRecipientAddress(mockTransaction));
 				sub.notify(BalanceTransferNotification(context.SignerAddress, recipient, pMosaics[i].MosaicId, pMosaics[i].Amount));
 			}
 		}
@@ -160,8 +164,8 @@ namespace catapult { namespace mocks {
 			{}
 
 		public:
-			utils::KeySet additionalRequiredCosignatories(const EmbeddedTransaction&) const override {
-				return utils::KeySet();
+			AddressSet additionalRequiredCosignatories(const EmbeddedTransaction&) const override {
+				return AddressSet();
 			}
 
 			void publish(
