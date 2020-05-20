@@ -22,7 +22,6 @@
 #include "src/model/AliasNotifications.h"
 #include "src/model/MosaicAliasTransaction.h"
 #include "src/model/NamespaceNotifications.h"
-#include "catapult/model/Address.h"
 #include "tests/test/plugins/TransactionPluginTestUtils.h"
 #include "tests/TestHarness.h"
 

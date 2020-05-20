@@ -21,7 +21,6 @@
 #include "src/plugins/NamespaceRegistrationTransactionPlugin.h"
 #include "src/model/NamespaceNotifications.h"
 #include "src/model/NamespaceRegistrationTransaction.h"
-#include "catapult/model/Address.h"
 #include "catapult/utils/MemoryUtils.h"
 #include "catapult/constants.h"
 #include "tests/test/core/AddressTestUtils.h"

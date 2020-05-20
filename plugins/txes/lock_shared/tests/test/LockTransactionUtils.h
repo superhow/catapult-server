@@ -20,7 +20,6 @@
 
 #pragma once
 #include "sdk/src/extensions/ConversionExtensions.h"
-#include "catapult/model/Address.h"
 #include "catapult/utils/MemoryUtils.h"
 #include "tests/TestHarness.h"
 

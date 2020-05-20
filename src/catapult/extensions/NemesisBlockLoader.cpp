@@ -25,7 +25,6 @@
 #include "catapult/config/CatapultConfiguration.h"
 #include "catapult/crypto/Vrf.h"
 #include "catapult/io/BlockStorageCache.h"
-#include "catapult/model/Address.h"
 #include "catapult/model/BlockUtils.h"
 #include "catapult/model/NemesisNotificationPublisher.h"
 #include "catapult/observers/NotificationObserverAdapter.h"

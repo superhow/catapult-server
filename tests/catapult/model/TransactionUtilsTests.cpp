@@ -20,7 +20,6 @@
 
 #include "catapult/model/TransactionUtils.h"
 #include "sdk/src/extensions/ConversionExtensions.h"
-#include "catapult/model/Address.h"
 #include "catapult/model/NotificationPublisher.h"
 #include "catapult/model/NotificationSubscriber.h"
 #include "tests/test/core/mocks/MockTransaction.h"
@@ -31,8 +30,6 @@ namespace catapult { namespace model {
 #define TEST_CLASS TransactionUtilsTests
 
 	namespace {
-		constexpr auto Network_Identifier = NetworkIdentifier::Mijin_Test;
-
 		class MockNotificationPublisher : public NotificationPublisher {
 		public:
 			enum class Mode { Address, Public_Key, Other };
@@ -47,7 +44,7 @@ namespace catapult { namespace model {
 
 				if (Mode::Address == m_mode) {
 					auto senderAddress = model::GetSignerAddress(transaction);
-					auto recipientAddress = PublicKeyToAddress(transaction.RecipientPublicKey, Network_Identifier);
+					auto recipientAddress = mocks::GetRecipientAddress(transaction);
 					sub.notify(AccountAddressNotification(extensions::CopyToUnresolvedAddress(senderAddress)));
 					sub.notify(AccountAddressNotification(extensions::CopyToUnresolvedAddress(recipientAddress)));
 				} else if (Mode::Public_Key == m_mode) {
@@ -67,13 +64,8 @@ namespace catapult { namespace model {
 			auto pTransaction = mocks::CreateMockTransactionWithSignerAndRecipient(
 					test::GenerateRandomByteArray<Key>(),
 					test::GenerateRandomByteArray<Key>());
-			auto senderAddress = extensions::CopyToUnresolvedAddress(PublicKeyToAddress(
-					pTransaction->SignerPublicKey,
-					Network_Identifier));
-			auto recipientAddress = extensions::CopyToUnresolvedAddress(PublicKeyToAddress(
-					pTransaction->RecipientPublicKey,
-					Network_Identifier));
-
+			auto senderAddress = extensions::CopyToUnresolvedAddress(model::GetSignerAddress(*pTransaction));
+			auto recipientAddress = extensions::CopyToUnresolvedAddress(mocks::GetRecipientAddress(*pTransaction));
 			MockNotificationPublisher notificationPublisher(mode);
 
 			// Act:

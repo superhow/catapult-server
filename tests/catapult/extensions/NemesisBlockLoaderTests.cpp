@@ -569,7 +569,7 @@ namespace catapult { namespace extensions {
 					Amount()));
 
 			// - resolution receipts due to use of CreateResolverContextXor and interaction with MockTransaction
-			auto recipient = PublicKeyToAddress(GetTransactionRecipient(nemesisBlock, 0), model::NetworkIdentifier::Mijin_Test);
+			auto recipient = model::PublicKeyToAddress(GetTransactionRecipient(nemesisBlock, 0), model::NetworkIdentifier::Mijin_Test);
 			blockStatementBuilder.addResolution(test::UnresolveXor(recipient), recipient);
 			blockStatementBuilder.addResolution(test::UnresolveXor(receiptMosaicId), receiptMosaicId);
 

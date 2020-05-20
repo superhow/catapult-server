@@ -19,7 +19,7 @@
 **/
 
 #include "catapult/model/NotificationPublisher.h"
-#include "catapult/model/Address.h"
+#include "catapult/model/Address.h" // TODO: Beneficiary
 #include "tests/test/core/BlockTestUtils.h"
 #include "tests/test/core/mocks/MockNotificationSubscriber.h"
 #include "tests/test/core/mocks/MockTransaction.h"

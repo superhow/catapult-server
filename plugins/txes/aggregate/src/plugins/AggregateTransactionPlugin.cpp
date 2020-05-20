@@ -21,7 +21,6 @@
 #include "AggregateTransactionPlugin.h"
 #include "src/model/AggregateNotifications.h"
 #include "src/model/AggregateTransaction.h"
-#include "catapult/model/Address.h"
 #include "catapult/model/NotificationSubscriber.h"
 #include "catapult/model/TransactionPlugin.h"
 

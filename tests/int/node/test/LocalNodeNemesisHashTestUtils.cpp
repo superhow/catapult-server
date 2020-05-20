@@ -20,7 +20,6 @@
 
 #include "LocalNodeNemesisHashTestUtils.h"
 #include "plugins/txes/mosaic/src/model/MosaicEntityType.h"
-#include "catapult/model/Address.h"
 #include "catapult/model/BlockStatementBuilder.h"
 #include "catapult/model/BlockUtils.h"
 #include "tests/test/core/StorageTestUtils.h"

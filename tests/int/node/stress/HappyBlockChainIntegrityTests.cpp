@@ -21,7 +21,6 @@
 #include "sdk/src/extensions/TransactionExtensions.h"
 #include "catapult/chain/BlockScorer.h"
 #include "catapult/config/ValidateConfiguration.h"
-#include "catapult/model/Address.h"
 #include "catapult/model/BlockUtils.h"
 #include "catapult/model/ChainScore.h"
 #include "tests/int/node/stress/test/BlockChainBuilder.h"

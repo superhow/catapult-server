@@ -20,7 +20,6 @@
 
 #pragma once
 #include "TransactionPluginTests.h"
-#include "catapult/model/Address.h"
 #include "tests/test/core/mocks/MockNotificationSubscriber.h"
 
 namespace catapult { namespace test {
