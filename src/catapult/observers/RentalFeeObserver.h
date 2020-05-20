@@ -38,7 +38,7 @@ namespace catapult { namespace observers {
 			auto mosaicId = context.Resolvers.resolve(notification.MosaicId);
 			auto recipient = context.Resolvers.resolve(notification.Recipient);
 			auto effectiveAmount = Amount(notification.Amount.unwrap() * context.Cache.dependentState().DynamicFeeMultiplier.unwrap());
-			model::BalanceTransferReceipt receipt(receiptType, notification.Sender(), recipient, mosaicId, effectiveAmount);
+			model::BalanceTransferReceipt receipt(receiptType, notification.Sender, recipient, mosaicId, effectiveAmount);
 			context.StatementBuilder().addReceipt(receipt);
 		});
 	}
