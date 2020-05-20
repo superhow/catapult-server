@@ -43,7 +43,7 @@ namespace catapult { namespace model {
 				const auto& transaction = entityInfo.cast<mocks::MockTransaction>().entity();
 
 				if (Mode::Address == m_mode) {
-					auto senderAddress = model::GetSignerAddress(transaction);
+					auto senderAddress = GetSignerAddress(transaction);
 					auto recipientAddress = mocks::GetRecipientAddress(transaction);
 					sub.notify(AccountAddressNotification(extensions::CopyToUnresolvedAddress(senderAddress)));
 					sub.notify(AccountAddressNotification(extensions::CopyToUnresolvedAddress(recipientAddress)));
@@ -64,7 +64,7 @@ namespace catapult { namespace model {
 			auto pTransaction = mocks::CreateMockTransactionWithSignerAndRecipient(
 					test::GenerateRandomByteArray<Key>(),
 					test::GenerateRandomByteArray<Key>());
-			auto senderAddress = extensions::CopyToUnresolvedAddress(model::GetSignerAddress(*pTransaction));
+			auto senderAddress = extensions::CopyToUnresolvedAddress(GetSignerAddress(*pTransaction));
 			auto recipientAddress = extensions::CopyToUnresolvedAddress(mocks::GetRecipientAddress(*pTransaction));
 			MockNotificationPublisher notificationPublisher(mode);
 

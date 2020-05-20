@@ -83,7 +83,7 @@ namespace catapult { namespace model {
 		// Arrange:
 		VerifiableEntity entity;
 		test::FillWithRandomData(entity.SignerPublicKey);
-		entity.Network = static_cast<NetworkIdentifier>(123);
+		entity.Network = static_cast<NetworkIdentifier>(test::RandomByte());
 
 		// Act:
 		auto signerAddress = GetSignerAddress(entity);

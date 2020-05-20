@@ -76,13 +76,14 @@ namespace catapult { namespace model {
 	}
 
 	// endregion
+
 	// region GetSignerAddress
 
 	TEST(TEST_CLASS, GetSignerAddressCalculatesCorrectSignerAddress) {
 		// Arrange:
 		EmbeddedTransaction transaction;
 		test::FillWithRandomData(transaction.SignerPublicKey);
-		transaction.Network = static_cast<NetworkIdentifier>(123);
+		transaction.Network = static_cast<NetworkIdentifier>(test::RandomByte());
 
 		// Act:
 		auto signerAddress = GetSignerAddress(transaction);
