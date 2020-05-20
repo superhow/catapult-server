@@ -22,7 +22,6 @@
 #include "src/cache/SecretLockInfoCache.h"
 #include "src/model/SecretLockReceiptType.h"
 #include "src/state/SecretLockInfo.h"
-#include "catapult/model/Address.h"
 
 namespace catapult { namespace observers {
 

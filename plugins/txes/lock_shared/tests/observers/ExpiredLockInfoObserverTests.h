@@ -20,7 +20,6 @@
 
 #pragma once
 #include "catapult/cache_core/AccountStateCache.h"
-#include "catapult/model/Address.h"
 #include "tests/test/core/NotificationTestUtils.h"
 #include "tests/test/plugins/ObserverTestUtils.h"
 #include "tests/TestHarness.h"

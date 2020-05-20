@@ -22,7 +22,6 @@
 #include "src/cache/HashLockInfoCache.h"
 #include "src/model/HashLockReceiptType.h"
 #include "src/state/HashLockInfo.h"
-#include "catapult/model/Address.h"
 
 namespace catapult { namespace observers {
 

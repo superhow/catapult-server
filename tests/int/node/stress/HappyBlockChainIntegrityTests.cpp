@@ -241,7 +241,6 @@ namespace catapult { namespace local {
 						model::PublicKeyToAddress(block.SignerPublicKey, model::NetworkIdentifier::Mijin_Test),
 						test::Default_Currency_Mosaic_Id,
 						totalFee);
-
 				blockStatementBuilder.addReceipt(receipt);
 
 				auto pStatement = blockStatementBuilder.build();

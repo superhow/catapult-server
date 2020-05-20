@@ -20,7 +20,6 @@
 
 #pragma once
 #include "catapult/cache_core/AccountStateCache.h"
-#include "catapult/model/Address.h"
 #include "plugins/txes/lock_shared/tests/test/LockInfoCacheTestUtils.h"
 #include "tests/test/plugins/ObserverTestUtils.h"
 

@@ -20,7 +20,6 @@
 
 #pragma once
 #include "catapult/cache_core/AccountStateCache.h"
-#include "catapult/model/Address.h"
 
 namespace catapult { namespace observers {
 

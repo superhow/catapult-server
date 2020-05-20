@@ -20,7 +20,6 @@
 
 #pragma once
 #include "ObserverTypes.h"
-#include "catapult/model/Address.h"
 #include "catapult/model/Receipt.h"
 
 namespace catapult { namespace observers {
