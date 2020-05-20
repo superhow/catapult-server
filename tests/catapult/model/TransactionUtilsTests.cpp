@@ -46,7 +46,7 @@ namespace catapult { namespace model {
 				const auto& transaction = entityInfo.cast<mocks::MockTransaction>().entity();
 
 				if (Mode::Address == m_mode) {
-					auto senderAddress = PublicKeyToAddress(transaction.SignerPublicKey, Network_Identifier);
+					auto senderAddress = model::GetSignerAddress(transaction);
 					auto recipientAddress = PublicKeyToAddress(transaction.RecipientPublicKey, Network_Identifier);
 					sub.notify(AccountAddressNotification(extensions::CopyToUnresolvedAddress(senderAddress)));
 					sub.notify(AccountAddressNotification(extensions::CopyToUnresolvedAddress(recipientAddress)));

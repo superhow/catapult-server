@@ -116,7 +116,7 @@ namespace catapult { namespace plugins {
 					// - specific sub-transaction notifications
 					//   (calculateRealSize would have failed if plugin is unknown or not embeddable)
 					PublishContext subContext;
-					subContext.SignerAddress = model::PublicKeyToAddress(subTransaction.SignerPublicKey, subTransaction.Network);
+					subContext.SignerAddress = model::GetSignerAddress(subTransaction);
 					plugin.publish(subTransaction, subContext, sub);
 				}
 

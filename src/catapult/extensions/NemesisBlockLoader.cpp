@@ -205,7 +205,7 @@ namespace catapult { namespace extensions {
 		CheckNemesisBlockFeeMultiplier(nemesisBlockElement.Block);
 
 		// 2. reset nemesis funding observer data and custom state
-		m_nemesisAddress = model::PublicKeyToAddress(nemesisBlockElement.Block.SignerPublicKey, nemesisBlockElement.Block.Network);
+		m_nemesisAddress = model::GetSignerAddress(nemesisBlockElement.Block);
 		m_nemesisFundingState = NemesisFundingState();
 		m_publisherOptions = model::ExtractNemesisNotificationPublisherOptions(config);
 

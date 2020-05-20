@@ -58,7 +58,7 @@ namespace catapult { namespace test {
 			auto feeMosaicId = Default_Currency_Mosaic_Id;
 			model::BalanceChangeReceipt receipt(
 					model::Receipt_Type_Harvest_Fee,
-					model::PublicKeyToAddress(nemesisBlock.SignerPublicKey, nemesisBlock.Network),
+					model::GetSignerAddress(nemesisBlock),
 					feeMosaicId,
 					totalFee);
 			blockStatementBuilder.addReceipt(receipt);

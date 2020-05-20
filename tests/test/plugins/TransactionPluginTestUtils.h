@@ -101,7 +101,7 @@ namespace catapult { namespace test {
 		template<typename TTransaction>
 		static model::PublishContext CreatePublishContext(const TTransaction& transaction) {
 			model::PublishContext context;
-			context.SignerAddress = model::PublicKeyToAddress(transaction.SignerPublicKey, transaction.Network);
+			context.SignerAddress = model::GetSignerAddress(transaction);
 			return context;
 		}
 

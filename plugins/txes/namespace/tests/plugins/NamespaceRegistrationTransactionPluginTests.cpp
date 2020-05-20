@@ -86,8 +86,7 @@ namespace catapult { namespace plugins {
 				EXPECT_EQ(transaction.RegistrationType, notification.RegistrationType);
 			});
 			builder.template addExpectation<RootNamespaceNotification>([&transaction](const auto& notification) {
-				auto signerAddress = model::PublicKeyToAddress(transaction.SignerPublicKey, transaction.Network);
-				EXPECT_EQ(signerAddress, notification.Owner);
+				EXPECT_EQ(model::GetSignerAddress(transaction), notification.Owner);
 				EXPECT_EQ(transaction.Id, notification.NamespaceId);
 				EXPECT_EQ(transaction.Duration, notification.Duration);
 			});
@@ -173,16 +172,14 @@ namespace catapult { namespace plugins {
 		typename test::TransactionPluginTestUtils<TTraits>::PublishTestBuilder builder;
 		AddCommonRootExpectations<TTraits>(builder, config, transaction);
 		builder.template addExpectation<BalanceTransferNotification>([&config, &transaction](const auto& notification) {
-			auto signerAddress = model::PublicKeyToAddress(transaction.SignerPublicKey, transaction.Network);
-			EXPECT_EQ(signerAddress, notification.Sender);
+			EXPECT_EQ(model::GetSignerAddress(transaction), notification.Sender);
 			EXPECT_EQ(config.SinkAddress, notification.Recipient);
 			EXPECT_EQ(config.CurrencyMosaicId, notification.MosaicId);
 			EXPECT_EQ(Amount(987 * transaction.Duration.unwrap()), notification.Amount);
 			EXPECT_EQ(BalanceTransferNotification::AmountType::Dynamic, notification.TransferAmountType);
 		});
 		builder.template addExpectation<NamespaceRentalFeeNotification>([&config, &transaction](const auto& notification) {
-			auto signerAddress = model::PublicKeyToAddress(transaction.SignerPublicKey, transaction.Network);
-			EXPECT_EQ(signerAddress, notification.Sender);
+			EXPECT_EQ(model::GetSignerAddress(transaction), notification.Sender);
 			EXPECT_EQ(config.SinkAddress, notification.Recipient);
 			EXPECT_EQ(config.CurrencyMosaicId, notification.MosaicId);
 			EXPECT_EQ(Amount(987 * transaction.Duration.unwrap()), notification.Amount);
@@ -245,8 +242,7 @@ namespace catapult { namespace plugins {
 				EXPECT_EQ(transaction.RegistrationType, notification.RegistrationType);
 			});
 			builder.template addExpectation<ChildNamespaceNotification>([&transaction](const auto& notification) {
-				auto signerAddress = model::PublicKeyToAddress(transaction.SignerPublicKey, transaction.Network);
-				EXPECT_EQ(signerAddress, notification.Owner);
+				EXPECT_EQ(model::GetSignerAddress(transaction), notification.Owner);
 				EXPECT_EQ(transaction.Id, notification.NamespaceId);
 				EXPECT_EQ(transaction.ParentId, notification.ParentId);
 			});
@@ -332,16 +328,14 @@ namespace catapult { namespace plugins {
 		typename test::TransactionPluginTestUtils<TTraits>::PublishTestBuilder builder;
 		AddCommonChildExpectations<TTraits>(builder, config, transaction);
 		builder.template addExpectation<BalanceTransferNotification>([&config, &transaction](const auto& notification) {
-			auto signerAddress = model::PublicKeyToAddress(transaction.SignerPublicKey, transaction.Network);
-			EXPECT_EQ(signerAddress, notification.Sender);
+			EXPECT_EQ(model::GetSignerAddress(transaction), notification.Sender);
 			EXPECT_EQ(config.SinkAddress, notification.Recipient);
 			EXPECT_EQ(config.CurrencyMosaicId, notification.MosaicId);
 			EXPECT_EQ(Amount(777), notification.Amount);
 			EXPECT_EQ(BalanceTransferNotification::AmountType::Dynamic, notification.TransferAmountType);
 		});
 		builder.template addExpectation<NamespaceRentalFeeNotification>([&config, &transaction](const auto& notification) {
-			auto signerAddress = model::PublicKeyToAddress(transaction.SignerPublicKey, transaction.Network);
-			EXPECT_EQ(signerAddress, notification.Sender);
+			EXPECT_EQ(model::GetSignerAddress(transaction), notification.Sender);
 			EXPECT_EQ(config.SinkAddress, notification.Recipient);
 			EXPECT_EQ(config.CurrencyMosaicId, notification.MosaicId);
 			EXPECT_EQ(Amount(777), notification.Amount);

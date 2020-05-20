@@ -238,7 +238,7 @@ namespace catapult { namespace local {
 				model::BlockStatementBuilder blockStatementBuilder;
 				model::BalanceChangeReceipt receipt(
 						model::Receipt_Type_Harvest_Fee,
-						model::PublicKeyToAddress(block.SignerPublicKey, block.Network),
+						GetSignerAddress(block),
 						test::Default_Currency_Mosaic_Id,
 						totalFee);
 				blockStatementBuilder.addReceipt(receipt);
