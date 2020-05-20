@@ -261,13 +261,9 @@ namespace catapult { namespace model {
 	}
 
 	TEST(TEST_CLASS, IsValidEncodedAddressReturnsFalseForEncodedStringWithLeadingOrTrailingWhiteSpace) {
-		// Arrange:
-		auto encoded = std::string(Encoded_Address);
-
-		// Assert:
-		AssertInvalidEncodedAddress("   \t    " + encoded);
-		AssertInvalidEncodedAddress(encoded + "   \t    ");
-		AssertInvalidEncodedAddress("   \t    " + encoded + "   \t    ");
+		AssertInvalidEncodedAddress([](auto& encoded) { "   \t    " + encoded; });
+		AssertInvalidEncodedAddress([](auto& encoded) { encoded + "   \t    "; });
+		AssertInvalidEncodedAddress([](auto& encoded) { "   \t    " + encoded + "   \t    "; });
 	}
 
 	// endregion
@@ -318,13 +314,9 @@ namespace catapult { namespace model {
 	}
 
 	TEST(TEST_CLASS, TryParseValueReturnsFalseForEncodedStringWithLeadingOrTrailingWhiteSpace) {
-		// Arrange:
-		auto encoded = std::string(Encoded_Address);
-
-		// Assert:
-		AssertTryParseValueFailure("   \t    " + encoded);
-		AssertTryParseValueFailure(encoded + "   \t    ");
-		AssertTryParseValueFailure("   \t    " + encoded + "   \t    ");
+		AssertTryParseValueFailure([](auto& encoded) { "   \t    " + encoded; });
+		AssertTryParseValueFailure([](auto& encoded) { encoded + "   \t    "; });
+		AssertTryParseValueFailure([](auto& encoded) { "   \t    " + encoded + "   \t    "; });
 	}
 
 	// endregion
