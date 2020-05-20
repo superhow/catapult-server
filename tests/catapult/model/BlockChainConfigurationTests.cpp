@@ -46,7 +46,7 @@ namespace catapult { namespace model {
 						{
 							{ "identifier", "public-test" },
 							{ "nodeEqualityStrategy", "host" },
-							{ "NemesisSignerPublicKey", Nemesis_Signer_Public_Key },
+							{ "nemesisSignerPublicKey", Nemesis_Signer_Public_Key },
 							{ "generationHashSeed", Nemesis_Generation_Hash_Seed },
 							{ "epochAdjustment", "1234567h" }
 						}
