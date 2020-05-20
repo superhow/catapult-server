@@ -25,6 +25,7 @@
 #include "catapult/config/CatapultConfiguration.h"
 #include "catapult/crypto/Vrf.h"
 #include "catapult/io/BlockStorageCache.h"
+#include "catapult/model/Address.h"
 #include "catapult/model/BlockUtils.h"
 #include "catapult/model/NemesisNotificationPublisher.h"
 #include "catapult/observers/NotificationObserverAdapter.h"
@@ -35,11 +36,11 @@ namespace catapult { namespace extensions {
 
 	namespace {
 		std::unique_ptr<const observers::NotificationObserver> PrependNemesisObservers(
-				const Key& nemesisPublicKey,
+				const Address& nemesisAddress,
 				NemesisFundingState& nemesisFundingState,
 				std::unique_ptr<const observers::NotificationObserver>&& pObserver) {
 			observers::DemuxObserverBuilder builder;
-			builder.add(CreateNemesisFundingObserver(nemesisPublicKey, nemesisFundingState));
+			builder.add(CreateNemesisFundingObserver(nemesisAddress, nemesisFundingState));
 			builder.add(std::move(pObserver));
 			return builder.build();
 		}
@@ -148,7 +149,7 @@ namespace catapult { namespace extensions {
 			: m_cacheDelta(cacheDelta)
 			, m_pluginManager(pluginManager)
 			, m_pObserver(std::make_unique<observers::NotificationObserverAdapter>(
-					PrependNemesisObservers(m_nemesisPublicKey, m_nemesisFundingState, std::move(pObserver)),
+					PrependNemesisObservers(m_nemesisAddress, m_nemesisFundingState, std::move(pObserver)),
 					model::CreateNemesisNotificationPublisher(pluginManager.createNotificationPublisher(), m_publisherOptions)))
 	{}
 
@@ -205,7 +206,7 @@ namespace catapult { namespace extensions {
 		CheckNemesisBlockFeeMultiplier(nemesisBlockElement.Block);
 
 		// 2. reset nemesis funding observer data and custom state
-		m_nemesisPublicKey = nemesisBlockElement.Block.SignerPublicKey;
+		m_nemesisAddress = model::PublicKeyToAddress(nemesisBlockElement.Block.SignerPublicKey, nemesisBlockElement.Block.Network);
 		m_nemesisFundingState = NemesisFundingState();
 		m_publisherOptions = model::ExtractNemesisNotificationPublisherOptions(config);
 
