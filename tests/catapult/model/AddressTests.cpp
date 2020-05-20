@@ -261,9 +261,9 @@ namespace catapult { namespace model {
 	}
 
 	TEST(TEST_CLASS, IsValidEncodedAddressReturnsFalseForEncodedStringWithLeadingOrTrailingWhiteSpace) {
-		AssertInvalidEncodedAddress([](auto& encoded) { "   \t    " + encoded; });
-		AssertInvalidEncodedAddress([](auto& encoded) { encoded + "   \t    "; });
-		AssertInvalidEncodedAddress([](auto& encoded) { "   \t    " + encoded + "   \t    "; });
+		AssertInvalidEncodedAddress([](auto& encoded) { encoded = "   \t    " + encoded; });
+		AssertInvalidEncodedAddress([](auto& encoded) { encoded = encoded + "   \t    "; });
+		AssertInvalidEncodedAddress([](auto& encoded) { encoded = "   \t    " + encoded + "   \t    "; });
 	}
 
 	// endregion
@@ -314,9 +314,9 @@ namespace catapult { namespace model {
 	}
 
 	TEST(TEST_CLASS, TryParseValueReturnsFalseForEncodedStringWithLeadingOrTrailingWhiteSpace) {
-		AssertTryParseValueFailure([](auto& encoded) { "   \t    " + encoded; });
-		AssertTryParseValueFailure([](auto& encoded) { encoded + "   \t    "; });
-		AssertTryParseValueFailure([](auto& encoded) { "   \t    " + encoded + "   \t    "; });
+		AssertTryParseValueFailure([](auto& encoded) { encoded = "   \t    " + encoded; });
+		AssertTryParseValueFailure([](auto& encoded) { encoded = encoded + "   \t    "; });
+		AssertTryParseValueFailure([](auto& encoded) { encoded = "   \t    " + encoded + "   \t    "; });
 	}
 
 	// endregion
