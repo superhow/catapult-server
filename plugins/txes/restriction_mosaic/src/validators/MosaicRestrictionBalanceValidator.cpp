@@ -59,10 +59,7 @@ namespace catapult { namespace validators {
 			return ProcessMosaicRules(notification.MosaicId, context, [&notification, &resolvers = context.Resolvers](
 					const auto& cache,
 					const auto& mosaicRules) {
-				auto isSenderAuthorized = cache::EvaluateMosaicRestrictionResolvedRulesForAddress(
-						cache,
-						notification.Sender,
-						mosaicRules);
+				auto isSenderAuthorized = cache::EvaluateMosaicRestrictionResolvedRulesForAddress(cache, notification.Sender, mosaicRules);
 				auto isRecipientAuthorized = cache::EvaluateMosaicRestrictionResolvedRulesForAddress(
 						cache,
 						resolvers.resolve(notification.Recipient),

@@ -50,10 +50,9 @@ namespace catapult { namespace extensions {
 			const auto& publicKey = blockElement.Block.SignerPublicKey;
 			const auto& generationHash = blockElement.GenerationHash;
 			CATAPULT_LOG(info)
-					<< std::endl
-					<< "      nemesis network id: " << networkIdentifier << std::endl
-					<< "      nemesis public key: " << publicKey << std::endl
-					<< " nemesis generation hash: " << generationHash;
+					<< std::endl << "      nemesis network id: " << networkIdentifier
+					<< std::endl << "      nemesis public key: " << publicKey
+					<< std::endl << " nemesis generation hash: " << generationHash;
 		}
 
 		void OutputNemesisBalance(std::ostream& out, MosaicId mosaicId, Amount amount, char special = ' ') {

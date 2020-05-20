@@ -55,11 +55,7 @@ namespace catapult { namespace plugins {
 					config.CurrencyMosaicId,
 					rentalFee,
 					BalanceTransferNotification::AmountType::Dynamic));
-			sub.notify(NamespaceRentalFeeNotification(
-					context.SignerAddress,
-					config.SinkAddress,
-					config.CurrencyMosaicId,
-					rentalFee));
+			sub.notify(NamespaceRentalFeeNotification(context.SignerAddress, config.SinkAddress, config.CurrencyMosaicId, rentalFee));
 		}
 
 		template<typename TTransaction>
