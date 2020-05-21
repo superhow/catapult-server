@@ -78,7 +78,7 @@ namespace catapult { namespace model {
 		Hash256 StateHash;
 
 		/// Beneficiary address designated by harvester.
-		UnresolvedAddress BeneficiaryAddress;
+		Address BeneficiaryAddress;
 
 		/// Fee multiplier applied to block transactions.
 		BlockFeeMultiplier FeeMultiplier;

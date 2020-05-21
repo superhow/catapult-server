@@ -107,7 +107,7 @@ namespace catapult { namespace model {
 		// Arrange:
 		auto pBlock = test::GenerateEmptyRandomBlock();
 		test::FillWithRandomData(pBlock->SignerPublicKey);
-		test::FillWithRandomData(pBlock->BeneficiaryPublicKey);
+		test::FillWithRandomData(pBlock->BeneficiaryAddress);
 
 		// Act:
 		PublishAll(*pBlock, [&block = *pBlock](const auto& sub) {
@@ -117,7 +117,7 @@ namespace catapult { namespace model {
 			EXPECT_EQ(2u, sub.numKeys());
 
 			EXPECT_TRUE(sub.contains(block.SignerPublicKey));
-			EXPECT_TRUE(sub.contains(block.BeneficiaryPublicKey));
+			EXPECT_TRUE(sub.contains(block.BeneficiaryAddress.copyTo<UnresolvedAddress>()));
 		});
 	}
 
@@ -125,7 +125,7 @@ namespace catapult { namespace model {
 		// Arrange:
 		auto pBlock = test::GenerateEmptyRandomBlock();
 		test::FillWithRandomData(pBlock->SignerPublicKey);
-		pBlock->BeneficiaryPublicKey = pBlock->SignerPublicKey;
+		pBlock->BeneficiaryAddress = model::GetSignerAddress(*pBlock);
 
 		// Act:
 		PublishAll(*pBlock, [&block = *pBlock](const auto& sub) {
@@ -198,7 +198,7 @@ namespace catapult { namespace model {
 		PublishOne<BlockNotification>(*pBlock, [&block = *pBlock](const auto& notification) {
 			// Assert:
 			EXPECT_EQ(GetSignerAddress(block), notification.Harvester);
-			EXPECT_EQ(PublicKeyToAddress(block.BeneficiaryPublicKey, block.Network), notification.Beneficiary);
+			EXPECT_EQ(block.BeneficiaryAddress, notification.Beneficiary);
 			EXPECT_EQ(Timestamp(123), notification.Timestamp);
 			EXPECT_EQ(Difficulty(575), notification.Difficulty);
 			EXPECT_EQ(BlockFeeMultiplier(3), notification.FeeMultiplier);

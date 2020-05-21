@@ -133,7 +133,7 @@ namespace catapult { namespace model {
 			pBlock->Difficulty = Difficulty();
 			pBlock->PreviousBlockHash = context.BlockHash;
 
-			pBlock->BeneficiaryAddress = GetSignerAddress(*pBlock).copyTo<UnresolvedAddress>();
+			pBlock->BeneficiaryAddress = GetSignerAddress(*pBlock);
 
 			// append all the transactions
 			auto* pDestination = reinterpret_cast<uint8_t*>(pBlock->TransactionsPtr());

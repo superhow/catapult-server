@@ -87,7 +87,7 @@ namespace catapult { namespace harvesting {
 				extensions::ServiceState& state,
 				UnlockedAccounts& unlockedAccounts,
 				const crypto::KeyPair& encryptionKeyPair,
-				const Key& beneficiaryAddress) {
+				const Address& beneficiaryAddress) {
 			const auto& cache = state.cache();
 			const auto& blockChainConfig = state.config().BlockChain;
 			const auto& utCache = const_cast<const extensions::ServiceState&>(state).utCache();
@@ -175,7 +175,7 @@ namespace catapult { namespace harvesting {
 						state,
 						*pUnlockedAccounts,
 						locator.keys().nodeKeyPair(),
-						/*//TODO:m_config.BeneficiaryAddress*/ Key()));
+						m_config.BeneficiaryAddress));
 
 				if (IsDiagnosticExtensionEnabled(state.config().Extensions))
 					RegisterDiagnosticUnlockedAccountsHandler(state, *pUnlockedAccounts);

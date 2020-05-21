@@ -30,13 +30,13 @@ namespace catapult { namespace test {
 	}
 
 	/// Creates a block notification around \a harvester and \a beneficiary.
-	inline model::BlockNotification CreateBlockNotification(const Address& harvester, const UnresolvedAddress& beneficiary) {
+	inline model::BlockNotification CreateBlockNotification(const Address& harvester, const Address& beneficiary) {
 		return model::BlockNotification(harvester, beneficiary, Timestamp(), Difficulty(), BlockFeeMultiplier());
 	}
 
 	/// Creates a block notification around \a harvester.
 	inline model::BlockNotification CreateBlockNotification(const Address& harvester) {
-		return CreateBlockNotification(harvester, UnresolvedAddress());
+		return CreateBlockNotification(harvester, Address());
 	}
 
 	/// Creates a placeholder block notification.
