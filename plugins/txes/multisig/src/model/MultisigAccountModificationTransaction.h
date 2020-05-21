@@ -47,7 +47,7 @@ namespace catapult { namespace model {
 		uint8_t AddressAdditionsCount;
 
 		/// Number of cosignatory address deletions.
-		uint8_t AddressDeletions;
+		uint8_t AddressDeletionsCount;
 
 		/// Reserved padding to align AddressAdditions on 8-byte boundary.
 		uint32_t MultisigAccountModificationTransactionBody_Reserved1;
@@ -55,7 +55,7 @@ namespace catapult { namespace model {
 		// followed by additions data if AddressAdditionsCount != 0
 		DEFINE_TRANSACTION_VARIABLE_DATA_ACCESSORS(AddressAdditions, Address)
 
-		// followed by deletions data if AddressDeletions != 0
+		// followed by deletions data if AddressDeletionsCount != 0
 		DEFINE_TRANSACTION_VARIABLE_DATA_ACCESSORS(AddressDeletions, Address)
 
 	private:
@@ -67,7 +67,7 @@ namespace catapult { namespace model {
 		template<typename T>
 		static auto* AddressDeletionsPtrT(T& transaction) {
 			auto* pPayloadStart = THeader::PayloadStart(transaction);
-			return transaction.AddressDeletions && pPayloadStart
+			return transaction.AddressDeletionsCount && pPayloadStart
 					? pPayloadStart + transaction.AddressAdditionsCount * Address::Size
 					: nullptr;
 		}
@@ -75,7 +75,7 @@ namespace catapult { namespace model {
 	public:
 		/// Calculates the real size of a multisig account modification \a transaction.
 		static constexpr uint64_t CalculateRealSize(const TransactionType& transaction) noexcept {
-			return sizeof(TransactionType) + (transaction.AddressAdditionsCount + transaction.AddressDeletions) * Address::Size;
+			return sizeof(TransactionType) + (transaction.AddressAdditionsCount + transaction.AddressDeletionsCount) * Address::Size;
 		}
 	};
 

@@ -32,26 +32,23 @@ namespace catapult {
 
 namespace catapult { namespace test {
 
-	/// Asserts that all \a expectedKeys are contained within \a keys.
-	template<typename TExpectedKeys, typename TKeys>
-	void AssertContents(const TExpectedKeys& expectedKeys, const TKeys& keys) {
-		// Assert:
-		EXPECT_EQ(expectedKeys.size(), keys.size());
-		for (const auto& key : expectedKeys)
-			EXPECT_CONTAINS(keys, key);
-	}
+	// /// Asserts that all \a expectedKeys are contained within \a keys.
+	// template<typename TExpectedKeys, typename TKeys>
+	// void AssertContents(const TExpectedKeys& expectedKeys, const TKeys& keys) {
+	// 	// Assert:
+	// 	EXPECT_EQ(expectedKeys.size(), keys.size());
+	// 	for (const auto& key : expectedKeys)
+	// 		EXPECT_CONTAINS(keys, key);
+	// }
 
-	/// Asserts that all \a expectedKeys are contained within \a cache.
-	template<typename TExpectedKeys, typename TCache>
-	void AssertMultisigCacheContents(const TExpectedKeys& expectedKeys, const TCache& cache) {
-		// Assert:
-		EXPECT_EQ(expectedKeys.size(), cache.size());
-		for (const auto& key : expectedKeys)
-			EXPECT_TRUE(cache.contains(key)) << utils::HexFormat(key[0]);
-	}
-
-	/// Generates \a count random keys.
-	std::vector<Key> GenerateKeys(size_t count);
+	// /// Asserts that all \a expectedKeys are contained within \a cache.
+	// template<typename TExpectedKeys, typename TCache>
+	// void AssertMultisigCacheContents(const TExpectedKeys& expectedKeys, const TCache& cache) {
+	// 	// Assert:
+	// 	EXPECT_EQ(expectedKeys.size(), cache.size());
+	// 	for (const auto& key : expectedKeys)
+	// 		EXPECT_TRUE(cache.contains(key)) << utils::HexFormat(key[0]);
+	// }
 
 	/// Generates random cosignatures from \a cosignatories.
 	std::vector<model::Cosignature> GenerateCosignaturesFromCosignatories(const std::vector<Key>& cosignatories);
@@ -62,18 +59,18 @@ namespace catapult { namespace test {
 			uint8_t numAdditions,
 			uint8_t numDeletions);
 
-	/// Creates a multisig cosignatories notification around \a signer, \a addressAdditions and \a addressDeletions.
+	/// Creates a multisig cosignatories notification around \a multisig, \a addressAdditions and \a addressDeletions.
 	model::MultisigCosignatoriesNotification CreateMultisigCosignatoriesNotification(
-			const Key& signer,
-			const std::vector<Key>& addressAdditions,
-			const std::vector<Key>& addressDeletions);
+			const Address& multisig,
+			const std::vector<Address>& addressAdditions,
+			const std::vector<Address>& addressDeletions);
 
-	/// Makes \a multisigKey in \a cache a multisig account with \a cosignatoryKeys as cosignatories and required limits
+	/// Makes \a multisig in \a cache a multisig account with \a cosignatories and required limits
 	/// \a minApproval and \a minRemoval.
 	void MakeMultisig(
 			cache::CatapultCacheDelta& cache,
-			const Key& multisigKey,
-			const std::vector<Key>& cosignatoryKeys,
+			const Address& multisig,
+			const std::vector<Address>& cosignatories,
 			uint32_t minApproval = 0,
 			uint32_t minRemoval = 0);
 

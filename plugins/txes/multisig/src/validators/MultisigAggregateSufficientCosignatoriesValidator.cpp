@@ -37,8 +37,7 @@ namespace catapult { namespace validators {
 
 			const auto& accountModification = static_cast<const model::EmbeddedMultisigAccountModificationTransaction&>(transaction);
 			auto hasAdds = 0 != accountModification.AddressAdditionsCount;
-			auto hasDeletes = 0 != accountModification.AddressDeletions;
-
+			auto hasDeletes = 0 != accountModification.AddressDeletionsCount;
 			return hasDeletes
 					? hasAdds ? OperationType::Max : OperationType::Removal
 					: OperationType::Normal;

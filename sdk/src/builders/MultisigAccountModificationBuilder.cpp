@@ -38,12 +38,12 @@ namespace catapult { namespace builders {
 		m_minApprovalDelta = minApprovalDelta;
 	}
 
-	void MultisigAccountModificationBuilder::addPublicKeyAddition(const Key& publicKeyAddition) {
-		m_addressAdditions.push_back(publicKeyAddition);
+	void MultisigAccountModificationBuilder::addAddressAddition(const Address& addressAddition) {
+		m_addressAdditions.push_back(addressAddition);
 	}
 
-	void MultisigAccountModificationBuilder::addAddressDeletion(const Key& publicKeyDeletion) {
-		m_addressDeletions.push_back(publicKeyDeletion);
+	void MultisigAccountModificationBuilder::addAddressDeletion(const Address& addressDeletion) {
+		m_addressDeletions.push_back(addressDeletion);
 	}
 
 	size_t MultisigAccountModificationBuilder::size() const {
@@ -62,8 +62,8 @@ namespace catapult { namespace builders {
 	size_t MultisigAccountModificationBuilder::sizeImpl() const {
 		// calculate transaction size
 		auto size = sizeof(TransactionType);
-		size += m_addressAdditions.size() * sizeof(Key);
-		size += m_addressDeletions.size() * sizeof(Key);
+		size += m_addressAdditions.size() * sizeof(Address);
+		size += m_addressDeletions.size() * sizeof(Address);
 		return size;
 	}
 
@@ -76,7 +76,7 @@ namespace catapult { namespace builders {
 		pTransaction->MinRemovalDelta = m_minRemovalDelta;
 		pTransaction->MinApprovalDelta = m_minApprovalDelta;
 		pTransaction->AddressAdditionsCount = utils::checked_cast<size_t, uint8_t>(m_addressAdditions.size());
-		pTransaction->AddressDeletions = utils::checked_cast<size_t, uint8_t>(m_addressDeletions.size());
+		pTransaction->AddressDeletionsCount = utils::checked_cast<size_t, uint8_t>(m_addressDeletions.size());
 		pTransaction->MultisigAccountModificationTransactionBody_Reserved1 = 0;
 
 		// 3. set transaction attachments

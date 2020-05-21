@@ -36,7 +36,7 @@ namespace catapult { namespace plugins {
 
 			// 2. cosig changes
 			UnresolvedAddressSet addedCosignatories;
-			if (0 < transaction.AddressAdditionsCount || 0 < transaction.AddressDeletions) {
+			if (0 < transaction.AddressAdditionsCount || 0 < transaction.AddressDeletionsCount) {
 				// - raise new cosignatory notifications first because they are used for multisig loop detection
 				// - notify cosignatories' public keys in order to allow added cosignatories to get aggregate notifications
 				const auto* pAddressAdditions = transaction.AddressAdditionsPtr();
@@ -52,7 +52,7 @@ namespace catapult { namespace plugins {
 						context.SignerAddress,
 						transaction.AddressAdditionsCount,
 						pAddressAdditions,
-						transaction.AddressDeletions,
+						transaction.AddressDeletionsCount,
 						transaction.AddressDeletionsPtr()));
 			}
 

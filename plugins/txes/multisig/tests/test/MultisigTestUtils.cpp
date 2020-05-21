@@ -26,10 +26,6 @@
 
 namespace catapult { namespace test {
 
-	std::vector<Key> GenerateKeys(size_t count) {
-		return test::GenerateRandomDataVector<Key>(count);
-	}
-
 	std::vector<model::Cosignature> GenerateCosignaturesFromCosignatories(const std::vector<Key>& cosignatories) {
 		auto cosignatures = test::GenerateRandomDataVector<model::Cosignature>(cosignatories.size());
 		for (auto i = 0u; i < cosignatories.size(); ++i)
@@ -49,18 +45,18 @@ namespace catapult { namespace test {
 
 		pTransaction->Size = entitySize;
 		pTransaction->AddressAdditionsCount = numAdditions;
-		pTransaction->AddressDeletions = numDeletions;
+		pTransaction->AddressDeletionsCount = numDeletions;
 		pTransaction->Type = model::Entity_Type_Multisig_Account_Modification;
 		pTransaction->SignerPublicKey = signer;
 		return pTransaction;
 	}
 
 	model::MultisigCosignatoriesNotification CreateMultisigCosignatoriesNotification(
-			const Key& signer,
-			const std::vector<Key>& addressAdditions,
-			const std::vector<Key>& addressDeletions) {
+			const Address& multisig,
+			const std::vector<Address>& addressAdditions,
+			const std::vector<Address>& addressDeletions) {
 		return model::MultisigCosignatoriesNotification(
-				signer,
+				multisig,
 				static_cast<uint8_t>(addressAdditions.size()),
 				addressAdditions.data(),
 				static_cast<uint8_t>(addressDeletions.size()),
@@ -68,39 +64,39 @@ namespace catapult { namespace test {
 	}
 
 	namespace {
-		state::MultisigEntry& GetOrCreateEntry(cache::MultisigCacheDelta& multisigCache, const Key& key) {
-			if (!multisigCache.contains(key))
-				multisigCache.insert(state::MultisigEntry(key));
+		state::MultisigEntry& GetOrCreateEntry(cache::MultisigCacheDelta& multisigCache, const Address& address) {
+			if (!multisigCache.contains(address))
+				multisigCache.insert(state::MultisigEntry(address));
 
-			return multisigCache.find(key).get();
+			return multisigCache.find(address).get();
 		}
 	}
 
 	void MakeMultisig(
 			cache::CatapultCacheDelta& cache,
-			const Key& multisigKey,
-			const std::vector<Key>& cosignatoryKeys,
+			const Address& multisig,
+			const std::vector<Address>& cosignatories,
 			uint32_t minApproval,
 			uint32_t minRemoval) {
 		auto& multisigCache = cache.sub<cache::MultisigCache>();
 
-		auto& multisigEntry = GetOrCreateEntry(multisigCache, multisigKey);
+		auto& multisigEntry = GetOrCreateEntry(multisigCache, multisig);
 		multisigEntry.setMinApproval(minApproval);
 		multisigEntry.setMinRemoval(minRemoval);
 
 		// add all cosignatories
-		for (const auto& cosignatoryKey : cosignatoryKeys) {
-			multisigEntry.cosignatoryAddresses().insert(cosignatoryKey);
+		for (const auto& cosignatory : cosignatories) {
+			multisigEntry.cosignatoryAddresses().insert(cosignatory);
 
-			auto& cosignatoryEntry = GetOrCreateEntry(multisigCache, cosignatoryKey);
-			cosignatoryEntry.multisigAddresses().insert(multisigKey);
+			auto& cosignatoryEntry = GetOrCreateEntry(multisigCache, cosignatory);
+			cosignatoryEntry.multisigAddresses().insert(multisig);
 		}
 	}
 
 	namespace {
-		void AssertEqual(const utils::SortedKeySet& expectedAccountKeys, const utils::SortedKeySet& accountKeys) {
-			ASSERT_EQ(expectedAccountKeys.size(), accountKeys.size());
-			EXPECT_EQ(expectedAccountKeys, accountKeys);
+		void AssertEqual(const state::SortedAddressSet& expected, const state::SortedAddressSet& actual) {
+			ASSERT_EQ(expected.size(), actual.size());
+			EXPECT_EQ(expected, actual);
 		}
 	}
 
@@ -108,7 +104,7 @@ namespace catapult { namespace test {
 		EXPECT_EQ(expectedEntry.minApproval(), entry.minApproval());
 		EXPECT_EQ(expectedEntry.minRemoval(), entry.minRemoval());
 
-		EXPECT_EQ(expectedEntry.key(), entry.key());
+		EXPECT_EQ(expectedEntry.address(), entry.address());
 
 		AssertEqual(expectedEntry.cosignatoryAddresses(), entry.cosignatoryAddresses());
 		AssertEqual(expectedEntry.multisigAddresses(), entry.multisigAddresses());
