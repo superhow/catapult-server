@@ -39,7 +39,7 @@ namespace catapult { namespace test {
 			uint8_t numAdditions,
 			uint8_t numDeletions) {
 		using TransactionType = model::EmbeddedMultisigAccountModificationTransaction;
-		uint32_t entitySize = sizeof(TransactionType) + (numAdditions + numDeletions) * Key::Size;
+		uint32_t entitySize = sizeof(TransactionType) + (numAdditions + numDeletions) * Address::Size;
 		auto pTransaction = utils::MakeUniqueWithSize<TransactionType>(entitySize);
 		test::FillWithRandomData({ reinterpret_cast<uint8_t*>(pTransaction.get()), entitySize });
 
