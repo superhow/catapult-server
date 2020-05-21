@@ -113,8 +113,8 @@ namespace catapult { namespace model {
 		PublishAll(*pBlock, [&block = *pBlock](const auto& sub) {
 			// Assert:
 			EXPECT_EQ(6u, sub.numNotifications());
-			EXPECT_EQ(0u, sub.numAddresses());
-			EXPECT_EQ(2u, sub.numKeys());
+			EXPECT_EQ(1u, sub.numAddresses());
+			EXPECT_EQ(1u, sub.numKeys());
 
 			EXPECT_TRUE(sub.contains(block.SignerPublicKey));
 			EXPECT_TRUE(sub.contains(block.BeneficiaryAddress.copyTo<UnresolvedAddress>()));
@@ -237,7 +237,7 @@ namespace catapult { namespace model {
 			ASSERT_EQ(6u, sub.numNotifications());
 			EXPECT_EQ(Core_Source_Change_Notification, sub.notificationTypes()[0]);
 			EXPECT_EQ(Core_Register_Account_Public_Key_Notification, sub.notificationTypes()[1]);
-			EXPECT_EQ(Core_Register_Account_Public_Key_Notification, sub.notificationTypes()[2]);
+			EXPECT_EQ(Core_Register_Account_Address_Notification, sub.notificationTypes()[2]);
 			EXPECT_EQ(Core_Entity_Notification, sub.notificationTypes()[3]);
 			EXPECT_EQ(Core_Block_Notification, sub.notificationTypes()[4]);
 			EXPECT_EQ(Core_Signature_Notification, sub.notificationTypes()[5]);
