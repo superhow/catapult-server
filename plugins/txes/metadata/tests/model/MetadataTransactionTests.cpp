@@ -214,7 +214,7 @@ namespace catapult { namespace model {
 		auto additionalCosignatories = ExtractAdditionalRequiredCosignatories(transaction);
 
 		// Assert:
-		EXPECT_EQ(UnresolvedAddressSet{ transaction.TargetAddress }, additionalCosignatories);
+		EXPECT_EQ(AddressSet{ transaction.TargetAddress }, additionalCosignatories);
 	}
 
 	// endregion

@@ -62,7 +62,7 @@ namespace catapult { namespace plugins {
 
 			static void AddCustomExpectations(PublishTestBuilder& builder, const TTransaction& transaction) {
 				builder.template addExpectation<AccountAddressNotification>([&transaction](const auto& notification) {
-					EXPECT_EQ(transaction.TargetAddress, notification.Address);
+					EXPECT_EQ(transaction.TargetAddress.template copyTo<UnresolvedAddress>(), notification.Address);
 				});
 			}
 		};
@@ -91,7 +91,7 @@ namespace catapult { namespace plugins {
 
 			static void AddCustomExpectations(PublishTestBuilder& builder, const TTransaction& transaction) {
 				builder.template addExpectation<MosaicRequiredNotification>([&transaction](const auto& notification) {
-					// TODO: EXPECT_EQ(transaction.TargetAddress, notification.Owner);
+					EXPECT_EQ(transaction.TargetAddress, notification.Owner);
 					EXPECT_EQ(MosaicId(), notification.MosaicId);
 					EXPECT_EQ(transaction.TargetMosaicId, notification.UnresolvedMosaicId);
 					EXPECT_EQ(0u, notification.PropertyFlagMask);
@@ -124,7 +124,7 @@ namespace catapult { namespace plugins {
 
 			static void AddCustomExpectations(PublishTestBuilder& builder, const TTransaction& transaction) {
 				builder.template addExpectation<NamespaceRequiredNotification>([&transaction](const auto& notification) {
-					// TODO: EXPECT_EQ(transaction.TargetAddress, notification.Owner);
+					EXPECT_EQ(transaction.TargetAddress, notification.Owner);
 					EXPECT_EQ(transaction.TargetNamespaceId, notification.NamespaceId);
 				});
 			}
@@ -195,7 +195,7 @@ namespace catapult { namespace plugins {
 		builder.template addExpectation<MetadataValueNotification>([&transaction](const auto& notification) {
 			// partial metadata key
 			EXPECT_EQ(model::GetSignerAddress(transaction), notification.PartialMetadataKey.SourceAddress);
-			//  TODO: EXPECT_EQ(transaction.TargetAddress, notification.PartialMetadataKey.TargetAddress);
+			EXPECT_EQ(transaction.TargetAddress, notification.PartialMetadataKey.TargetAddress);
 			EXPECT_EQ(transaction.ScopedMetadataKey, notification.PartialMetadataKey.ScopedMetadataKey);
 
 			// metadata target
@@ -235,7 +235,7 @@ namespace catapult { namespace plugins {
 		auto additionalCosignatories = pPlugin->additionalRequiredCosignatories(transaction);
 
 		// Assert:
-		EXPECT_EQ(UnresolvedAddressSet{ transaction.TargetAddress }, additionalCosignatories);
+		EXPECT_EQ(AddressSet{ transaction.TargetAddress }, additionalCosignatories);
 	}
 
 	// endregion
