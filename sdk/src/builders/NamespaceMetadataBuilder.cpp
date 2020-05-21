@@ -31,7 +31,7 @@ namespace catapult { namespace builders {
 			, m_value()
 	{}
 
-	void NamespaceMetadataBuilder::setTargetAddress(const UnresolvedAddress& targetAddress) {
+	void NamespaceMetadataBuilder::setTargetAddress(const Address& targetAddress) {
 		m_targetAddress = targetAddress;
 	}
 
