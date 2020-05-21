@@ -32,14 +32,14 @@ namespace catapult {
 
 namespace catapult { namespace test {
 
-	// /// Asserts that all \a expectedKeys are contained within \a keys.
-	// template<typename TExpectedKeys, typename TKeys>
-	// void AssertContents(const TExpectedKeys& expectedKeys, const TKeys& keys) {
-	// 	// Assert:
-	// 	EXPECT_EQ(expectedKeys.size(), keys.size());
-	// 	for (const auto& key : expectedKeys)
-	// 		EXPECT_CONTAINS(keys, key);
-	// }
+	/// Asserts that all \a expectedAddresses are contained within \a addresses.
+	template<typename TExpectedAddresses, typename TAddresses>
+	void AssertContents(const TExpectedAddresses& expectedAddresses, const TAddresses& addresses) {
+		// Assert:
+		EXPECT_EQ(expectedAddresses.size(), addresses.size());
+		for (const auto& address : expectedAddresses)
+			EXPECT_CONTAINS(addresses, address);
+	}
 
 	// /// Asserts that all \a expectedKeys are contained within \a cache.
 	// template<typename TExpectedKeys, typename TCache>
