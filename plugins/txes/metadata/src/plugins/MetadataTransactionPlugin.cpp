@@ -34,13 +34,9 @@ namespace catapult { namespace plugins {
 
 	namespace {
 		template<typename TTransaction>
-		Address GetTargetAddress(const TTransaction& transaction) {
-			return model::PublicKeyToAddress(transaction.TargetPublicKey, transaction.Network);
-		}
-
-		template<typename TTransaction>
 		PartialMetadataKey ExtractPartialMetadataKey(const TTransaction& transaction, const PublishContext& context) {
-			return { context.SignerAddress, GetTargetAddress(transaction), transaction.ScopedMetadataKey };
+			// TODO: need to resolve this!
+			return { context.SignerAddress, transaction.TargetAddress.template copyTo<Address>(), transaction.ScopedMetadataKey };
 		}
 
 		struct AccountTraits {
@@ -51,7 +47,7 @@ namespace catapult { namespace plugins {
 
 			template<typename TTransaction>
 			static void RaiseCustomNotifications(const TTransaction& transaction, NotificationSubscriber& sub) {
-				sub.notify(AccountPublicKeyNotification(transaction.TargetPublicKey));
+				sub.notify(AccountAddressNotification(transaction.TargetAddress));
 			}
 		};
 
@@ -63,7 +59,8 @@ namespace catapult { namespace plugins {
 
 			template<typename TTransaction>
 			static void RaiseCustomNotifications(const TTransaction& transaction, NotificationSubscriber& sub) {
-				sub.notify(MosaicRequiredNotification(GetTargetAddress(transaction), transaction.TargetMosaicId));
+				// TODO: need to resolve this!
+				sub.notify(MosaicRequiredNotification(transaction.TargetAddress.template copyTo<Address>(), transaction.TargetMosaicId));
 			}
 		};
 
@@ -75,7 +72,8 @@ namespace catapult { namespace plugins {
 
 			template<typename TTransaction>
 			static void RaiseCustomNotifications(const TTransaction& transaction, NotificationSubscriber& sub) {
-				sub.notify(NamespaceRequiredNotification(GetTargetAddress(transaction), transaction.TargetNamespaceId));
+				// TODO: need to resolve this!
+				sub.notify(NamespaceRequiredNotification(transaction.TargetAddress.template copyTo<Address>(), transaction.TargetNamespaceId));
 			}
 		};
 
