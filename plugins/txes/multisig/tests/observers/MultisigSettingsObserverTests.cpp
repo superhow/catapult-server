@@ -190,8 +190,8 @@ namespace catapult { namespace observers {
 		EXPECT_EQ(signer, multisigEntry.key());
 		EXPECT_EQ(2u, multisigEntry.minApproval());
 		EXPECT_EQ(1u, multisigEntry.minRemoval());
-		EXPECT_TRUE(multisigEntry.cosignatoryPublicKeys().empty());
-		EXPECT_TRUE(multisigEntry.multisigPublicKeys().empty());
+		EXPECT_TRUE(multisigEntry.cosignatoryAddresses().empty());
+		EXPECT_TRUE(multisigEntry.multisigAddresses().empty());
 	}
 
 	// endregion

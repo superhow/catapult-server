@@ -57,12 +57,12 @@ namespace catapult { namespace state {
 
 				// add cosignatories
 				for (auto i = mainAccountId; i < mainAccountId + numCosignatories; ++i)
-					entry.cosignatoryPublicKeys().insert(m_accountKeys[i]);
+					entry.cosignatoryAddresses().insert(m_accountKeys[i]);
 
 				// add multisig accounts
 				auto firstMultisigId = mainAccountId + numCosignatories;
 				for (auto i = firstMultisigId; i < firstMultisigId + numMultisigAccounts; ++i)
-					entry.multisigPublicKeys().insert(m_accountKeys[i]);
+					entry.multisigAddresses().insert(m_accountKeys[i]);
 
 				return entry;
 			}
@@ -111,11 +111,11 @@ namespace catapult { namespace state {
 			EXPECT_EQ(entry.key(), accountKey);
 			pData += Key::Size;
 
-			AssertAccountKeys(entry.cosignatoryPublicKeys(), pData);
-			pData += sizeof(uint64_t) + entry.cosignatoryPublicKeys().size() * Key::Size;
+			AssertAccountKeys(entry.cosignatoryAddresses(), pData);
+			pData += sizeof(uint64_t) + entry.cosignatoryAddresses().size() * Key::Size;
 
-			AssertAccountKeys(entry.multisigPublicKeys(), pData);
-			pData += sizeof(uint64_t) + entry.multisigPublicKeys().size() * Key::Size;
+			AssertAccountKeys(entry.multisigAddresses(), pData);
+			pData += sizeof(uint64_t) + entry.multisigAddresses().size() * Key::Size;
 
 			EXPECT_EQ(pExpectedEnd, pData);
 		}
@@ -172,7 +172,7 @@ namespace catapult { namespace state {
 		public:
 			static void AddKeys(MultisigEntry& entry, const std::vector<Key>& keys) {
 				for (const auto& key : keys)
-					entry.cosignatoryPublicKeys().insert(key);
+					entry.cosignatoryAddresses().insert(key);
 			}
 
 			static constexpr size_t GetKeyStartBufferOffset() {
@@ -184,7 +184,7 @@ namespace catapult { namespace state {
 		public:
 			static void AddKeys(MultisigEntry& entry, const std::vector<Key>& keys) {
 				for (const auto& key : keys)
-					entry.multisigPublicKeys().insert(key);
+					entry.multisigAddresses().insert(key);
 			}
 
 			static constexpr size_t GetKeyStartBufferOffset() {

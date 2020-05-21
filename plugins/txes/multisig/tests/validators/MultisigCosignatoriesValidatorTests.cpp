@@ -32,11 +32,11 @@ namespace catapult { namespace validators {
 	namespace {
 		void AssertValidationResult(
 				ValidationResult expectedResult,
-				const std::vector<Key>& publicKeyAdditions,
-				const std::vector<Key>& publicKeyDeletions) {
+				const std::vector<Key>& addressAdditions,
+				const std::vector<Key>& addressDeletions) {
 			// Arrange:
 			auto signer = test::GenerateRandomByteArray<Key>();
-			auto notification = test::CreateMultisigCosignatoriesNotification(signer, publicKeyAdditions, publicKeyDeletions);
+			auto notification = test::CreateMultisigCosignatoriesNotification(signer, addressAdditions, addressDeletions);
 			auto pValidator = CreateMultisigCosignatoriesValidator();
 
 			// Act:

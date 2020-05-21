@@ -311,8 +311,8 @@ namespace catapult { namespace validators {
 		void AddRequiredCosignatoriesKeys(
 				std::vector<Key>& cosignatories,
 				const model::EmbeddedMultisigAccountModificationTransaction& transaction) {
-			for (auto i = 0u; i < transaction.PublicKeyAdditionsCount; ++i)
-				cosignatories.push_back(transaction.PublicKeyAdditionsPtr()[i]);
+			for (auto i = 0u; i < transaction.AddressAdditionsCount; ++i)
+				cosignatories.push_back(transaction.AddressAdditionsPtr()[i]);
 		}
 
 		void AssertMinApprovalLimit(
@@ -442,8 +442,8 @@ namespace catapult { namespace validators {
 
 			// - make added cosignatories single level multisig according to the multisig policies
 			std::vector<Key> requiredCosignatories;
-			for (auto i = 0u; i < pSubTransaction->PublicKeyAdditionsCount; ++i) {
-				const auto& cosignatoryPublicKey = pSubTransaction->PublicKeyAdditionsPtr()[i];
+			for (auto i = 0u; i < pSubTransaction->AddressAdditionsCount; ++i) {
+				const auto& cosignatoryPublicKey = pSubTransaction->AddressAdditionsPtr()[i];
 				if (AccountPolicy::Multisig == accountPolicies[i]) {
 					// - cosignatoryPublicKey is not a required cosignatory because it is a multisig account
 					auto cosignatoryCosignatories = test::GenerateRandomDataVector<Key>(3);

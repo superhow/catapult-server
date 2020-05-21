@@ -52,11 +52,11 @@ namespace catapult { namespace validators {
 
 		void AssertMultisigAccountIsUnknown(
 				ValidationResult expectedResult,
-				const std::vector<Key>& publicKeyAdditions,
-				const std::vector<Key>& publicKeyDeletions) {
+				const std::vector<Key>& addressAdditions,
+				const std::vector<Key>& addressDeletions) {
 			// Arrange:
 			auto signer = test::GenerateRandomByteArray<Key>();
-			auto notification = CreateNotification(signer, publicKeyAdditions, publicKeyDeletions);
+			auto notification = CreateNotification(signer, addressAdditions, addressDeletions);
 
 			auto cache = test::MultisigCacheFactory::Create();
 
@@ -93,16 +93,16 @@ namespace catapult { namespace validators {
 			auto keys = test::GenerateKeys(1 + settings.size());
 			const auto& signer = keys[0];
 
-			std::vector<Key> publicKeyAdditions;
-			std::vector<Key> publicKeyDeletions;
+			std::vector<Key> addressAdditions;
+			std::vector<Key> addressDeletions;
 			for (auto i = 0u; i < settings.size(); ++i) {
 				if (CosignatoryModificationAction::Add == settings[i].Operation)
-					publicKeyAdditions.push_back(keys[1 + i]);
+					addressAdditions.push_back(keys[1 + i]);
 				else
-					publicKeyDeletions.push_back(keys[1 + i]);
+					addressDeletions.push_back(keys[1 + i]);
 			}
 
-			auto notification = CreateNotification(signer, publicKeyAdditions, publicKeyDeletions);
+			auto notification = CreateNotification(signer, addressAdditions, addressDeletions);
 			auto cache = test::MultisigCacheFactory::Create();
 
 			// - create multisig entry in cache
@@ -111,7 +111,7 @@ namespace catapult { namespace validators {
 				auto& multisigDelta = delta.sub<cache::MultisigCache>();
 				const auto& multisigAccountKey = keys[0];
 				multisigDelta.insert(state::MultisigEntry(multisigAccountKey));
-				auto& cosignatories = multisigDelta.find(multisigAccountKey).get().cosignatoryPublicKeys();
+				auto& cosignatories = multisigDelta.find(multisigAccountKey).get().cosignatoryAddresses();
 				for (auto i = 0u; i < settings.size(); ++i) {
 					if (CosignatoryType::Existing == settings[i].Type)
 						cosignatories.insert(keys[1 + i]);

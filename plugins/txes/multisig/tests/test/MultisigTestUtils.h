@@ -62,11 +62,11 @@ namespace catapult { namespace test {
 			uint8_t numAdditions,
 			uint8_t numDeletions);
 
-	/// Creates a multisig cosignatories notification around \a signer, \a publicKeyAdditions and \a publicKeyDeletions.
+	/// Creates a multisig cosignatories notification around \a signer, \a addressAdditions and \a addressDeletions.
 	model::MultisigCosignatoriesNotification CreateMultisigCosignatoriesNotification(
 			const Key& signer,
-			const std::vector<Key>& publicKeyAdditions,
-			const std::vector<Key>& publicKeyDeletions);
+			const std::vector<Key>& addressAdditions,
+			const std::vector<Key>& addressDeletions);
 
 	/// Makes \a multisigKey in \a cache a multisig account with \a cosignatoryKeys as cosignatories and required limits
 	/// \a minApproval and \a minRemoval.

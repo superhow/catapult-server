@@ -47,8 +47,8 @@ namespace catapult { namespace mongo { namespace plugins {
 					<< "minApproval" << static_cast<int32_t>(entry.minApproval())
 					<< "minRemoval" << static_cast<int32_t>(entry.minRemoval());
 
-		StreamPublicKeys(builder, "cosignatoryPublicKeys", entry.cosignatoryPublicKeys());
-		StreamPublicKeys(builder, "multisigPublicKeys", entry.multisigPublicKeys());
+		StreamPublicKeys(builder, "cosignatoryAddresses", entry.cosignatoryAddresses());
+		StreamPublicKeys(builder, "multisigAddresses", entry.multisigAddresses());
 
 		return doc
 				<< bson_stream::close_document

@@ -45,10 +45,10 @@ namespace catapult { namespace cache {
 				entry.setMinRemoval(34);
 
 				for (auto i = 0u; i < 3u; ++i)
-					entry.cosignatoryPublicKeys().insert(test::GenerateRandomByteArray<Key>());
+					entry.cosignatoryAddresses().insert(test::GenerateRandomByteArray<Key>());
 
 				for (auto i = 0u; i < 4u; ++i)
-					entry.multisigPublicKeys().insert(test::GenerateRandomByteArray<Key>());
+					entry.multisigAddresses().insert(test::GenerateRandomByteArray<Key>());
 
 				return entry;
 			}

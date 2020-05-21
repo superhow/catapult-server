@@ -41,8 +41,8 @@ namespace catapult { namespace mongo { namespace plugins {
 			builder
 					<< "minRemovalDelta" << transaction.MinRemovalDelta
 					<< "minApprovalDelta" << transaction.MinApprovalDelta;
-			StreamKeys(builder, "publicKeyAdditions", transaction.PublicKeyAdditionsPtr(), transaction.PublicKeyAdditionsCount);
-			StreamKeys(builder, "publicKeyDeletions", transaction.PublicKeyDeletionsPtr(), transaction.PublicKeyDeletionsCount);
+			StreamKeys(builder, "addressAdditions", transaction.AddressAdditionsPtr(), transaction.AddressAdditionsCount);
+			StreamKeys(builder, "addressDeletions", transaction.AddressDeletionsPtr(), transaction.AddressDeletions);
 		}
 	}
 

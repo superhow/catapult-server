@@ -47,7 +47,7 @@ namespace catapult { namespace builders {
 		void addPublicKeyAddition(const Key& publicKeyAddition);
 
 		/// Adds \a publicKeyDeletion to cosignatory public key deletions.
-		void addPublicKeyDeletion(const Key& publicKeyDeletion);
+		void addAddressDeletion(const Key& publicKeyDeletion);
 
 	public:
 		/// Gets the size of multisig account modification transaction.
@@ -70,7 +70,7 @@ namespace catapult { namespace builders {
 	private:
 		int8_t m_minRemovalDelta;
 		int8_t m_minApprovalDelta;
-		std::vector<Key> m_publicKeyAdditions;
-		std::vector<Key> m_publicKeyDeletions;
+		std::vector<Key> m_addressAdditions;
+		std::vector<Key> m_addressDeletions;
 	};
 }}

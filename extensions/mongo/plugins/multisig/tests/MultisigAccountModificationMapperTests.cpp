@@ -47,7 +47,7 @@ namespace catapult { namespace mongo { namespace plugins {
 				builder.addPublicKeyAddition(test::GenerateRandomByteArray<Key>());
 
 			for (auto i = 0u; i < numKeyDeletions; ++i)
-				builder.addPublicKeyDeletion(test::GenerateRandomByteArray<Key>());
+				builder.addAddressDeletion(test::GenerateRandomByteArray<Key>());
 
 			return builder;
 		}
@@ -69,8 +69,8 @@ namespace catapult { namespace mongo { namespace plugins {
 			EXPECT_EQ(transaction.MinRemovalDelta, test::GetInt32(dbTransaction, "minRemovalDelta"));
 			EXPECT_EQ(transaction.MinApprovalDelta, test::GetInt32(dbTransaction, "minApprovalDelta"));
 
-			AssertEqualKeys(dbTransaction, "publicKeyAdditions", transaction.PublicKeyAdditionsPtr(), transaction.PublicKeyAdditionsCount);
-			AssertEqualKeys(dbTransaction, "publicKeyDeletions", transaction.PublicKeyDeletionsPtr(), transaction.PublicKeyDeletionsCount);
+			AssertEqualKeys(dbTransaction, "addressAdditions", transaction.AddressAdditionsPtr(), transaction.AddressAdditionsCount);
+			AssertEqualKeys(dbTransaction, "addressDeletions", transaction.AddressDeletionsPtr(), transaction.AddressDeletions);
 		}
 
 		template<typename TTraits>

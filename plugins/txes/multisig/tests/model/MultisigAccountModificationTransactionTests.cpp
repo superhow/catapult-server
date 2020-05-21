@@ -35,7 +35,7 @@ namespace catapult { namespace model {
 
 	// region size + alignment + properties
 
-#define TRANSACTION_FIELDS FIELD(MinRemovalDelta) FIELD(MinApprovalDelta) FIELD(PublicKeyAdditionsCount) FIELD(PublicKeyDeletionsCount)
+#define TRANSACTION_FIELDS FIELD(MinRemovalDelta) FIELD(MinApprovalDelta) FIELD(AddressAdditionsCount) FIELD(AddressDeletions)
 
 	namespace {
 		template<typename T>
@@ -83,8 +83,8 @@ namespace catapult { namespace model {
 				uint32_t entitySize = sizeof(TransactionType) + (numAdditions + numDeletions) * Key::Size;
 				auto pTransaction = utils::MakeUniqueWithSize<TransactionType>(entitySize);
 				pTransaction->Size = entitySize;
-				pTransaction->PublicKeyAdditionsCount = numAdditions;
-				pTransaction->PublicKeyDeletionsCount = numDeletions;
+				pTransaction->AddressAdditionsCount = numAdditions;
+				pTransaction->AddressDeletions = numDeletions;
 				return pTransaction;
 			}
 
@@ -94,12 +94,12 @@ namespace catapult { namespace model {
 
 			template<typename TEntity>
 			static auto GetAttachmentPointer1(TEntity& entity) {
-				return entity.PublicKeyAdditionsPtr();
+				return entity.AddressAdditionsPtr();
 			}
 
 			template<typename TEntity>
 			static auto GetAttachmentPointer2(TEntity& entity) {
-				return entity.PublicKeyDeletionsPtr();
+				return entity.AddressDeletionsPtr();
 			}
 		};
 	}
@@ -114,8 +114,8 @@ namespace catapult { namespace model {
 		// Arrange:
 		TransactionType transaction;
 		transaction.Size = 0;
-		transaction.PublicKeyAdditionsCount = 7;
-		transaction.PublicKeyDeletionsCount = 4;
+		transaction.AddressAdditionsCount = 7;
+		transaction.AddressDeletions = 4;
 
 		// Act:
 		auto realSize = TransactionType::CalculateRealSize(transaction);
@@ -128,8 +128,8 @@ namespace catapult { namespace model {
 		// Arrange:
 		TransactionType transaction;
 		test::SetMaxValue(transaction.Size);
-		test::SetMaxValue(transaction.PublicKeyAdditionsCount);
-		test::SetMaxValue(transaction.PublicKeyDeletionsCount);
+		test::SetMaxValue(transaction.AddressAdditionsCount);
+		test::SetMaxValue(transaction.AddressDeletions);
 
 		// Act:
 		auto realSize = TransactionType::CalculateRealSize(transaction);
@@ -163,8 +163,8 @@ namespace catapult { namespace model {
 		auto additionalCosignatories = ExtractAdditionalRequiredCosignatories(*pTransaction);
 
 		// Assert:
-		const auto* pPublicKeyAdditions = pTransaction->PublicKeyAdditionsPtr();
-		EXPECT_EQ(utils::KeySet({ pPublicKeyAdditions[0], pPublicKeyAdditions[1] }), additionalCosignatories);
+		const auto* pAddressAdditions = pTransaction->AddressAdditionsPtr();
+		EXPECT_EQ(utils::KeySet({ pAddressAdditions[0], pAddressAdditions[1] }), additionalCosignatories);
 	}
 
 	TEST(TEST_CLASS, ExtractAdditionalRequiredCosignatories_DelModifications) {
@@ -186,8 +186,8 @@ namespace catapult { namespace model {
 		auto additionalCosignatories = ExtractAdditionalRequiredCosignatories(*pTransaction);
 
 		// Assert:
-		const auto* pPublicKeyAdditions = pTransaction->PublicKeyAdditionsPtr();
-		EXPECT_EQ(utils::KeySet({ pPublicKeyAdditions[0], pPublicKeyAdditions[1] }), additionalCosignatories);
+		const auto* pAddressAdditions = pTransaction->AddressAdditionsPtr();
+		EXPECT_EQ(utils::KeySet({ pAddressAdditions[0], pAddressAdditions[1] }), additionalCosignatories);
 	}
 
 	// endregion

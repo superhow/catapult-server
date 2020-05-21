@@ -49,15 +49,15 @@ namespace catapult { namespace validators {
 
 				// - add cosignatories
 				for (auto i = 0; i < numInitialCosignatories; ++i)
-					entry.cosignatoryPublicKeys().insert(test::GenerateRandomByteArray<Key>());
+					entry.cosignatoryAddresses().insert(test::GenerateRandomByteArray<Key>());
 
 				cacheDelta.sub<cache::MultisigCache>().insert(entry);
 				cache.commit(Height());
 			}
 
-			auto publicKeyAdditions = test::GenerateRandomDataVector<Key>(numAdditions);
-			auto publicKeyDeletions = test::GenerateRandomDataVector<Key>(numDeletions);
-			auto notification = test::CreateMultisigCosignatoriesNotification(signer, publicKeyAdditions, publicKeyDeletions);
+			auto addressAdditions = test::GenerateRandomDataVector<Key>(numAdditions);
+			auto addressDeletions = test::GenerateRandomDataVector<Key>(numDeletions);
+			auto notification = test::CreateMultisigCosignatoriesNotification(signer, addressAdditions, addressDeletions);
 			auto pValidator = CreateMultisigMaxCosignatoriesValidator(maxCosignatoriesPerAccount);
 
 			// Act:

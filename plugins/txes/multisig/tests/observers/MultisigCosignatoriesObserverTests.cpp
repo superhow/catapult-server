@@ -43,8 +43,8 @@ namespace catapult { namespace observers {
 			if (!cache.contains(cosignatoryAccountKey))
 				cache.insert(state::MultisigEntry(cosignatoryAccountKey));
 
-			cache.find(cosignatoryAccountKey).get().multisigPublicKeys().insert(multisigAccountKey);
-			cache.find(multisigAccountKey).get().cosignatoryPublicKeys().insert(cosignatoryAccountKey);
+			cache.find(cosignatoryAccountKey).get().multisigAddresses().insert(multisigAccountKey);
+			cache.find(multisigAccountKey).get().cosignatoryAddresses().insert(cosignatoryAccountKey);
 		}
 
 		class MultisigCacheFacade {
@@ -72,7 +72,7 @@ namespace catapult { namespace observers {
 				ASSERT_TRUE(m_multisigCache.contains(accountKey)) << "cache is missing account " << accountKey;
 
 				const auto& multisigEntry = m_multisigCache.find(accountKey).get();
-				assertAccountsInSet(cosignatoryKeys, multisigEntry.cosignatoryPublicKeys());
+				assertAccountsInSet(cosignatoryKeys, multisigEntry.cosignatoryAddresses());
 			}
 
 			void assertHasMultisigAccounts(const Key& accountKey, const std::vector<Key>& multisigAccountKeys) const {
@@ -80,7 +80,7 @@ namespace catapult { namespace observers {
 				ASSERT_TRUE(m_multisigCache.contains(accountKey)) << "cache is missing account " << accountKey;
 
 				const auto& multisigEntry = m_multisigCache.find(accountKey).get();
-				assertAccountsInSet(multisigAccountKeys, multisigEntry.multisigPublicKeys());
+				assertAccountsInSet(multisigAccountKeys, multisigEntry.multisigAddresses());
 			}
 
 		private:
@@ -226,8 +226,8 @@ namespace catapult { namespace observers {
 	NOTIFY_MODE_BASED_TRAITS(CanAddCosignatories) {
 		// Arrange:
 		auto keys = test::GenerateKeys(10);
-		auto publicKeyAdditions = std::vector<Key>{ keys[1], keys[2], keys[3] };
-		auto notification = CreateNotification(keys[0], publicKeyAdditions, std::vector<Key>());
+		auto addressAdditions = std::vector<Key>{ keys[1], keys[2], keys[3] };
+		auto notification = CreateNotification(keys[0], addressAdditions, std::vector<Key>());
 
 		// Act + Assert:
 		TTraits::RunMultisigTest(keys, { 0, 1, 2, 3 }, {}, notification, {}, {{ 0, { 1, 2, 3 } }});
@@ -236,8 +236,8 @@ namespace catapult { namespace observers {
 	NOTIFY_MODE_BASED_TRAITS(CanConvertCosignatoryToMultisigAccount) {
 		// Arrange:
 		auto keys = test::GenerateKeys(10);
-		auto publicKeyAdditions = std::vector<Key>{ keys[3], keys[4] };
-		auto notification = CreateNotification(keys[1], publicKeyAdditions, std::vector<Key>());
+		auto addressAdditions = std::vector<Key>{ keys[3], keys[4] };
+		auto notification = CreateNotification(keys[1], addressAdditions, std::vector<Key>());
 
 		// Act + Assert:
 		TTraits::RunMultisigTest(keys, { 3, 4 }, {{ 0, { 1, 2 } }}, notification, {}, {{ 0, { 1, 2 } }, { 1, { 3, 4 } }, });
@@ -246,8 +246,8 @@ namespace catapult { namespace observers {
 	NOTIFY_MODE_BASED_TRAITS(CanAddMultisigAccountAsACosignatory) {
 		// Arrange:
 		auto keys = test::GenerateKeys(10);
-		auto publicKeyAdditions = std::vector<Key>{ keys[1], keys[4] };
-		auto notification = CreateNotification(keys[0], publicKeyAdditions, std::vector<Key>());
+		auto addressAdditions = std::vector<Key>{ keys[1], keys[4] };
+		auto notification = CreateNotification(keys[0], addressAdditions, std::vector<Key>());
 
 		// Act + Assert:
 		TTraits::RunMultisigTest(keys, { 0, 4 }, {{ 1, { 2, 3 } }}, notification, {}, {{ 0, { 1, 4 } }, { 1, { 2, 3 } }, });
@@ -260,9 +260,9 @@ namespace catapult { namespace observers {
 	NOTIFY_MODE_BASED_TRAITS(CanAddAndRemoveCosignatories) {
 		// Arrange:
 		auto keys = test::GenerateKeys(10);
-		auto publicKeyAdditions = std::vector<Key>{ keys[1], keys[4] };
-		auto publicKeyDeletions = std::vector<Key>{ keys[2], keys[3] };
-		auto notification = CreateNotification(keys[0], publicKeyAdditions, publicKeyDeletions);
+		auto addressAdditions = std::vector<Key>{ keys[1], keys[4] };
+		auto addressDeletions = std::vector<Key>{ keys[2], keys[3] };
+		auto notification = CreateNotification(keys[0], addressAdditions, addressDeletions);
 
 		// Act + Assert:
 		TTraits::RunMultisigTest(keys, { 1, 4 }, {{ 0, { 2, 3 } }}, notification, { 2, 3 }, {{ 0, { 1, 4 } }});
@@ -275,8 +275,8 @@ namespace catapult { namespace observers {
 	NOTIFY_MODE_BASED_TRAITS(RemovingCosignatory_RemovesCosignatoryWithNoLinks_RemovesMultisigAccountWithNoLinks) {
 		// Arrange:
 		auto keys = test::GenerateKeys(10);
-		auto publicKeyDeletions = std::vector<Key>{ keys[1] };
-		auto notification = CreateNotification(keys[0], std::vector<Key>(), publicKeyDeletions);
+		auto addressDeletions = std::vector<Key>{ keys[1] };
+		auto notification = CreateNotification(keys[0], std::vector<Key>(), addressDeletions);
 
 		// Act + Assert:
 		TTraits::RunMultisigTest(keys, {}, {{ 0, { 1 } }}, notification, { 0, 1 }, {});
@@ -285,8 +285,8 @@ namespace catapult { namespace observers {
 	NOTIFY_MODE_BASED_TRAITS(RemovingCosignatory_RemovesCosignatoryWithNoLinks_LeavesMultisigAccountWithCosignatories) {
 		// Arrange:
 		auto keys = test::GenerateKeys(10);
-		auto publicKeyDeletions = std::vector<Key>{ keys[2] };
-		auto notification = CreateNotification(keys[0], std::vector<Key>(), publicKeyDeletions);
+		auto addressDeletions = std::vector<Key>{ keys[2] };
+		auto notification = CreateNotification(keys[0], std::vector<Key>(), addressDeletions);
 
 		// Act + Assert:
 		TTraits::RunMultisigTest(keys, {}, {{ 0, { 1, 2 } }}, notification, { 2 }, {{ 0, { 1 } }});
@@ -295,8 +295,8 @@ namespace catapult { namespace observers {
 	NOTIFY_MODE_BASED_TRAITS(RemovingCosignatory_RemovesCosignatoryWithNoLinks_LeavesMultisigAccountWithMultisigAccounts) {
 		// Arrange:
 		auto keys = test::GenerateKeys(10);
-		auto publicKeyDeletions = std::vector<Key>{ keys[2] };
-		auto notification = CreateNotification(keys[1], std::vector<Key>(), publicKeyDeletions);
+		auto addressDeletions = std::vector<Key>{ keys[2] };
+		auto notification = CreateNotification(keys[1], std::vector<Key>(), addressDeletions);
 
 		// Act + Assert:
 		TTraits::RunMultisigTest(keys, {}, {{ 0, { 1 } }, { 1, { 2 } }}, notification, { 2 }, {{ 0, { 1 } }});
@@ -305,8 +305,8 @@ namespace catapult { namespace observers {
 	NOTIFY_MODE_BASED_TRAITS(RemovingCosignatory_LeavesCosignatoryWithCosignatories_RemovesMultisigAccountWitNoLinks) {
 		// Arrange:
 		auto keys = test::GenerateKeys(10);
-		auto publicKeyDeletions = std::vector<Key>{ keys[1] };
-		auto notification = CreateNotification(keys[0], std::vector<Key>(), publicKeyDeletions);
+		auto addressDeletions = std::vector<Key>{ keys[1] };
+		auto notification = CreateNotification(keys[0], std::vector<Key>(), addressDeletions);
 
 		// Act + Assert:
 		TTraits::RunMultisigTest(keys, {}, {{ 0, { 1 } }, { 1, { 2 } }}, notification, { 0 }, {{ 1, { 2 } }});
@@ -315,8 +315,8 @@ namespace catapult { namespace observers {
 	NOTIFY_MODE_BASED_TRAITS(RemovingCosignatory_LeavesCosignatoryWithMultisigAccounts_RemovesMultisigAccountWithNoLinks) {
 		// Arrange:
 		auto keys = test::GenerateKeys(10);
-		auto publicKeyDeletions = std::vector<Key>{ keys[2] };
-		auto notification = CreateNotification(keys[0], std::vector<Key>(), publicKeyDeletions);
+		auto addressDeletions = std::vector<Key>{ keys[2] };
+		auto notification = CreateNotification(keys[0], std::vector<Key>(), addressDeletions);
 
 		// Act + Assert:
 		TTraits::RunMultisigTest(keys, {}, {{ 0, { 2 } }, { 1, { 2 } }}, notification, { 0 }, {{ 1, { 2 } }});

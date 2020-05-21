@@ -46,7 +46,7 @@ namespace catapult { namespace validators {
 
 				// - add multisig accounts
 				for (auto i = 0; i < initialCosignedAccounts; ++i)
-					cosignatoryEntry.multisigPublicKeys().insert(test::GenerateRandomByteArray<Key>());
+					cosignatoryEntry.multisigAddresses().insert(test::GenerateRandomByteArray<Key>());
 
 				cacheDelta.sub<cache::MultisigCache>().insert(cosignatoryEntry);
 				cache.commit(Height());

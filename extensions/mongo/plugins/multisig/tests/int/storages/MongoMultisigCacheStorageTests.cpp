@@ -59,8 +59,8 @@ namespace catapult { namespace mongo { namespace plugins {
 				entry.setMinApproval(12);
 				entry.setMinRemoval(23);
 
-				InsertRandom(entry.cosignatoryPublicKeys(), std::max<size_t>(1, test::RandomByte() & 0x0F));
-				InsertRandom(entry.multisigPublicKeys(), std::max<size_t>(1, test::RandomByte() & 0x0F));
+				InsertRandom(entry.cosignatoryAddresses(), std::max<size_t>(1, test::RandomByte() & 0x0F));
+				InsertRandom(entry.multisigAddresses(), std::max<size_t>(1, test::RandomByte() & 0x0F));
 				return entry;
 			}
 

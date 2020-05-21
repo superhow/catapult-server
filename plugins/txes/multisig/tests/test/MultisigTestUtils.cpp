@@ -48,8 +48,8 @@ namespace catapult { namespace test {
 		test::FillWithRandomData({ reinterpret_cast<uint8_t*>(pTransaction.get()), entitySize });
 
 		pTransaction->Size = entitySize;
-		pTransaction->PublicKeyAdditionsCount = numAdditions;
-		pTransaction->PublicKeyDeletionsCount = numDeletions;
+		pTransaction->AddressAdditionsCount = numAdditions;
+		pTransaction->AddressDeletions = numDeletions;
 		pTransaction->Type = model::Entity_Type_Multisig_Account_Modification;
 		pTransaction->SignerPublicKey = signer;
 		return pTransaction;
@@ -57,14 +57,14 @@ namespace catapult { namespace test {
 
 	model::MultisigCosignatoriesNotification CreateMultisigCosignatoriesNotification(
 			const Key& signer,
-			const std::vector<Key>& publicKeyAdditions,
-			const std::vector<Key>& publicKeyDeletions) {
+			const std::vector<Key>& addressAdditions,
+			const std::vector<Key>& addressDeletions) {
 		return model::MultisigCosignatoriesNotification(
 				signer,
-				static_cast<uint8_t>(publicKeyAdditions.size()),
-				publicKeyAdditions.data(),
-				static_cast<uint8_t>(publicKeyDeletions.size()),
-				publicKeyDeletions.data());
+				static_cast<uint8_t>(addressAdditions.size()),
+				addressAdditions.data(),
+				static_cast<uint8_t>(addressDeletions.size()),
+				addressDeletions.data());
 	}
 
 	namespace {
@@ -90,10 +90,10 @@ namespace catapult { namespace test {
 
 		// add all cosignatories
 		for (const auto& cosignatoryKey : cosignatoryKeys) {
-			multisigEntry.cosignatoryPublicKeys().insert(cosignatoryKey);
+			multisigEntry.cosignatoryAddresses().insert(cosignatoryKey);
 
 			auto& cosignatoryEntry = GetOrCreateEntry(multisigCache, cosignatoryKey);
-			cosignatoryEntry.multisigPublicKeys().insert(multisigKey);
+			cosignatoryEntry.multisigAddresses().insert(multisigKey);
 		}
 	}
 
@@ -110,7 +110,7 @@ namespace catapult { namespace test {
 
 		EXPECT_EQ(expectedEntry.key(), entry.key());
 
-		AssertEqual(expectedEntry.cosignatoryPublicKeys(), entry.cosignatoryPublicKeys());
-		AssertEqual(expectedEntry.multisigPublicKeys(), entry.multisigPublicKeys());
+		AssertEqual(expectedEntry.cosignatoryAddresses(), entry.cosignatoryAddresses());
+		AssertEqual(expectedEntry.multisigAddresses(), entry.multisigAddresses());
 	}
 }}

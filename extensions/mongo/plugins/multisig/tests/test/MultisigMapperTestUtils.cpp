@@ -46,8 +46,8 @@ namespace catapult { namespace test {
 		EXPECT_EQ(entry.minApproval(), GetUint32(dbMultisig, "minApproval"));
 		EXPECT_EQ(entry.minRemoval(), GetUint32(dbMultisig, "minRemoval"));
 
-		AssertKeySet(entry.cosignatoryPublicKeys(), dbMultisig["cosignatoryPublicKeys"].get_array().value);
-		AssertKeySet(entry.multisigPublicKeys(), dbMultisig["multisigPublicKeys"].get_array().value);
+		AssertKeySet(entry.cosignatoryAddresses(), dbMultisig["cosignatoryAddresses"].get_array().value);
+		AssertKeySet(entry.multisigAddresses(), dbMultisig["multisigAddresses"].get_array().value);
 	}
 
 	// endregion

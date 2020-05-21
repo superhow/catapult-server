@@ -46,8 +46,8 @@ namespace catapult { namespace plugins {
 			test::FillWithRandomData({ reinterpret_cast<uint8_t*>(pTransaction.get()), entitySize });
 
 			pTransaction->Size = entitySize;
-			pTransaction->PublicKeyAdditionsCount = numAdditions;
-			pTransaction->PublicKeyDeletionsCount = numDeletions;
+			pTransaction->AddressAdditionsCount = numAdditions;
+			pTransaction->AddressDeletions = numDeletions;
 			return pTransaction;
 		}
 	}
@@ -128,28 +128,28 @@ namespace catapult { namespace plugins {
 
 		for (auto i = 0u; i < 2; ++i) {
 			builder.template addExpectation<AccountPublicKeyNotification>(i, [&transaction, i](const auto& notification) {
-				EXPECT_EQ(transaction.PublicKeyAdditionsPtr()[i], notification.PublicKey);
+				EXPECT_EQ(transaction.AddressAdditionsPtr()[i], notification.PublicKey);
 			});
 
 			builder.template addExpectation<MultisigNewCosignatoryNotification>(i, [&transaction, i](const auto& notification) {
 				EXPECT_EQ(transaction.SignerPublicKey, notification.MultisigPublicKey);
-				EXPECT_EQ(transaction.PublicKeyAdditionsPtr()[i], notification.CosignatoryPublicKey);
+				EXPECT_EQ(transaction.AddressAdditionsPtr()[i], notification.CosignatoryPublicKey);
 			});
 		}
 
 		builder.template addExpectation<MultisigCosignatoriesNotification>([&transaction](const auto& notification) {
 			EXPECT_EQ(transaction.SignerPublicKey, notification.SignerPublicKey);
-			EXPECT_EQ(transaction.PublicKeyAdditionsCount, notification.PublicKeyAdditionsCount);
-			EXPECT_EQ(transaction.PublicKeyAdditionsPtr(), notification.PublicKeyAdditionsPtr);
-			EXPECT_EQ(transaction.PublicKeyDeletionsCount, notification.PublicKeyDeletionsCount);
-			EXPECT_EQ(transaction.PublicKeyDeletionsPtr(), notification.PublicKeyDeletionsPtr);
+			EXPECT_EQ(transaction.AddressAdditionsCount, notification.AddressAdditionsCount);
+			EXPECT_EQ(transaction.AddressAdditionsPtr(), notification.AddressAdditionsPtr);
+			EXPECT_EQ(transaction.AddressDeletions, notification.AddressDeletionsCount);
+			EXPECT_EQ(transaction.AddressDeletionsPtr(), notification.AddressDeletionsPtr);
 		});
 		builder.template addExpectation<AddressInteractionNotification>([&transaction](const auto& notification) {
 			EXPECT_EQ(transaction.SignerPublicKey, notification.Source);
 			EXPECT_EQ(transaction.Type, notification.TransactionType);
 			EXPECT_EQ(model::UnresolvedAddressSet(), notification.ParticipantsByAddress);
 
-			utils::KeySet expectedParticipantsByKey{ transaction.PublicKeyAdditionsPtr()[0], transaction.PublicKeyAdditionsPtr()[1] };
+			utils::KeySet expectedParticipantsByKey{ transaction.AddressAdditionsPtr()[0], transaction.AddressAdditionsPtr()[1] };
 			EXPECT_EQ(expectedParticipantsByKey, notification.ParticipantsByKey);
 		});
 
@@ -183,10 +183,10 @@ namespace catapult { namespace plugins {
 
 		builder.template addExpectation<MultisigCosignatoriesNotification>([&transaction](const auto& notification) {
 			EXPECT_EQ(transaction.SignerPublicKey, notification.SignerPublicKey);
-			EXPECT_EQ(transaction.PublicKeyAdditionsCount, notification.PublicKeyAdditionsCount);
-			EXPECT_EQ(transaction.PublicKeyAdditionsPtr(), notification.PublicKeyAdditionsPtr);
-			EXPECT_EQ(transaction.PublicKeyDeletionsCount, notification.PublicKeyDeletionsCount);
-			EXPECT_EQ(transaction.PublicKeyDeletionsPtr(), notification.PublicKeyDeletionsPtr);
+			EXPECT_EQ(transaction.AddressAdditionsCount, notification.AddressAdditionsCount);
+			EXPECT_EQ(transaction.AddressAdditionsPtr(), notification.AddressAdditionsPtr);
+			EXPECT_EQ(transaction.AddressDeletions, notification.AddressDeletionsCount);
+			EXPECT_EQ(transaction.AddressDeletionsPtr(), notification.AddressDeletionsPtr);
 		});
 
 		// Act + Assert:
@@ -224,28 +224,28 @@ namespace catapult { namespace plugins {
 
 		for (auto i = 0u; i < 2; ++i) {
 			builder.template addExpectation<AccountPublicKeyNotification>(i, [&transaction, i](const auto& notification) {
-				EXPECT_EQ(transaction.PublicKeyAdditionsPtr()[i], notification.PublicKey);
+				EXPECT_EQ(transaction.AddressAdditionsPtr()[i], notification.PublicKey);
 			});
 
 			builder.template addExpectation<MultisigNewCosignatoryNotification>(i, [&transaction, i](const auto& notification) {
 				EXPECT_EQ(transaction.SignerPublicKey, notification.MultisigPublicKey);
-				EXPECT_EQ(transaction.PublicKeyAdditionsPtr()[i], notification.CosignatoryPublicKey);
+				EXPECT_EQ(transaction.AddressAdditionsPtr()[i], notification.CosignatoryPublicKey);
 			});
 		}
 
 		builder.template addExpectation<MultisigCosignatoriesNotification>([&transaction](const auto& notification) {
 			EXPECT_EQ(transaction.SignerPublicKey, notification.SignerPublicKey);
-			EXPECT_EQ(transaction.PublicKeyAdditionsCount, notification.PublicKeyAdditionsCount);
-			EXPECT_EQ(transaction.PublicKeyAdditionsPtr(), notification.PublicKeyAdditionsPtr);
-			EXPECT_EQ(transaction.PublicKeyDeletionsCount, notification.PublicKeyDeletionsCount);
-			EXPECT_EQ(transaction.PublicKeyDeletionsPtr(), notification.PublicKeyDeletionsPtr);
+			EXPECT_EQ(transaction.AddressAdditionsCount, notification.AddressAdditionsCount);
+			EXPECT_EQ(transaction.AddressAdditionsPtr(), notification.AddressAdditionsPtr);
+			EXPECT_EQ(transaction.AddressDeletions, notification.AddressDeletionsCount);
+			EXPECT_EQ(transaction.AddressDeletionsPtr(), notification.AddressDeletionsPtr);
 		});
 		builder.template addExpectation<AddressInteractionNotification>([&transaction](const auto& notification) {
 			EXPECT_EQ(transaction.SignerPublicKey, notification.Source);
 			EXPECT_EQ(transaction.Type, notification.TransactionType);
 			EXPECT_EQ(model::UnresolvedAddressSet(), notification.ParticipantsByAddress);
 
-			utils::KeySet expectedParticipantsByKey{ transaction.PublicKeyAdditionsPtr()[0], transaction.PublicKeyAdditionsPtr()[1] };
+			utils::KeySet expectedParticipantsByKey{ transaction.AddressAdditionsPtr()[0], transaction.AddressAdditionsPtr()[1] };
 			EXPECT_EQ(expectedParticipantsByKey, notification.ParticipantsByKey);
 		});
 
@@ -266,8 +266,8 @@ namespace catapult { namespace plugins {
 		auto additionalCosignatories = pPlugin->additionalRequiredCosignatories(*pTransaction);
 
 		// Assert:
-		const auto* pPublicKeyAdditions = pTransaction->PublicKeyAdditionsPtr();
-		EXPECT_EQ(utils::KeySet({ pPublicKeyAdditions[0], pPublicKeyAdditions[1] }), additionalCosignatories);
+		const auto* pAddressAdditions = pTransaction->AddressAdditionsPtr();
+		EXPECT_EQ(utils::KeySet({ pAddressAdditions[0], pAddressAdditions[1] }), additionalCosignatories);
 	}
 
 	// endregion

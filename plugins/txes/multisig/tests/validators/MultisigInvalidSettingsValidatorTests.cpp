@@ -119,7 +119,7 @@ namespace catapult { namespace validators {
 				auto& entry = multisigDelta.find(multisigAccountKey).get();
 				entry.setMinRemoval(removal.Current);
 				entry.setMinApproval(approval.Current);
-				auto& cosignatories = entry.cosignatoryPublicKeys();
+				auto& cosignatories = entry.cosignatoryAddresses();
 				for (auto i = 0u; i < numCosignatories; ++i)
 					cosignatories.insert(keys[1 + i]);
 

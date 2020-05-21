@@ -33,11 +33,11 @@ namespace catapult { namespace state {
 		}
 
 		void AssertCosignatories(const std::vector<Key>& expectedCosignatories, const MultisigEntry& entry) {
-			test::AssertContents(expectedCosignatories, entry.cosignatoryPublicKeys());
+			test::AssertContents(expectedCosignatories, entry.cosignatoryAddresses());
 		}
 
 		void AssertMultisigAccounts(const std::vector<Key>& expectedMultisigAccounts, const MultisigEntry& entry) {
-			test::AssertContents(expectedMultisigAccounts, entry.multisigPublicKeys());
+			test::AssertContents(expectedMultisigAccounts, entry.multisigAddresses());
 		}
 	}
 
@@ -81,20 +81,20 @@ namespace catapult { namespace state {
 
 		decltype(accountKeys) expectedCosignatories;
 		for (auto i = 0u; i < 10; ++i)
-			entry.cosignatoryPublicKeys().insert(accountKeys[i]);
+			entry.cosignatoryAddresses().insert(accountKeys[i]);
 
 		for (auto i = 0u; i < 10; i += 2)
-			entry.cosignatoryPublicKeys().erase(accountKeys[i]);
+			entry.cosignatoryAddresses().erase(accountKeys[i]);
 
 		for (auto i = 1u; i < 10; i += 2)
 			expectedCosignatories.push_back(accountKeys[i]);
 
 		decltype(accountKeys) expectedMultisigAccounts;
 		for (auto i = 0u; i < 10; ++i)
-			entry.multisigPublicKeys().insert(accountKeys[i]);
+			entry.multisigAddresses().insert(accountKeys[i]);
 
 		for (auto i = 1u; i < 10; i += 2)
-			entry.multisigPublicKeys().erase(accountKeys[i]);
+			entry.multisigAddresses().erase(accountKeys[i]);
 
 		for (auto i = 0u; i < 10; i += 2)
 			expectedMultisigAccounts.push_back(accountKeys[i]);
@@ -112,7 +112,7 @@ namespace catapult { namespace state {
 		auto entry = MultisigEntry(key);
 
 		for (auto i = 0u; i < 10; ++i)
-			entry.cosignatoryPublicKeys().insert(accountKeys[i]);
+			entry.cosignatoryAddresses().insert(accountKeys[i]);
 
 		// Act + Assert:
 		auto i = 0u;
@@ -129,7 +129,7 @@ namespace catapult { namespace state {
 		auto entry = MultisigEntry(key);
 
 		for (auto i = 0u; i < 10; ++i)
-			entry.multisigPublicKeys().insert(accountKeys[i]);
+			entry.multisigAddresses().insert(accountKeys[i]);
 
 		// Act + Assert:
 		auto i = 0u;
