@@ -39,6 +39,6 @@ namespace catapult { namespace observers {
 	}
 
 	DEFINE_OBSERVER(Beneficiary, model::BlockNotification, ([](const model::BlockNotification& notification, ObserverContext& context) {
-		UpdateBeneficiaryActivity(notification.Beneficiary, context);
+		UpdateBeneficiaryActivity(context.Resolvers.resolve(notification.Beneficiary), context);
 	}));
 }}

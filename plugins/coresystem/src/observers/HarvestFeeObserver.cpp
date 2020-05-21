@@ -69,8 +69,8 @@ namespace catapult { namespace observers {
 			ObserverContext& m_context;
 		};
 
-		bool ShouldShareFees(const Notification& notification, uint8_t harvestBeneficiaryPercentage) {
-			return 0u < harvestBeneficiaryPercentage && notification.Harvester != notification.Beneficiary;
+		bool ShouldShareFees(const Address& harvester, const Address& beneficiary, uint8_t harvestBeneficiaryPercentage) {
+			return 0u < harvestBeneficiaryPercentage && harvester != beneficiary;
 		}
 	}
 
@@ -79,10 +79,11 @@ namespace catapult { namespace observers {
 			auto inflationAmount = calculator.getSpotAmount(context.Height);
 			auto totalAmount = notification.TotalFee + inflationAmount;
 
-			auto networkAmount = Amount(totalAmount.unwrap() * options.HarvestNetworkPercentage / 100);
-			auto beneficiaryAmount = ShouldShareFees(notification, options.HarvestBeneficiaryPercentage)
+			auto beneficiary = context.Resolvers.resolve(notification.Beneficiary);
+			auto beneficiaryAmount = ShouldShareFees(notification.Harvester, beneficiary, options.HarvestBeneficiaryPercentage)
 					? Amount(totalAmount.unwrap() * options.HarvestBeneficiaryPercentage / 100)
 					: Amount();
+			auto networkAmount = Amount(totalAmount.unwrap() * options.HarvestNetworkPercentage / 100);
 			auto harvesterAmount = totalAmount - networkAmount - beneficiaryAmount;
 
 			// always create receipt for harvester
@@ -95,7 +96,7 @@ namespace catapult { namespace observers {
 
 			// only if amount is non-zero create receipt for beneficiary account
 			if (Amount() != beneficiaryAmount)
-				applier.apply(notification.Beneficiary, beneficiaryAmount);
+				applier.apply(beneficiary, beneficiaryAmount);
 
 			// add inflation receipt
 			if (Amount() != inflationAmount && NotifyMode::Commit == context.Mode) {

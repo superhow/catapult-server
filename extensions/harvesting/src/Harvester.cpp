@@ -57,11 +57,11 @@ namespace catapult { namespace harvesting {
 				const NextBlockContext& context,
 				model::NetworkIdentifier networkIdentifier,
 				const Key& signer,
-				const Key& beneficiary) {
+				const Key& /*beneficiary*/) {
 			auto pBlock = model::CreateBlock(context.ParentContext, networkIdentifier, signer, {});
 			pBlock->Difficulty = context.Difficulty;
 			pBlock->Timestamp = context.Timestamp;
-			pBlock->BeneficiaryPublicKey = Key() == beneficiary ? signer : beneficiary;
+			pBlock->BeneficiaryAddress = UnresolvedAddress();// TODO: [fix me] Key() == beneficiary ? signer : beneficiary;
 			return pBlock;
 		}
 

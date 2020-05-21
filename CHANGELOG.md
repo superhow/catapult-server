@@ -20,7 +20,7 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 ### Added
  - forcibly disconnect connections to/from newly banned node identity
  - use network fingerprint (id + generation hash) for nicer network separation
- - missing mongo index on beneficiaryPublicKey
+ - missing mongo index on beneficiaryAddress
 
 ### Changed
  - unit221b pentesting: use ephemeral keys in unlock messages, use HKDF for key derivation
@@ -196,7 +196,7 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 - You can now attach namespaces and subnamespaces to addresses or mosaics using the AliasTransaction. A namespace can only be the alias of one account or mosaic at a time.
 - Remote harvesting has been enabled. Remote harvesting enables an account to use a proxy private key that can be shared with a node securely to calculate new blocks.
 - The base mosaic for currency is now configurable. This means other mosaic different than xem can be defined in private networks.
-- Properties FeeMultiplier and BeneficiaryPublicKey were added to the block header.
+- Properties FeeMultiplier and BeneficiaryAddress were added to the block header.
 - Transaction fee property was renamed to MaxFee.
 - Dynamic fee handling - Transactions specify max fee and blocks set fee multiplier, which determines actual fee paid.
 - Node reputation handling - When interacting with other nodes, each node will gather data, which will influence future partner node selection probability.

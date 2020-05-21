@@ -209,7 +209,7 @@ namespace catapult { namespace model {
 		/// Creates a block notification around \a harvester, \a beneficiary, \a timestamp, \a difficulty and \a feeMultiplier.
 		BlockNotification(
 				const Address& harvester,
-				const Address& beneficiary,
+				const UnresolvedAddress& beneficiary,
 				Timestamp timestamp,
 				Difficulty difficulty,
 				BlockFeeMultiplier feeMultiplier)
@@ -227,7 +227,7 @@ namespace catapult { namespace model {
 		Address Harvester;
 
 		/// Block beneficiary.
-		Address Beneficiary;
+		UnresolvedAddress Beneficiary;
 
 		/// Block timestamp.
 		catapult::Timestamp Timestamp;
