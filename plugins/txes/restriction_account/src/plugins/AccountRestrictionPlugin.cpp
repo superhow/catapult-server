@@ -49,11 +49,11 @@ namespace catapult { namespace plugins {
 			});
 		});
 
-		manager.addStatelessValidatorHook([networkIdentifier](auto& builder) {
+		manager.addStatelessValidatorHook([](auto& builder) {
 			builder
 				.add(validators::CreateAccountRestrictionFlagsValidator())
 
-				.add(validators::CreateAccountAddressRestrictionNoSelfModificationValidator(networkIdentifier))
+				.add(validators::CreateAccountAddressRestrictionNoSelfModificationValidator())
 
 				.add(validators::CreateAccountOperationRestrictionModificationValuesValidator());
 		});

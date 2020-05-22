@@ -38,7 +38,6 @@ namespace catapult { namespace plugins {
 			}
 
 			sub.notify(KeyLinkActionNotification(transaction.LinkAction));
-			sub.notify(AddressInteractionNotification(transaction.SignerPublicKey, transaction.Type, {}, { transaction.LinkedPublicKey }));
 			sub.notify(RemoteAccountKeyLinkNotification(transaction.SignerPublicKey, transaction.LinkedPublicKey, transaction.LinkAction));
 		}
 	}
