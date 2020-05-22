@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /**
 *** Copyright (c) 2016-present,
 *** Jaguar0625, gimre, BloodyRookie, Tech Bureau, Corp. All rights reserved.
