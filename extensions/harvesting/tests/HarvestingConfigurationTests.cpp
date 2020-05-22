@@ -89,7 +89,6 @@ namespace catapult { namespace harvesting {
 			if ("beneficiaryAddress" == pair.first)
 				pair.second = "";
 		}
-		// *properties["harvesting"].find("beneficiaryAddress") = "";
 
 		// Act:
 		auto config = HarvestingConfiguration::LoadFromBag(utils::ConfigurationBag(std::move(properties)));

@@ -24,11 +24,7 @@
 #include "catapult/utils/ConfigurationBag.h"
 #include "catapult/utils/ConfigurationUtils.h"
 
-namespace catapult { namespace utils {
-	static bool TryParseValue(const std::string& str, Address& parsedValue) {
-		return str.empty() || model::TryParseValue(str, parsedValue);
-	}
-}}
+DEFINE_ADDRESS_CONFIGURATION_VALUE_SUPPORT_ALLOW_EMPTY(true)
 
 namespace catapult { namespace harvesting {
 
