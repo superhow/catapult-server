@@ -51,12 +51,6 @@ namespace catapult { namespace plugins {
 			builder.template addExpectation<KeyLinkActionNotification>([&transaction](const auto& notification) {
 				EXPECT_EQ(transaction.LinkAction, notification.LinkAction);
 			});
-			builder.template addExpectation<AddressInteractionNotification>([&transaction](const auto& notification) {
-				EXPECT_EQ(transaction.SignerPublicKey, notification.Source);
-				EXPECT_EQ(transaction.Type, notification.TransactionType);
-				EXPECT_EQ(UnresolvedAddressSet(), notification.ParticipantsByAddress);
-				EXPECT_EQ(utils::KeySet{ transaction.LinkedPublicKey }, notification.ParticipantsByKey);
-			});
 			builder.template addExpectation<RemoteAccountKeyLinkNotification>([&transaction](const auto& notification) {
 				EXPECT_EQ(transaction.SignerPublicKey, notification.MainAccountPublicKey);
 				EXPECT_EQ(transaction.LinkedPublicKey, notification.LinkedPublicKey);
@@ -76,7 +70,6 @@ namespace catapult { namespace plugins {
 			NewRemoteAccountNotification::Notification_Type,
 			AccountPublicKeyNotification::Notification_Type,
 			KeyLinkActionNotification::Notification_Type,
-			AddressInteractionNotification::Notification_Type,
 			RemoteAccountKeyLinkNotification::Notification_Type
 		});
 	}
