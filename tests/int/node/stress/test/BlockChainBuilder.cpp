@@ -164,7 +164,9 @@ namespace catapult { namespace test {
 		auto pBlock = model::CreateBlock(context, Network_Identifier, signerKeyPair.publicKey(), transactions);
 		pBlock->Timestamp = timestamp;
 		pBlock->Difficulty = difficulty;
-		pBlock->BeneficiaryAddress = Address{ { 1 } }; // burn beneficiary allotment so that it doesn't cause state changes
+
+		// burn beneficiary allotment so that it doesn't cause state changes
+		pBlock->BeneficiaryAddress = GenerateRandomAddress(Network_Identifier);
 
 		pBlock->ReceiptsHash = m_blockReceiptsHashCalculator(*pBlock);
 		m_pStateHashCalculator->updateStateHash(*pBlock);
