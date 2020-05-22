@@ -344,8 +344,8 @@ namespace catapult { namespace validators {
 			auto publicKeyDeletions = test::GenerateRandomDataVector<Key>(numDeletions);
 			auto pSubTransaction = test::CreateMultisigAccountModificationTransaction(
 					embeddedSigner,
-					publicKeyAdditions,
-					publicKeyDeletions);
+					ToAddresses(publicKeyAdditions),
+					ToAddresses(publicKeyDeletions));
 
 			// - create the cache making the embedded signer a single level multisig
 			auto cache = CreateCacheWithSingleLevelMultisig(embeddedSigner, cosignatories, minApproval, minRemoval);
@@ -456,8 +456,8 @@ namespace catapult { namespace validators {
 			auto publicKeyDeletions = test::GenerateRandomDataVector<Key>(numDeletions);
 			auto pSubTransaction = test::CreateMultisigAccountModificationTransaction(
 					embeddedSigner,
-					publicKeyAdditions,
-					publicKeyDeletions);
+					ToAddresses(publicKeyAdditions),
+					ToAddresses(publicKeyDeletions));
 
 			// - create the cache making the embedded signer a single level multisig
 			auto cache = test::MultisigCacheFactory::Create();

@@ -52,7 +52,8 @@ namespace catapult { namespace validators {
 			auto cache = test::MultisigCacheFactory::Create();
 			auto cacheDelta = cache.createDelta();
 
-			test::MakeMultisig(cacheDelta, multisig, cosignatories, 3, 4); // make a 3-4-X multisig
+			// make a 3-4-X multisig
+			test::MakeMultisig(cacheDelta, multisig, cosignatories, 3, 4);
 
 			cache.commit(Height());
 			return cache;

@@ -41,34 +41,29 @@ namespace catapult { namespace test {
 			uint8_t numDeletions) {
 		return CreateMultisigAccountModificationTransaction(
 				signer,
-				GenerateRandomDataVector<Key>(numAdditions),
-				GenerateRandomDataVector<Key>(numDeletions));
+				GenerateRandomDataVector<Address>(numAdditions),
+				GenerateRandomDataVector<Address>(numDeletions));
 	}
 
 	std::unique_ptr<model::EmbeddedMultisigAccountModificationTransaction> CreateMultisigAccountModificationTransaction(
 			const Key& signer,
-			const std::vector<Key>& publicKeyAdditions,
-			const std::vector<Key>& publicKeyDeletions) {
+			const std::vector<Address>& addressAdditions,
+			const std::vector<Address>& addressDeletions) {
 		using TransactionType = model::EmbeddedMultisigAccountModificationTransaction;
 		uint32_t entitySize = sizeof(TransactionType);
-		entitySize += static_cast<uint32_t>((publicKeyAdditions.size() + publicKeyDeletions.size()) * Address::Size);
+		entitySize += static_cast<uint32_t>((addressAdditions.size() + addressDeletions.size()) * Address::Size);
 
 		auto pTransaction = utils::MakeUniqueWithSize<TransactionType>(entitySize);
 		FillWithRandomData({ reinterpret_cast<uint8_t*>(pTransaction.get()), entitySize });
 
 		pTransaction->Size = entitySize;
-		pTransaction->AddressAdditionsCount = static_cast<uint8_t>(publicKeyAdditions.size());
-		pTransaction->AddressDeletionsCount = static_cast<uint8_t>(publicKeyDeletions.size());
+		pTransaction->AddressAdditionsCount = static_cast<uint8_t>(addressAdditions.size());
+		pTransaction->AddressDeletionsCount = static_cast<uint8_t>(addressDeletions.size());
 		pTransaction->Type = model::Entity_Type_Multisig_Account_Modification;
 		pTransaction->SignerPublicKey = signer;
 
-		// use NetworkIdentifier::Zero to match network used by default for validator tests
-		for (auto i = 0u; i < pTransaction->AddressAdditionsCount; ++i)
-			pTransaction->AddressAdditionsPtr()[i] = model::PublicKeyToAddress(publicKeyAdditions[i], model::NetworkIdentifier::Zero);
-
-		for (auto i = 0u; i < pTransaction->AddressDeletionsCount; ++i)
-			pTransaction->AddressDeletionsPtr()[i] = model::PublicKeyToAddress(publicKeyDeletions[i], model::NetworkIdentifier::Zero);
-
+		std::copy(addressAdditions.cbegin(), addressAdditions.cend(), pTransaction->AddressAdditionsPtr());
+		std::copy(addressDeletions.cbegin(), addressDeletions.cend(), pTransaction->AddressDeletionsPtr());
 		return pTransaction;
 	}
 

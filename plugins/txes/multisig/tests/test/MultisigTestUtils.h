@@ -50,11 +50,11 @@ namespace catapult { namespace test {
 			uint8_t numAdditions,
 			uint8_t numDeletions);
 
-	/// Creates a multisig account modification transaction from \a signer with \a publicKeyAdditions and \a publicKeyDeletions.
+	/// Creates a multisig account modification transaction from \a signer with \a addressAdditions and \a addressDeletions.
 	std::unique_ptr<model::EmbeddedMultisigAccountModificationTransaction> CreateMultisigAccountModificationTransaction(
 			const Key& signer,
-			const std::vector<Key>& publicKeyAdditions,
-			const std::vector<Key>& publicKeyDeletions);
+			const std::vector<Address>& addressAdditions,
+			const std::vector<Address>& addressDeletions);
 
 	/// Creates a multisig cosignatories notification around \a multisig, \a addressAdditions and \a addressDeletions.
 	model::MultisigCosignatoriesNotification CreateMultisigCosignatoriesNotification(

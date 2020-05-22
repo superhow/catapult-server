@@ -190,7 +190,8 @@ namespace catapult { namespace validators {
 			auto cache = test::MultisigCacheFactory::Create();
 			auto cacheDelta = cache.createDelta();
 
-			test::MakeMultisig(cacheDelta, ToAddress(embeddedSigner), ToAddresses(cosignatories), 3, 4); // make a 3-4-X multisig
+			// make a 3-4-X multisig
+			test::MakeMultisig(cacheDelta, ToAddress(embeddedSigner), ToAddresses(cosignatories), 3, 4);
 
 			cache.commit(Height());
 			return cache;
@@ -306,7 +307,10 @@ namespace catapult { namespace validators {
 		auto signer = test::GenerateRandomByteArray<Key>();
 		auto publicKeyAdditions = test::GenerateRandomDataVector<Key>(2);
 		auto publicKeyDeletions = test::GenerateRandomDataVector<Key>(2);
-		auto pTransaction = test::CreateMultisigAccountModificationTransaction(signer, publicKeyAdditions, publicKeyDeletions);
+		auto pTransaction = test::CreateMultisigAccountModificationTransaction(
+				signer,
+				ToAddresses(publicKeyAdditions),
+				ToAddresses(publicKeyDeletions));
 		auto cache = test::MultisigCacheFactory::Create();
 
 		// Assert: added accounts are eligible cosignatories even though they aren't in the multisig cache
@@ -322,7 +326,10 @@ namespace catapult { namespace validators {
 		auto signer = test::GenerateRandomByteArray<Key>();
 		auto publicKeyAdditions = test::GenerateRandomDataVector<Key>(2);
 		auto publicKeyDeletions = test::GenerateRandomDataVector<Key>(2);
-		auto pTransaction = test::CreateMultisigAccountModificationTransaction(signer, publicKeyAdditions, publicKeyDeletions);
+		auto pTransaction = test::CreateMultisigAccountModificationTransaction(
+				signer,
+				ToAddresses(publicKeyAdditions),
+				ToAddresses(publicKeyDeletions));
 		auto cache = test::MultisigCacheFactory::Create();
 
 		// Assert: deleted accounts do not have any special eligibility privileges
