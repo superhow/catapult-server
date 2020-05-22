@@ -218,7 +218,7 @@ namespace catapult { namespace model {
 		PublishOne<BlockNotification>(*pBlock, [&block = *pBlock](const auto& notification) {
 			// Assert:
 			EXPECT_EQ(GetSignerAddress(block), notification.Harvester);
-			EXPECT_EQ(PublicKeyToAddress(block.BeneficiaryPublicKey, block.Network), notification.Beneficiary);
+			EXPECT_EQ(block.BeneficiaryAddress, notification.Beneficiary);
 			EXPECT_EQ(Timestamp(432), notification.Timestamp);
 			EXPECT_EQ(Difficulty(575), notification.Difficulty);
 			EXPECT_EQ(BlockFeeMultiplier(3), notification.FeeMultiplier);
