@@ -149,7 +149,7 @@ namespace catapult { namespace cache {
 		TestContext<MockAddCosignaturePtCacheModifier> context(cosignatureInfos, transactionInfo);
 
 		auto parentHash = test::GenerateRandomByteArray<Hash256>();
-		auto cosignature = model::Cosignature{ test::GenerateRandomByteArray<Key>(), test::GenerateRandomByteArray<Signature>() };
+		auto cosignature = test::CreateRandomCosignature();
 
 		// Act: add via modifier, which flushes when destroyed
 		auto transactionInfoFromAdd = context.aggregate().modifier().add(parentHash, cosignature);
@@ -180,7 +180,7 @@ namespace catapult { namespace cache {
 		TestContext<MockAddCosignaturePtCacheModifier> context(cosignatureInfos, model::TransactionInfo());
 
 		auto parentHash = test::GenerateRandomByteArray<Hash256>();
-		auto cosignature = model::Cosignature{ test::GenerateRandomByteArray<Key>(), test::GenerateRandomByteArray<Signature>() };
+		auto cosignature = test::CreateRandomCosignature();
 
 		// Act: add via modifier, which flushes when destroyed
 		auto transactionInfoFromAdd = context.aggregate().modifier().add(parentHash, cosignature);

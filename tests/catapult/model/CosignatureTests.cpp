@@ -76,8 +76,7 @@ namespace catapult { namespace model {
 
 	TEST(TEST_CLASS, CanCreateDetachedCosignatureFromCosignature) {
 		// Arrange:
-		auto cosignatureSeed = Cosignature(test::GenerateRandomByteArray<Key>(), test::GenerateRandomByteArray<Signature>());
-		cosignatureSeed.Cosignature_Reserved1 = test::Random();
+		auto cosignatureSeed = test::CreateRandomCosignature();
 		auto parentHash = test::GenerateRandomByteArray<Hash256>();
 
 		// Act:
@@ -89,5 +88,4 @@ namespace catapult { namespace model {
 		EXPECT_EQ(cosignatureSeed.Signature, cosignature.Signature);
 		EXPECT_EQ(parentHash, cosignature.ParentHash);
 	}
-
 }}

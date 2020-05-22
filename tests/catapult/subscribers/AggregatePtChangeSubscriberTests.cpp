@@ -23,6 +23,7 @@
 #include "tests/catapult/subscribers/test/AggregateSubscriberTestContext.h"
 #include "tests/catapult/subscribers/test/UnsupportedSubscribers.h"
 #include "tests/test/core/TransactionInfoTestUtils.h"
+#include "tests/test/core/TransactionTestUtils.h"
 #include "tests/TestHarness.h"
 
 namespace catapult { namespace subscribers {
@@ -78,7 +79,7 @@ namespace catapult { namespace subscribers {
 
 		TestContext<MockPtChangeSubscriber> context;
 		auto transactionInfo = test::CreateRandomTransactionInfo();
-		auto cosignature = model::Cosignature();
+		auto cosignature = test::CreateRandomCosignature();
 
 		// Sanity:
 		EXPECT_EQ(3u, context.subscribers().size());
