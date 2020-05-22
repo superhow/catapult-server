@@ -106,7 +106,6 @@ namespace catapult { namespace plugins {
 		// Act + Assert:
 		test::TransactionPluginTestUtils<TTraits>::AssertNotificationTypes(transaction, {
 			KeyLinkActionNotification::Notification_Type,
-			AddressInteractionNotification::Notification_Type,
 			RemoteAccountKeyLinkNotification::Notification_Type
 		});
 	}

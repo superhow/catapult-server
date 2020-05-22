@@ -150,11 +150,11 @@ namespace catapult { namespace test {
 	/// Creates an account restriction value notification around \a key, \a restrictionValue and \a action.
 	template<typename TRestrictionValueTraits, typename TOperationTraits = AllowTraits>
 	auto CreateAccountRestrictionValueNotification(
-			const Key& key,
+			const Address& address,
 			const typename TRestrictionValueTraits::UnresolvedValueType& restrictionValue,
 			model::AccountRestrictionModificationAction action) {
 		return typename TRestrictionValueTraits::NotificationType(
-				key,
+				address,
 				TOperationTraits::CompleteAccountRestrictionFlags(TRestrictionValueTraits::Restriction_Flags),
 				restrictionValue,
 				action);
@@ -163,11 +163,11 @@ namespace catapult { namespace test {
 	/// Creates an account restrictions notification around \a key, \a restrictionAdditions and \a restrictionDeletions.
 	template<typename TRestrictionValueTraits, typename TValueType, typename TOperationTraits = AllowTraits>
 	auto CreateAccountRestrictionsNotification(
-			const Key& key,
+			const Address& address,
 			const std::vector<TValueType>& restrictionAdditions,
 			const std::vector<TValueType>& restrictionDeletions) {
 		return typename TRestrictionValueTraits::NotificationType(
-				key,
+				address,
 				TOperationTraits::CompleteAccountRestrictionFlags(TRestrictionValueTraits::Restriction_Flags),
 				utils::checked_cast<size_t, uint8_t>(restrictionAdditions.size()),
 				restrictionAdditions.data(),
