@@ -144,7 +144,7 @@ namespace catapult { namespace plugins {
 		typename test::TransactionPluginTestUtils<TTraits>::PublishTestBuilder builder;
 		AddCommonExpectations<TTraits>(builder, transaction);
 		builder.template addExpectation<TransferMessageNotification>([&transaction](const auto& notification) {
-			EXPECT_EQ(transaction.SignerPublicKey, notification.Sender);
+			EXPECT_EQ(transaction.SignerPublicKey, notification.SenderPublicKey);
 			EXPECT_EQ(transaction.RecipientAddress, notification.Recipient);
 			EXPECT_EQ(17u, notification.MessageSize);
 			EXPECT_EQ(transaction.MessagePtr(), notification.MessagePtr);
@@ -262,7 +262,7 @@ namespace catapult { namespace plugins {
 		}
 
 		builder.template addExpectation<TransferMessageNotification>([&transaction](const auto& notification) {
-			EXPECT_EQ(transaction.SignerPublicKey, notification.Sender);
+			EXPECT_EQ(transaction.SignerPublicKey, notification.SenderPublicKey);
 			EXPECT_EQ(transaction.RecipientAddress, notification.Recipient);
 			EXPECT_EQ(17u, notification.MessageSize);
 			EXPECT_EQ(transaction.MessagePtr(), notification.MessagePtr);
