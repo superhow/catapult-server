@@ -60,10 +60,9 @@ namespace catapult { namespace test {
 	template<typename TRestrictionValueTraits, typename TOperationTraits = AllowTraits>
 	void PopulateCache(
 			cache::CatapultCacheDelta& delta,
-			const Key& key,
+			const Address& address,
 			const std::vector<typename TRestrictionValueTraits::ValueType>& values) {
 		auto& restrictionCacheDelta = delta.sub<cache::AccountRestrictionCache>();
-		auto address = model::PublicKeyToAddress(key, model::NetworkIdentifier::Zero);
 		restrictionCacheDelta.insert(state::AccountRestrictions(address));
 		auto& restrictions = restrictionCacheDelta.find(address).get();
 		auto& restriction = restrictions.restriction(TRestrictionValueTraits::Restriction_Flags);
@@ -75,10 +74,10 @@ namespace catapult { namespace test {
 	template<typename TRestrictionValueTraits, typename TOperationTraits = AllowTraits>
 	void PopulateCache(
 			cache::CatapultCache& cache,
-			const Key& key,
+			const Address& address,
 			const std::vector<typename TRestrictionValueTraits::ValueType>& values) {
 		auto delta = cache.createDelta();
-		PopulateCache<TRestrictionValueTraits, TOperationTraits>(delta, key, values);
+		PopulateCache<TRestrictionValueTraits, TOperationTraits>(delta, address, values);
 		cache.commit(Height(1));
 	}
 
