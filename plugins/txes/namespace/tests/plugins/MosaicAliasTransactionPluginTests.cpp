@@ -47,7 +47,7 @@ namespace catapult { namespace plugins {
 		// Arrange:
 		typename TTraits::TransactionType transaction;
 		test::FillWithRandomData(transaction);
-		transaction.AliasAction = model::AliasAction::Link;
+		transaction.AliasAction = AliasAction::Link;
 
 		// Act + Assert:
 		test::TransactionPluginTestUtils<TTraits>::AssertNotificationTypes(transaction, {
@@ -62,11 +62,11 @@ namespace catapult { namespace plugins {
 		// Arrange:
 		typename TTraits::TransactionType transaction;
 		test::FillWithRandomData(transaction);
-		transaction.AliasAction = model::AliasAction::Link;
+		transaction.AliasAction = AliasAction::Link;
 
 		typename test::TransactionPluginTestUtils<TTraits>::PublishTestBuilder builder;
 		builder.template addExpectation<NamespaceRequiredNotification>([&transaction](const auto& notification) {
-			EXPECT_EQ(model::GetSignerAddress(transaction), notification.Owner);
+			EXPECT_EQ(GetSignerAddress(transaction), notification.Owner);
 			EXPECT_EQ(transaction.NamespaceId, notification.NamespaceId);
 		});
 		builder.template addExpectation<AliasLinkNotification>([&transaction](const auto& notification) {
@@ -79,7 +79,7 @@ namespace catapult { namespace plugins {
 			EXPECT_EQ(transaction.MosaicId, notification.AliasedData);
 		});
 		builder.template addExpectation<MosaicRequiredNotification>([&transaction](const auto& notification) {
-			EXPECT_EQ(model::GetSignerAddress(transaction), notification.Owner);
+			EXPECT_EQ(GetSignerAddress(transaction), notification.Owner);
 			EXPECT_EQ(transaction.MosaicId, notification.MosaicId);
 			EXPECT_EQ(UnresolvedMosaicId(), notification.UnresolvedMosaicId);
 			EXPECT_EQ(0u, notification.PropertyFlagMask);
@@ -94,7 +94,7 @@ namespace catapult { namespace plugins {
 		// Arrange:
 		typename TTraits::TransactionType transaction;
 		test::FillWithRandomData(transaction);
-		transaction.AliasAction = model::AliasAction::Unlink;
+		transaction.AliasAction = AliasAction::Unlink;
 
 		// Act + Assert:
 		test::TransactionPluginTestUtils<TTraits>::AssertNotificationTypes(transaction, {
@@ -108,11 +108,11 @@ namespace catapult { namespace plugins {
 		// Arrange:
 		typename TTraits::TransactionType transaction;
 		test::FillWithRandomData(transaction);
-		transaction.AliasAction = model::AliasAction::Unlink;
+		transaction.AliasAction = AliasAction::Unlink;
 
 		typename test::TransactionPluginTestUtils<TTraits>::PublishTestBuilder builder;
 		builder.template addExpectation<NamespaceRequiredNotification>([&transaction](const auto& notification) {
-			EXPECT_EQ(model::GetSignerAddress(transaction), notification.Owner);
+			EXPECT_EQ(GetSignerAddress(transaction), notification.Owner);
 			EXPECT_EQ(transaction.NamespaceId, notification.NamespaceId);
 		});
 		builder.template addExpectation<AliasLinkNotification>([&transaction](const auto& notification) {

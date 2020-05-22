@@ -74,7 +74,7 @@ namespace catapult { namespace plugins {
 				pSubTransaction->Size = transactionSize;
 				pSubTransaction->Data.Size = 0;
 				pSubTransaction->Version = (i + 1) * 2;
-				pSubTransaction->Network = static_cast<model::NetworkIdentifier>(100 + i);
+				pSubTransaction->Network = static_cast<NetworkIdentifier>(100 + i);
 				pSubTransaction->Type = mocks::EmbeddedMockTransaction::Entity_Type;
 				test::FillWithRandomData(pSubTransaction->SignerPublicKey);
 				test::FillWithRandomData(pSubTransaction->RecipientPublicKey);
@@ -292,7 +292,7 @@ namespace catapult { namespace plugins {
 				});
 				builder.addExpectation<mocks::MockAddressNotification>(i, [&wrapper, i](const auto& notification) {
 					const auto& signerPublicKey = wrapper.SubTransactions[i]->SignerPublicKey;
-					auto signerAddress = model::PublicKeyToAddress(signerPublicKey, static_cast<NetworkIdentifier>(100 + i));
+					auto signerAddress = PublicKeyToAddress(signerPublicKey, static_cast<NetworkIdentifier>(100 + i));
 					EXPECT_EQ(signerAddress, notification.Address);
 				});
 			}

@@ -63,7 +63,7 @@ namespace catapult { namespace plugins {
 
 		typename test::TransactionPluginTestUtils<TTraits>::PublishTestBuilder builder;
 		builder.template addExpectation<NamespaceRequiredNotification>([&transaction](const auto& notification) {
-			EXPECT_EQ(model::GetSignerAddress(transaction), notification.Owner);
+			EXPECT_EQ(GetSignerAddress(transaction), notification.Owner);
 			EXPECT_EQ(transaction.NamespaceId, notification.NamespaceId);
 		});
 		builder.template addExpectation<AliasLinkNotification>([&transaction](const auto& notification) {
