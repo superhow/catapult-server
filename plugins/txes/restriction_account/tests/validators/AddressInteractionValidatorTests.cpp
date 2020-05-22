@@ -32,11 +32,6 @@ namespace catapult { namespace validators {
 	namespace {
 		using CacheContents = std::unordered_map<Address, std::vector<Address>, utils::ArrayHasher<Address>>;
 
-		// region Address traits
-
-
-		// endregion
-
 		// region Incoming / Outgoing traits
 
 		struct IncomingTraits {
