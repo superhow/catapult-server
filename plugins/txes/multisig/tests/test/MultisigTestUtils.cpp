@@ -21,13 +21,14 @@
 #include "MultisigTestUtils.h"
 #include "src/cache/MultisigCache.h"
 #include "catapult/cache/CatapultCacheDelta.h"
+#include "catapult/model/Address.h"
 #include "catapult/utils/MemoryUtils.h"
 #include "tests/test/nodeps/Random.h"
 
 namespace catapult { namespace test {
 
 	std::vector<model::Cosignature> GenerateCosignaturesFromCosignatories(const std::vector<Key>& cosignatories) {
-		auto cosignatures = test::GenerateRandomDataVector<model::Cosignature>(cosignatories.size());
+		auto cosignatures = GenerateRandomDataVector<model::Cosignature>(cosignatories.size());
 		for (auto i = 0u; i < cosignatories.size(); ++i)
 			cosignatures[i].SignerPublicKey = cosignatories[i];
 
@@ -38,16 +39,35 @@ namespace catapult { namespace test {
 			const Key& signer,
 			uint8_t numAdditions,
 			uint8_t numDeletions) {
+		return CreateMultisigAccountModificationTransaction(
+				signer,
+				GenerateRandomDataVector<Key>(numAdditions),
+				GenerateRandomDataVector<Key>(numDeletions));
+	}
+
+	std::unique_ptr<model::EmbeddedMultisigAccountModificationTransaction> CreateMultisigAccountModificationTransaction(
+			const Key& signer,
+			const std::vector<Key>& publicKeyAdditions,
+			const std::vector<Key>& publicKeyDeletions) {
 		using TransactionType = model::EmbeddedMultisigAccountModificationTransaction;
-		uint32_t entitySize = sizeof(TransactionType) + (numAdditions + numDeletions) * Address::Size;
+		uint32_t entitySize = sizeof(TransactionType);
+		entitySize +=  static_cast<uint32_t>((publicKeyAdditions.size() + publicKeyDeletions.size()) * Address::Size);
+
 		auto pTransaction = utils::MakeUniqueWithSize<TransactionType>(entitySize);
-		test::FillWithRandomData({ reinterpret_cast<uint8_t*>(pTransaction.get()), entitySize });
+		FillWithRandomData({ reinterpret_cast<uint8_t*>(pTransaction.get()), entitySize });
 
 		pTransaction->Size = entitySize;
-		pTransaction->AddressAdditionsCount = numAdditions;
-		pTransaction->AddressDeletionsCount = numDeletions;
+		pTransaction->AddressAdditionsCount = static_cast<uint8_t>(publicKeyAdditions.size());
+		pTransaction->AddressDeletionsCount = static_cast<uint8_t>(publicKeyDeletions.size());
 		pTransaction->Type = model::Entity_Type_Multisig_Account_Modification;
 		pTransaction->SignerPublicKey = signer;
+
+		for (auto i = 0u; i < pTransaction->AddressAdditionsCount; ++i)
+			pTransaction->AddressAdditionsPtr()[i] = model::PublicKeyToAddress(publicKeyAdditions[i], pTransaction->Network);
+
+		for (auto i = 0u; i < pTransaction->AddressDeletionsCount; ++i)
+			pTransaction->AddressDeletionsPtr()[i] = model::PublicKeyToAddress(publicKeyDeletions[i], pTransaction->Network);
+
 		return pTransaction;
 	}
 

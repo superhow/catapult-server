@@ -41,15 +41,6 @@ namespace catapult { namespace test {
 			EXPECT_CONTAINS(addresses, address);
 	}
 
-	// /// Asserts that all \a expectedKeys are contained within \a cache.
-	// template<typename TExpectedKeys, typename TCache>
-	// void AssertMultisigCacheContents(const TExpectedKeys& expectedKeys, const TCache& cache) {
-	// 	// Assert:
-	// 	EXPECT_EQ(expectedKeys.size(), cache.size());
-	// 	for (const auto& key : expectedKeys)
-	// 		EXPECT_TRUE(cache.contains(key)) << utils::HexFormat(key[0]);
-	// }
-
 	/// Generates random cosignatures from \a cosignatories.
 	std::vector<model::Cosignature> GenerateCosignaturesFromCosignatories(const std::vector<Key>& cosignatories);
 
@@ -58,6 +49,12 @@ namespace catapult { namespace test {
 			const Key& signer,
 			uint8_t numAdditions,
 			uint8_t numDeletions);
+
+	/// Creates a multisig account modification transaction from \a signer with \a publicKeyAdditions and \a publicKeyDeletions.
+	std::unique_ptr<model::EmbeddedMultisigAccountModificationTransaction> CreateMultisigAccountModificationTransaction(
+			const Key& signer,
+			const std::vector<Key>& publicKeyAdditions,
+			const std::vector<Key>& publicKeyDeletions);
 
 	/// Creates a multisig cosignatories notification around \a multisig, \a addressAdditions and \a addressDeletions.
 	model::MultisigCosignatoriesNotification CreateMultisigCosignatoriesNotification(
