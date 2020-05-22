@@ -20,6 +20,7 @@
 
 // #include "src/validators/Validators.h"
 // #include "src/plugins/MultisigAccountModificationTransactionPlugin.h"
+// #include "catapult/model/Address.h"
 // #include "catapult/model/TransactionPlugin.h"
 // #include "tests/test/MultisigCacheTestUtils.h"
 // #include "tests/test/MultisigTestUtils.h"
@@ -35,6 +36,18 @@
 
 // 	namespace {
 // 		constexpr auto Failure_Result = Failure_Aggregate_Ineligible_Cosignatories;
+
+// 		Address ToAddress(const Key& publicKey) {
+// 			return model::PublicKeyToAddress(publicKey, model::NetworkIdentifier::Zero);
+// 		}
+
+// 		std::vector<Address> ToAddresses(const std::vector<Key>& publicKeys) {
+// 			std::vector<Address> addresses;
+// 			for (const auto& publicKey : publicKeys)
+// 				addresses.push_back(ToAddress(publicKey));
+
+// 			return addresses;
+// 		}
 
 // 		auto CreateTransactionRegistry() {
 // 			// use a registry with mock and multilevel multisig transactions registered
@@ -94,7 +107,7 @@
 // 				auto cacheDelta = cache.createDelta();
 
 // 				// make the aggregate signer a cosignatory of a different account
-// 				test::MakeMultisig(cacheDelta, test::GenerateRandomByteArray<Key>(), { aggregateSigner });
+// 				test::MakeMultisig(cacheDelta, test::GenerateRandomByteArray<Address>(), { ToAddress(aggregateSigner) });
 
 // 				cache.commit(Height());
 // 				return cache;
@@ -177,7 +190,7 @@
 // 			auto cache = test::MultisigCacheFactory::Create();
 // 			auto cacheDelta = cache.createDelta();
 
-// 			test::MakeMultisig(cacheDelta, embeddedSigner, cosignatories, 3, 4); // make a 3-4-X multisig
+// 			test::MakeMultisig(cacheDelta, ToAddress(embeddedSigner), ToAddresses(cosignatories), 3, 4); // make a 3-4-X multisig
 
 // 			cache.commit(Height());
 // 			return cache;
@@ -220,8 +233,11 @@
 // 			auto cache = test::MultisigCacheFactory::Create();
 // 			auto cacheDelta = cache.createDelta();
 
-// 			test::MakeMultisig(cacheDelta, embeddedSigner, cosignatories, 2, 3); // make a 2-3-X multisig
-// 			test::MakeMultisig(cacheDelta, cosignatories[1], secondLevelCosignatories, 3, 4); // make a 3-4-X multisig
+// 			// make a 2-3-X multisig
+// 			test::MakeMultisig(cacheDelta, ToAddress(embeddedSigner), ToAddresses(cosignatories), 2, 3);
+
+// 			// make a 3-4-X multisig
+// 			test::MakeMultisig(cacheDelta, ToAddress(cosignatories[1]), ToAddresses(secondLevelCosignatories), 3, 4);
 
 // 			cache.commit(Height());
 // 			return cache;
@@ -294,7 +310,7 @@
 // 		// Assert: added accounts are eligible cosignatories even though they aren't in the multisig cache
 // 		auto i = 0u;
 // 		const auto* pAddressAdditions = pTransaction->AddressAdditionsPtr();
-// 		for (const auto& cosignatory : { signer, pAddressAdditions[0], pAddressAdditions[1] }) {
+// 		for (const auto& cosignatory : { ToAddress(signer), pAddressAdditions[0], pAddressAdditions[1] }) {
 // 			CATAPULT_LOG(debug) << "cosigning with cosignatory " << i++;
 // 			AssertValidationResult(ValidationResult::Success, cache, signer, *pTransaction, { cosignatory });
 // 		}
