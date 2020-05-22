@@ -46,12 +46,12 @@ namespace catapult { namespace validators {
 
 		void AssertValidation(
 				ValidationResult expectedResult,
-				Address& accountAddress,
+				const Address& address,
 				state::AccountType accountType,
 				const Address& notificationAddress) {
 			// Arrange:
 			auto cache = test::CoreSystemCacheFactory::Create(model::BlockChainConfiguration::Uninitialized());
-			AddAccount(cache, accountAddress, accountType);
+			AddAccount(cache, address, accountType);
 
 			auto pValidator = CreateRemoteSenderValidator();
 			auto entityType = static_cast<model::EntityType>(0x4201);
@@ -67,35 +67,35 @@ namespace catapult { namespace validators {
 
 	TEST(TEST_CLASS, FailureWhenAccountIsRemoteAndSender) {
 		// Arrange:
-		auto accountAddress = test::GenerateRandomByteArray<Address>();
+		auto address = test::GenerateRandomByteArray<Address>();
 
 		// Assert:
 		constexpr auto Failure_Result = Failure_AccountLink_Remote_Account_Signer_Prohibited;
-		AssertValidation(Failure_Result, accountAddress, state::AccountType::Remote, accountAddress);
+		AssertValidation(Failure_Result, address, state::AccountType::Remote, address);
 	}
 
 	TEST(TEST_CLASS, SuccessWhenSenderIsUnknown) {
 		// Arrange:
-		auto accountAddress = test::GenerateRandomByteArray<Address>();
+		auto address = test::GenerateRandomByteArray<Address>();
 		auto notificationAddress = test::GenerateRandomByteArray<Address>();
 
 		// Assert:
-		AssertValidation(ValidationResult::Success, accountAddress, state::AccountType::Remote, notificationAddress);
+		AssertValidation(ValidationResult::Success, address, state::AccountType::Remote, notificationAddress);
 	}
 
 	TEST(TEST_CLASS, SuccessWhenAccountIsMainAndSender) {
 		// Arrange:
-		auto accountAddress = test::GenerateRandomByteArray<Address>();
+		auto address = test::GenerateRandomByteArray<Address>();
 
 		// Assert:
-		AssertValidation(ValidationResult::Success, accountAddress, state::AccountType::Main, accountAddress);
+		AssertValidation(ValidationResult::Success, address, state::AccountType::Main, address);
 	}
 
 	TEST(TEST_CLASS, SuccessWhenAccountIsUnlinkedAndSender) {
 		// Arrange:
-		auto accountAddress = test::GenerateRandomByteArray<Address>();
+		auto address = test::GenerateRandomByteArray<Address>();
 
 		// Assert:
-		AssertValidation(ValidationResult::Success, accountAddress, state::AccountType::Unlinked, accountAddress);
+		AssertValidation(ValidationResult::Success, address, state::AccountType::Unlinked, address);
 	}
 }}
