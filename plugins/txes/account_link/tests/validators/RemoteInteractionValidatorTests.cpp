@@ -51,14 +51,14 @@ namespace catapult { namespace validators {
 				ValidationResult expectedResult,
 				const Address& address,
 				state::AccountType accountType,
-				std::vector<Address> additionalCacheKeys,
+				std::vector<Address> additionalCacheAddresses,
 				model::EntityType transactionType,
 				const model::UnresolvedAddressSet& participantsByAddress) {
 			// Arrange:
 			auto cache = test::CoreSystemCacheFactory::Create(model::BlockChainConfiguration::Uninitialized());
 			AddAccount(cache, address, accountType);
-			for (const auto& key : additionalCacheKeys)
-				AddAccount(cache, key, state::AccountType::Main);
+			for (const auto& additionalAddress : additionalCacheAddresses)
+				AddAccount(cache, additionalAddress, state::AccountType::Main);
 
 			auto pValidator = CreateRemoteInteractionValidator();
 			auto notification = model::AddressInteractionNotification(Address(), transactionType, participantsByAddress);

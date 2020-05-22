@@ -34,7 +34,7 @@ namespace catapult { namespace validators {
 
 		using CacheContents = std::unordered_map<Key, std::vector<Key>, utils::ArrayHasher<Key>>;
 
-		// region Address
+		// region Address traits
 
 		struct AddressTraits {
 			static model::UnresolvedAddressSet ParticipantsByAddress(const std::vector<Key>& keys) {

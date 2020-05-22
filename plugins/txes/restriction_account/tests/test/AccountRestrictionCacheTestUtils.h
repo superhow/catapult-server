@@ -56,7 +56,7 @@ namespace catapult { namespace test {
 
 	// region PopulateCache
 
-	/// Populates \a delta with \a key and \a values.
+	/// Populates \a delta with \a address and \a values.
 	template<typename TRestrictionValueTraits, typename TOperationTraits = AllowTraits>
 	void PopulateCache(
 			cache::CatapultCacheDelta& delta,
@@ -70,7 +70,7 @@ namespace catapult { namespace test {
 			TOperationTraits::Add(restriction, state::ToVector(value));
 	}
 
-	/// Populates \a cache with \a key and \a values.
+	/// Populates \a cache with \a address and \a values.
 	template<typename TRestrictionValueTraits, typename TOperationTraits = AllowTraits>
 	void PopulateCache(
 			cache::CatapultCache& cache,

@@ -38,7 +38,7 @@ namespace catapult { namespace validators {
 				ValidationResult expectedResult,
 				const Address& address,
 				model::AccountRestrictionModificationAction action,
-				UnresolvedAddress& restrictionValue) {
+				UnresolvedAddress restrictionValue) {
 			// Arrange:
 			model::ModifyAccountAddressRestrictionValueNotification notification(
 					address,
@@ -69,7 +69,6 @@ namespace catapult { namespace validators {
 
 	TEST(TEST_CLASS, SuccessWhenSignerIsNotValueInModification) {
 		auto address = test::GenerateRandomByteArray<Address>();
-		auto unresolvedAddress = extensions::CopyToUnresolvedAddress(address);
-		AssertValidationResult(ValidationResult::Success, address, Add, unresolvedAddress);
+		AssertValidationResult(ValidationResult::Success, address, Add, test::GenerateRandomByteArray<UnresolvedAddress>());
 	}
 }}

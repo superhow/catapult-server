@@ -147,7 +147,7 @@ namespace catapult { namespace test {
 
 	// region CreateNotification
 
-	/// Creates an account restriction value notification around \a key, \a restrictionValue and \a action.
+	/// Creates an account restriction value notification around \a address, \a restrictionValue and \a action.
 	template<typename TRestrictionValueTraits, typename TOperationTraits = AllowTraits>
 	auto CreateAccountRestrictionValueNotification(
 			const Address& address,
@@ -160,7 +160,7 @@ namespace catapult { namespace test {
 				action);
 	}
 
-	/// Creates an account restrictions notification around \a key, \a restrictionAdditions and \a restrictionDeletions.
+	/// Creates an account restrictions notification around \a address, \a restrictionAdditions and \a restrictionDeletions.
 	template<typename TRestrictionValueTraits, typename TValueType, typename TOperationTraits = AllowTraits>
 	auto CreateAccountRestrictionsNotification(
 			const Address& address,

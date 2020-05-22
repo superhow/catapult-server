@@ -117,7 +117,7 @@ namespace catapult { namespace validators {
 		}
 
 		template<typename TRestrictionValueTraits, typename TOperationTraits>
-		auto CreateNotificationWithRandomKey(
+		auto CreateNotificationWithRandomAddress(
 				const Address&,
 				const typename TRestrictionValueTraits::UnresolvedValueType& restrictionValue,
 				model::AccountRestrictionModificationAction action) {
@@ -147,7 +147,7 @@ namespace catapult { namespace validators {
 	}
 
 	TRAITS_BASED_TEST(SuccessWhenAccountIsUnknown) {
-		auto createNotification = CreateNotificationWithRandomKey<TRestrictionValueTraits, TOperationTraits>;
+		auto createNotification = CreateNotificationWithRandomAddress<TRestrictionValueTraits, TOperationTraits>;
 		constexpr auto Success = ValidationResult::Success;
 		AssertValidationResult<TRestrictionValueTraits, TOperationTraits>(Success, 0, createNotification, [](const auto&) {
 			return std::make_pair(Add, TRestrictionValueTraits::RandomUnresolvedValue());

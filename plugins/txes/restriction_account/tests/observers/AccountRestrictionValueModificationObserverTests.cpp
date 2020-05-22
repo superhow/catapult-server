@@ -231,7 +231,7 @@ namespace catapult { namespace observers {
 	// region commit
 
 	TRAITS_BASED_TEST(ObserverAddsAccountRestrictionsInModeCommit) {
-		// Act: since cache is empty there is no account restriction for the provided key
+		// Act: since cache is empty there is no account restriction for the provided address
 		AssertObserverAddsAccountRestrictions<TOperationTraits, TRestrictionValueTraits>(NotifyMode::Commit);
 	}
 
