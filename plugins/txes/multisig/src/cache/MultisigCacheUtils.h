@@ -19,8 +19,8 @@
 **/
 
 #pragma once
-#include "catapult/model/ContainerTypes.h"
 #include "MultisigCacheTypes.h"
+#include "catapult/model/ContainerTypes.h"
 
 namespace catapult { namespace cache {
 

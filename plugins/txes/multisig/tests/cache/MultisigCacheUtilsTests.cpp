@@ -78,7 +78,6 @@ namespace catapult { namespace cache {
 
 			return pickedAddresses;
 		}
-
 	}
 
 	// region FindDescendants

@@ -51,7 +51,7 @@ namespace catapult { namespace test {
 			const std::vector<Key>& publicKeyDeletions) {
 		using TransactionType = model::EmbeddedMultisigAccountModificationTransaction;
 		uint32_t entitySize = sizeof(TransactionType);
-		entitySize +=  static_cast<uint32_t>((publicKeyAdditions.size() + publicKeyDeletions.size()) * Address::Size);
+		entitySize += static_cast<uint32_t>((publicKeyAdditions.size() + publicKeyDeletions.size()) * Address::Size);
 
 		auto pTransaction = utils::MakeUniqueWithSize<TransactionType>(entitySize);
 		FillWithRandomData({ reinterpret_cast<uint8_t*>(pTransaction.get()), entitySize });

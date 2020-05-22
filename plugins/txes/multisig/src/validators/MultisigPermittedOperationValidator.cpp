@@ -32,7 +32,6 @@ namespace catapult { namespace validators {
 		const auto& multisigCache = context.Cache.sub<cache::MultisigCache>();
 		auto multisigIter = multisigCache.find(model::PublicKeyToAddress(notification.Sender, context.Network.Identifier));
 
-
 		return !multisigIter.tryGet() || multisigIter.get().cosignatoryAddresses().empty()
 				? ValidationResult::Success
 				: Failure_Multisig_Operation_Prohibited_By_Account;
