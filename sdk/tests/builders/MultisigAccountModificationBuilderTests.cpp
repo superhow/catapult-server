@@ -43,12 +43,12 @@ namespace catapult { namespace builders {
 			std::vector<Address> AddressDeletions;
 		};
 
-		void AssertAddresses(const std::vector<Address>& expectedAddresses, const Address* pAddress, uint16_t count) {
+		void AssertAddresses(const std::vector<Address>& expectedAddresses, const Address* pAddresses, uint16_t count) {
 			ASSERT_EQ(expectedAddresses.size(), count);
 
 			auto i = 0u;
 			for (const auto& expectedAddress : expectedAddresses) {
-				EXPECT_EQ(expectedAddress, pAddress[i]) << "address " << expectedAddress << " at index " << i;
+				EXPECT_EQ(expectedAddress, pAddresses[i]) << "address " << expectedAddress << " at index " << i;
 				++i;
 			}
 		}

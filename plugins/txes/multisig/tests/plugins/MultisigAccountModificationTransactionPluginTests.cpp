@@ -273,7 +273,7 @@ namespace catapult { namespace plugins {
 
 		// Assert:
 		const auto* pAddressAdditions = pTransaction->AddressAdditionsPtr();
-		EXPECT_EQ(model::AddressSet({ pAddressAdditions[0], pAddressAdditions[1] }), additionalCosignatories);
+		EXPECT_EQ(AddressSet({ pAddressAdditions[0], pAddressAdditions[1] }), additionalCosignatories);
 	}
 
 	// endregion

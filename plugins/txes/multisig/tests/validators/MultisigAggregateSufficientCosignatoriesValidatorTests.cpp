@@ -428,11 +428,11 @@ namespace catapult { namespace validators {
 	namespace {
 		enum class AccountPolicy { Regular, Multisig };
 
-		void AddSingleLevelMultisig(cache::CatapultCache& cache, const Key& multisigPublicKey, const std::vector<Key>& cosignatories) {
+		void AddSingleLevelMultisig(cache::CatapultCache& cache, const Key& multisig, const std::vector<Key>& cosignatories) {
 			auto cacheDelta = cache.createDelta();
 
 			// make a (3-3-X default) multisig
-			test::MakeMultisig(cacheDelta, ToAddress(multisigPublicKey), ToAddresses(cosignatories), 3, 3);
+			test::MakeMultisig(cacheDelta, ToAddress(multisig), ToAddresses(cosignatories), 3, 3);
 
 			cache.commit(Height());
 		}

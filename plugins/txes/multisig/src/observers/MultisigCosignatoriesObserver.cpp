@@ -37,19 +37,19 @@ namespace catapult { namespace observers {
 		public:
 			MultisigAccountFacade(cache::MultisigCacheDelta& multisigCache, const Address& multisig)
 					: m_multisigCache(multisigCache)
-					, m_multisigAddress(multisig)
-					, m_multisigIter(GetMultisigEntry(m_multisigCache, m_multisigAddress))
+					, m_multisig(multisig)
+					, m_multisigIter(GetMultisigEntry(m_multisigCache, m_multisig))
 					, m_multisigEntry(m_multisigIter.get())
 			{}
 
 			~MultisigAccountFacade() {
-				removeIfEmpty(m_multisigEntry, m_multisigAddress);
+				removeIfEmpty(m_multisigEntry, m_multisig);
 			}
 
 		public:
 			void addCosignatory(const Address& cosignatory) {
 				auto multisigIter = GetMultisigEntry(m_multisigCache, cosignatory);
-				multisigIter.get().multisigAddresses().insert(m_multisigAddress);
+				multisigIter.get().multisigAddresses().insert(m_multisig);
 				m_multisigEntry.cosignatoryAddresses().insert(cosignatory);
 			}
 
@@ -58,7 +58,7 @@ namespace catapult { namespace observers {
 
 				auto multisigIter = m_multisigCache.find(cosignatory);
 				auto& cosignatoryEntry = multisigIter.get();
-				cosignatoryEntry.multisigAddresses().erase(m_multisigAddress);
+				cosignatoryEntry.multisigAddresses().erase(m_multisig);
 
 				removeIfEmpty(cosignatoryEntry, cosignatory);
 			}
@@ -71,13 +71,13 @@ namespace catapult { namespace observers {
 
 		private:
 			cache::MultisigCacheDelta& m_multisigCache;
-			const Address& m_multisigAddress;
+			const Address& m_multisig;
 			cache::MultisigCacheDelta::iterator m_multisigIter;
 			state::MultisigEntry& m_multisigEntry;
 		};
 
-		void AddAll(MultisigAccountFacade& multisigAccountFacade, const Address* pAddresses, uint8_t numAddresses, bool shouldAdd) {
-			for (auto i = 0u; i < numAddresses; ++i) {
+		void AddAll(MultisigAccountFacade& multisigAccountFacade, const Address* pAddresses, uint8_t count, bool shouldAdd) {
+			for (auto i = 0u; i < count; ++i) {
 				const auto& cosignatory = pAddresses[i];
 				if (shouldAdd)
 					multisigAccountFacade.addCosignatory(cosignatory);

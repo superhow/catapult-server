@@ -33,7 +33,7 @@ namespace catapult { namespace mocks {
 	namespace {
 		template<typename TTransaction>
 		Address GetRecipientAddressT(const TTransaction& mockTransaction) {
-			return model::PublicKeyToAddress(mockTransaction.RecipientPublicKey, mockTransaction.Network);
+			return PublicKeyToAddress(mockTransaction.RecipientPublicKey, mockTransaction.Network);
 		}
 	}
 

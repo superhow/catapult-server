@@ -38,7 +38,7 @@ namespace catapult { namespace plugins {
 			UnresolvedAddressSet addedCosignatories;
 			if (0 < transaction.AddressAdditionsCount || 0 < transaction.AddressDeletionsCount) {
 				// - raise new cosignatory notifications first because they are used for multisig loop detection
-				// - notify cosignatories' public keys in order to allow added cosignatories to get aggregate notifications
+				// - notify cosignatories' addresses in order to allow added cosignatories to get aggregate notifications
 				const auto* pAddressAdditions = transaction.AddressAdditionsPtr();
 				for (auto i = 0u; i < transaction.AddressAdditionsCount; ++i) {
 					auto unresolvedAddress = pAddressAdditions[i].template copyTo<UnresolvedAddress>();

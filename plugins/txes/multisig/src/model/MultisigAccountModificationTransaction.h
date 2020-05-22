@@ -83,7 +83,7 @@ namespace catapult { namespace model {
 
 #pragma pack(pop)
 
-	/// Extracts address of additional accounts that must approve \a transaction.
+	/// Extracts addresses of additional accounts that must approve \a transaction.
 	inline AddressSet ExtractAdditionalRequiredCosignatories(const EmbeddedMultisigAccountModificationTransaction& transaction) {
 		AddressSet addedCosignatories;
 		const auto* pAddressAdditions = transaction.AddressAdditionsPtr();

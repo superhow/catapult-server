@@ -152,7 +152,7 @@ namespace catapult { namespace model {
 		auto additionalCosignatories = ExtractAdditionalRequiredCosignatories(*pTransaction);
 
 		// Assert:
-		EXPECT_EQ(model::AddressSet(), additionalCosignatories);
+		EXPECT_EQ(AddressSet(), additionalCosignatories);
 	}
 
 	TEST(TEST_CLASS, ExtractAdditionalRequiredCosignatories_AddModifications) {
@@ -164,7 +164,7 @@ namespace catapult { namespace model {
 
 		// Assert:
 		const auto* pAddressAdditions = pTransaction->AddressAdditionsPtr();
-		EXPECT_EQ(model::AddressSet({ pAddressAdditions[0], pAddressAdditions[1] }), additionalCosignatories);
+		EXPECT_EQ(AddressSet({ pAddressAdditions[0], pAddressAdditions[1] }), additionalCosignatories);
 	}
 
 	TEST(TEST_CLASS, ExtractAdditionalRequiredCosignatories_DelModifications) {
@@ -175,7 +175,7 @@ namespace catapult { namespace model {
 		auto additionalCosignatories = ExtractAdditionalRequiredCosignatories(*pTransaction);
 
 		// Assert:
-		EXPECT_EQ(model::AddressSet(), additionalCosignatories);
+		EXPECT_EQ(AddressSet(), additionalCosignatories);
 	}
 
 	TEST(TEST_CLASS, ExtractAdditionalRequiredCosignatories_AddAndDelModifications) {
@@ -187,7 +187,7 @@ namespace catapult { namespace model {
 
 		// Assert:
 		const auto* pAddressAdditions = pTransaction->AddressAdditionsPtr();
-		EXPECT_EQ(model::AddressSet({ pAddressAdditions[0], pAddressAdditions[1] }), additionalCosignatories);
+		EXPECT_EQ(AddressSet({ pAddressAdditions[0], pAddressAdditions[1] }), additionalCosignatories);
 	}
 
 	// endregion

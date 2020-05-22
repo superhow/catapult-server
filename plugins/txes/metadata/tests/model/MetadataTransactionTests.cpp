@@ -194,7 +194,7 @@ namespace catapult { namespace model {
 		// Arrange:
 		typename TTraits::EmbeddedTransactionType transaction;
 		test::FillWithRandomData(transaction);
-		transaction.TargetAddress = model::GetSignerAddress(transaction);
+		transaction.TargetAddress = GetSignerAddress(transaction);
 
 		// Act:
 		auto additionalCosignatories = ExtractAdditionalRequiredCosignatories(transaction);

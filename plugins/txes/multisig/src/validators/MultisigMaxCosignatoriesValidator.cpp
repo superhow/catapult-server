@@ -39,7 +39,7 @@ namespace catapult { namespace validators {
 				numCosignatories = multisigAccountEntry.cosignatoryAddresses().size();
 			}
 
-			// cannot underflow because other validator checks that all keys being deleted exist
+			// cannot underflow because other validator checks that all addresses being deleted exist
 			numCosignatories += notification.AddressAdditionsCount - notification.AddressDeletionsCount;
 			return numCosignatories > maxCosignatoriesPerAccount ? Failure_Multisig_Max_Cosignatories : ValidationResult::Success;
 		});

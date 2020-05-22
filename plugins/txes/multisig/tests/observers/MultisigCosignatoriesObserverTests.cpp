@@ -59,30 +59,30 @@ namespace catapult { namespace observers {
 			}
 
 		public:
-			void assertAccountsAreNotInMultisigCache(const std::vector<Address>& multisigs) const {
-				for (const auto& multisig : multisigs)
-					assertNoMultisigEntryInCache(multisig);
+			void assertAccountsAreNotInMultisigCache(const std::vector<Address>& addresses) const {
+				for (const auto& address : addresses)
+					assertNoMultisigEntryInCache(address);
 			}
 
-			void assertHasCosignatories(const Address& multisig, const std::vector<Address>& cosignatories) const {
+			void assertHasCosignatories(const Address& address, const std::vector<Address>& cosignatories) const {
 				// Assert:
-				ASSERT_TRUE(m_multisigCache.contains(multisig)) << "cache is missing account " << multisig;
+				ASSERT_TRUE(m_multisigCache.contains(address)) << "cache is missing account " << address;
 
-				const auto& multisigEntry = m_multisigCache.find(multisig).get();
+				const auto& multisigEntry = m_multisigCache.find(address).get();
 				assertAccountsInSet(cosignatories, multisigEntry.cosignatoryAddresses());
 			}
 
-			void assertHasMultisigAccounts(const Address& multisig, const std::vector<Address>& multisigs) const {
+			void assertHasMultisigAccounts(const Address& address, const std::vector<Address>& multisigs) const {
 				// Assert:
-				ASSERT_TRUE(m_multisigCache.contains(multisig)) << "cache is missing account " << multisig;
+				ASSERT_TRUE(m_multisigCache.contains(address)) << "cache is missing account " << address;
 
-				const auto& multisigEntry = m_multisigCache.find(multisig).get();
+				const auto& multisigEntry = m_multisigCache.find(address).get();
 				assertAccountsInSet(multisigs, multisigEntry.multisigAddresses());
 			}
 
 		private:
-			void assertNoMultisigEntryInCache(const Address& multisig) const {
-				EXPECT_FALSE(m_multisigCache.contains(multisig)) << "cache should not have account " << multisig;
+			void assertNoMultisigEntryInCache(const Address& address) const {
+				EXPECT_FALSE(m_multisigCache.contains(address)) << "cache should not have account " << address;
 			}
 
 			void assertAccountsInSet(const std::vector<Address>& expectedAddresses, const state::SortedAddressSet& addresses) const {

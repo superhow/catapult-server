@@ -27,9 +27,9 @@ namespace catapult { namespace validators {
 	using Notification = model::MultisigCosignatoriesNotification;
 
 	namespace {
-		utils::ArrayPointerSet<Address> ToSet(const Address* pAddresses, uint8_t numAddresses) {
+		utils::ArrayPointerSet<Address> ToSet(const Address* pAddresses, uint8_t count) {
 			utils::ArrayPointerSet<Address> addresses;
-			for (auto i = 0u; i < numAddresses; ++i)
+			for (auto i = 0u; i < count; ++i)
 				addresses.insert(&pAddresses[i]);
 
 			return addresses;

@@ -83,10 +83,11 @@ namespace catapult { namespace state {
 			return address;
 		}
 
-		void AssertAccountAddresses(const state::SortedAddressSet& expectedAddresses, const uint8_t* pData) {
+		void AssertAccountAddresses(const SortedAddressSet& expectedAddresses, const uint8_t* pData) {
 			// pData is not 8-byte aligned, so need to use memcpy
-			uint64_t numAddresses;
-			std::memcpy(&numAddresses, pData, sizeof(uint64_t));
+			uint64_t count;
+			std::memcpy(&count, pData, sizeof(uint64_t));
+			ASSERT_EQ(expectedAddresses.size(), count);
 			pData += sizeof(uint64_t);
 
 			std::set<Address> addresses;
