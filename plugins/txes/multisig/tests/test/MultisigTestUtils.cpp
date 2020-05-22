@@ -62,11 +62,12 @@ namespace catapult { namespace test {
 		pTransaction->Type = model::Entity_Type_Multisig_Account_Modification;
 		pTransaction->SignerPublicKey = signer;
 
+		// use NetworkIdentifier::Zero to match network used by default for validator tests
 		for (auto i = 0u; i < pTransaction->AddressAdditionsCount; ++i)
-			pTransaction->AddressAdditionsPtr()[i] = model::PublicKeyToAddress(publicKeyAdditions[i], pTransaction->Network);
+			pTransaction->AddressAdditionsPtr()[i] = model::PublicKeyToAddress(publicKeyAdditions[i], model::NetworkIdentifier::Zero);
 
 		for (auto i = 0u; i < pTransaction->AddressDeletionsCount; ++i)
-			pTransaction->AddressDeletionsPtr()[i] = model::PublicKeyToAddress(publicKeyDeletions[i], pTransaction->Network);
+			pTransaction->AddressDeletionsPtr()[i] = model::PublicKeyToAddress(publicKeyDeletions[i], model::NetworkIdentifier::Zero);
 
 		return pTransaction;
 	}

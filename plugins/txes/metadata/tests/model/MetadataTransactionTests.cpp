@@ -190,20 +190,18 @@ namespace catapult { namespace model {
 
 	// region ExtractAdditionalRequiredCosignatories
 
-// TODO: review this
+	METADATA_TYPE_BASED_TEST(ExtractAdditionalRequiredCosignatories_ExtractsTargetAddressWhenEqualToSigner) {
+		// Arrange:
+		typename TTraits::EmbeddedTransactionType transaction;
+		test::FillWithRandomData(transaction);
+		transaction.TargetAddress = model::GetSignerAddress(transaction);
 
-	// METADATA_TYPE_BASED_TEST(ExtractAdditionalRequiredCosignatories_ExtractsNothingWhenTargetAddressIsEqualToSigner) {
-	// 	// Arrange:
-	// 	typename TTraits::EmbeddedTransactionType transaction;
-	// 	test::FillWithRandomData(transaction);
-	// 	transaction.TargetAddress = transaction.SignerPublicKey;
+		// Act:
+		auto additionalCosignatories = ExtractAdditionalRequiredCosignatories(transaction);
 
-	// 	// Act:
-	// 	auto additionalCosignatories = ExtractAdditionalRequiredCosignatories(transaction);
-
-	// 	// Assert:
-	// 	EXPECT_EQ(utils::KeySet(), additionalCosignatories);
-	// }
+		// Assert:
+		EXPECT_EQ(AddressSet{ transaction.TargetAddress }, additionalCosignatories);
+	}
 
 	METADATA_TYPE_BASED_TEST(ExtractAdditionalRequiredCosignatories_ExtractsTargetAddressWhenNotEqualToSigner) {
 		// Arrange:
