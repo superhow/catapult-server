@@ -24,9 +24,7 @@
 #include "catapult/functions.h"
 #include <vector>
 
-namespace catapult { namespace model {
-	struct Cosignature;
-}}
+namespace catapult { namespace model { struct Cosignature; } }
 
 namespace catapult { namespace cache {
 
@@ -44,7 +42,7 @@ namespace catapult { namespace cache {
 		/// Returns \c true if the transaction info was successfully added.
 		virtual bool add(const model::DetachedTransactionInfo& transactionInfo) = 0;
 
-		/// Adds a \a cosignature for a partial transaction with hash \a parentHash to the cache.
+		/// Adds \a cosignature for a partial transaction with hash \a parentHash to the cache.
 		virtual model::DetachedTransactionInfo add(const Hash256& parentHash, const model::Cosignature& cosignature) = 0;
 
 		/// Removes the transaction identified by \a hash from the cache.
@@ -66,7 +64,7 @@ namespace catapult { namespace cache {
 		using BaseType::add;
 
 	public:
-		/// Adds a \a cosignature for a partial transaction with hash \a parentHash to the cache.
+		/// Adds \a cosignature for a partial transaction with hash \a parentHash to the cache.
 		model::DetachedTransactionInfo add(const Hash256& parentHash, const model::Cosignature& cosignature) {
 			return modifier().add(parentHash, cosignature);
 		}

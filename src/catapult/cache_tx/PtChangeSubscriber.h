@@ -39,7 +39,7 @@ namespace catapult { namespace cache {
 		/// \note This is only aggregate part and will not have any cosignatures.
 		virtual void notifyAddPartials(const TransactionInfos& transactionInfos) = 0;
 
-		/// Indicates a \a cosignature was added to a partial transaction (\a parentTransactionInfo).
+		/// Indicates \a cosignature was added to a partial transaction (\a parentTransactionInfo).
 		virtual void notifyAddCosignature(const model::TransactionInfo& parentTransactionInfo, const model::Cosignature& cosignature) = 0;
 
 		/// Indicates transaction infos (\a transactionInfos) were removed from partial transactions.
