@@ -19,8 +19,8 @@
 **/
 
 #include "src/validators/Validators.h"
-#include "sdk/src/extensions/ConversionExtensions.h"
 #include "catapult/model/Address.h"
+#include "tests/test/cache/CacheTestUtils.h"
 #include "tests/test/plugins/ValidatorTestUtils.h"
 #include "tests/TestHarness.h"
 
@@ -48,7 +48,7 @@ namespace catapult { namespace validators {
 			auto pValidator = CreateAccountAddressRestrictionNoSelfModificationValidator();
 
 			// Act:
-			auto result = test::ValidateNotification(*pValidator, notification);
+			auto result = test::ValidateNotification(*pValidator, notification, test::CreateEmptyCatapultCache());
 
 			// Assert:
 			EXPECT_EQ(expectedResult, result);
@@ -57,13 +57,13 @@ namespace catapult { namespace validators {
 
 	TEST(TEST_CLASS, FailureWhenSignerIsValueInModification_Add) {
 		auto address = test::GenerateRandomByteArray<Address>();
-		auto unresolvedAddress = extensions::CopyToUnresolvedAddress(address);
+		auto unresolvedAddress = test::UnresolveXor(address);
 		AssertValidationResult(Failure_RestrictionAccount_Invalid_Modification_Address, address, Add, unresolvedAddress);
 	}
 
 	TEST(TEST_CLASS, FailureWhenSignerIsValueInModification_Del) {
 		auto address = test::GenerateRandomByteArray<Address>();
-		auto unresolvedAddress = extensions::CopyToUnresolvedAddress(address);
+		auto unresolvedAddress = test::UnresolveXor(address);
 		AssertValidationResult(Failure_RestrictionAccount_Invalid_Modification_Address, address, Del, unresolvedAddress);
 	}
 

@@ -53,8 +53,6 @@ namespace catapult { namespace plugins {
 			builder
 				.add(validators::CreateAccountRestrictionFlagsValidator())
 
-				.add(validators::CreateAccountAddressRestrictionNoSelfModificationValidator())
-
 				.add(validators::CreateAccountOperationRestrictionModificationValuesValidator());
 		});
 
@@ -67,6 +65,7 @@ namespace catapult { namespace plugins {
 				.add(validators::CreateAccountAddressRestrictionValueModificationValidator())
 				.add(validators::CreateMaxAccountAddressRestrictionValuesValidator(maxAccountRestrictionValues))
 				.add(validators::CreateAddressInteractionValidator())
+				.add(validators::CreateAccountAddressRestrictionNoSelfModificationValidator())
 
 				.add(validators::CreateAccountMosaicRestrictionRedundantModificationValidator())
 				.add(validators::CreateAccountMosaicRestrictionValueModificationValidator())
