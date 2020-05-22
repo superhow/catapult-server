@@ -23,6 +23,7 @@
 #include "filespooling/tests/test/FileTransactionsChangeStorageContext.h"
 #include "filespooling/tests/test/StorageTransactionInfoTestUtils.h"
 #include "tests/test/core/AddressTestUtils.h"
+#include "tests/test/core/TransactionTestUtils.h"
 
 namespace catapult { namespace filespooling {
 
@@ -40,22 +41,20 @@ namespace catapult { namespace filespooling {
 
 		class FilePtChangeStorageContext : public test::FileTransactionsChangeStorageContext<SubscriberTraits> {
 		public:
-			void assertCosignature(
-					const Key& expectedKey,
-					const Signature& expectedSignature,
-					const model::TransactionInfo& expectedTransactionInfo) {
-				auto inputStream = createInputStream();
-				Key key;
+			void assertCosignature(const model::Cosignature& expectedCosignature, const model::TransactionInfo& expectedTransactionInfo) {
+				Key signerPublicKey;
 				Signature signature;
 				model::TransactionInfo transactionInfo;
+
+				auto inputStream = createInputStream();
 				auto operationType = static_cast<OperationType>(io::Read8(inputStream));
-				inputStream.read(key);
+				inputStream.read(signerPublicKey);
 				inputStream.read(signature);
 				io::ReadTransactionInfo(inputStream, transactionInfo);
 
 				EXPECT_EQ(subscribers::PtChangeOperationType::Add_Cosignature, operationType);
-				EXPECT_EQ(expectedKey, key);
-				EXPECT_EQ(expectedSignature, signature);
+				EXPECT_EQ(expectedCosignature.SignerPublicKey, signerPublicKey);
+				EXPECT_EQ(expectedCosignature.Signature, signature);
 
 				test::AssertEqual(expectedTransactionInfo, transactionInfo);
 			}
@@ -111,16 +110,15 @@ namespace catapult { namespace filespooling {
 	TEST(TEST_CLASS, NotifyAddCosignatureSavesCosignature) {
 		// Arrange:
 		FilePtChangeStorageContext context;
-		auto key = test::GenerateRandomByteArray<Key>();
-		auto signature = test::GenerateRandomByteArray<Signature>();
+		auto cosignature = test::CreateRandomCosignature();
 		auto transactionInfo = test::CreateRandomTransactionInfo();
 		transactionInfo.OptionalExtractedAddresses = test::GenerateRandomUnresolvedAddressSetPointer(3);
 
 		// Act:
-		context.subscriber().notifyAddCosignature(transactionInfo, key, signature);
+		context.subscriber().notifyAddCosignature(transactionInfo, cosignature);
 
 		// Assert:
-		context.assertCosignature(key, signature, transactionInfo);
+		context.assertCosignature(cosignature, transactionInfo);
 		context.assertNumFlushes(0);
 	}
 

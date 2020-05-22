@@ -26,6 +26,7 @@
 namespace catapult {
 	namespace model {
 		struct BlockElement;
+		struct Cosignature;
 		struct Transaction;
 		struct TransactionElement;
 		struct TransactionInfo;
@@ -97,7 +98,7 @@ namespace catapult { namespace zeromq {
 		void publishTransactionStatus(const model::Transaction& transaction, const Hash256& hash, uint32_t status);
 
 		/// Publishes a cosignature composed of transaction info (\a parentTransactionInfo), \a signer and \a signature.
-		void publishCosignature(const model::TransactionInfo& parentTransactionInfo, const Key& signer, const Signature& signature);
+		void publishCosignature(const model::TransactionInfo& parentTransactionInfo, const model::Cosignature& cosignature);
 
 	private:
 		struct WeakTransactionInfo;

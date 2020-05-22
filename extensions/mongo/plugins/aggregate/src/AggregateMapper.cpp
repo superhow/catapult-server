@@ -32,6 +32,9 @@ namespace catapult { namespace mongo { namespace plugins {
 		}
 
 		void StreamCosignatures(bson_stream::document& builder, const model::Cosignature* pCosignature, size_t numCosignatures) {
+			// cosignature.Cosignature_Reserved1 doesn't need to be saved until multiple signature schemes are supported
+			// because reserved values are not currently persisted into mongo
+
 			auto cosignaturesArray = builder << "cosignatures" << bson_stream::open_array;
 			for (auto i = 0u; i < numCosignatures; ++i) {
 				cosignaturesArray

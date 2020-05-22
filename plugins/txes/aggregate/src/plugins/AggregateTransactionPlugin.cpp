@@ -126,6 +126,7 @@ namespace catapult { namespace plugins {
 					//   (1) sub-transaction execution or (2) composite account setup
 					// - require the cosignatories to sign the aggregate indirectly via the hash of its data
 					sub.notify(SignatureNotification(pCosignature->SignerPublicKey, pCosignature->Signature, transactionInfo.hash()));
+					sub.notify(InternalPaddingNotification(pCosignature->Cosignature_Reserved1));
 					++pCosignature;
 				}
 			}

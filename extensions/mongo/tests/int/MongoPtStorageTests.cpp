@@ -74,13 +74,13 @@ namespace catapult { namespace mongo {
 				m_pStorage->notifyAddPartials(transactionInfos);
 			}
 
-			void saveCosignature(const model::TransactionInfo& parentTransactionInfo, const Key& signer, const Signature& signature) {
-				m_pStorage->notifyAddCosignature(parentTransactionInfo, signer, signature);
+			void saveCosignature(const model::TransactionInfo& parentTransactionInfo, const model::Cosignature& cosignature) {
+				m_pStorage->notifyAddCosignature(parentTransactionInfo, cosignature);
 			}
 
 			void saveCosignatures(const model::TransactionInfo& transactionInfo, const std::vector<model::Cosignature>& cosignatures) {
 				for (const auto& cosignature : cosignatures)
-					saveCosignature(transactionInfo, cosignature.SignerPublicKey, cosignature.Signature);
+					saveCosignature(transactionInfo, cosignature);
 			}
 
 			void removeTransaction(const model::TransactionInfo& transactionInfo) {
@@ -155,7 +155,7 @@ namespace catapult { namespace mongo {
 		auto transactionInfo = test::CreateRandomTransactionInfo();
 		context.saveTransaction(transactionInfo);
 		auto cosignature = test::CreateRandomCosignature();
-		context.saveCosignature(transactionInfo, cosignature.SignerPublicKey, cosignature.Signature);
+		context.saveCosignature(transactionInfo, cosignature);
 		context.flush();
 
 		// Sanity:
@@ -182,7 +182,7 @@ namespace catapult { namespace mongo {
 		auto cosignature = test::CreateRandomCosignature();
 
 		// Act:
-		context.saveCosignature(transactionInfo, cosignature.SignerPublicKey, cosignature.Signature);
+		context.saveCosignature(transactionInfo, cosignature);
 		context.flush();
 
 		// Assert:
@@ -243,7 +243,7 @@ namespace catapult { namespace mongo {
 		auto cosignature = test::CreateRandomCosignature();
 
 		// Act:
-		context.saveCosignature(transactionInfo, cosignature.SignerPublicKey, cosignature.Signature);
+		context.saveCosignature(transactionInfo, cosignature);
 		context.flush();
 
 		// Assert:
@@ -259,7 +259,7 @@ namespace catapult { namespace mongo {
 		auto cosignature = test::CreateRandomCosignature();
 
 		// Act:
-		context.saveCosignature(transactionInfo, cosignature.SignerPublicKey, cosignature.Signature);
+		context.saveCosignature(transactionInfo, cosignature);
 		context.removeTransaction(transactionInfo);
 		context.flush();
 

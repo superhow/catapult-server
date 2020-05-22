@@ -82,11 +82,10 @@ namespace catapult { namespace mongo {
 
 			void notifyAddCosignature(
 					const model::TransactionInfo& parentTransactionInfo,
-					const Key& signer,
-					const Signature& signature) override {
+					const model::Cosignature& cosignature) override {
 				// this function is only called by the pt cache modifier if parentInfo corresponds to a known partial transaction
 				auto& cosignatures = m_cosignaturesMap[parentTransactionInfo.EntityHash];
-				cosignatures.push_back({ signer, signature });
+				cosignatures.push_back(cosignature);
 			}
 
 			void notifyRemovePartials(const TransactionInfos& transactionInfos) override {
