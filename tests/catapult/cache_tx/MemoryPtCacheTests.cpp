@@ -212,12 +212,6 @@ namespace catapult { namespace cache {
 
 	// region add(cosignature)
 
-	namespace {
-		model::Cosignature GenerateRandomCosignature() {
-			return { test::GenerateRandomByteArray<Key>(), test::GenerateRandomByteArray<Signature>() };
-		}
-	}
-
 	TEST(TEST_CLASS, CanAttachCosignatureToKnownTransaction) {
 		// Arrange:
 		MemoryPtCache cache(Default_Options);
@@ -228,7 +222,7 @@ namespace catapult { namespace cache {
 		AssertCacheSize(cache, 5);
 
 		// Act:
-		auto cosignature = GenerateRandomCosignature();
+		auto cosignature = test::CreateRandomCosignature();
 		auto transactionInfoFromAdd = cache.modifier().add(originalInfos[3].EntityHash, cosignature);
 
 		// Assert: added transaction is correct
@@ -253,7 +247,7 @@ namespace catapult { namespace cache {
 		std::vector<model::Cosignature> cosignatures;
 		std::vector<model::Cosignature> transactionsFromAdd;
 		for (auto i = 0u; i < 20; ++i) {
-			auto cosignature = GenerateRandomCosignature();
+			auto cosignature = test::CreateRandomCosignature();
 			auto transactionInfoFromAdd = cache.modifier().add(originalInfos[3].EntityHash, cosignature);
 			cosignatures.push_back(cosignature);
 
@@ -274,14 +268,14 @@ namespace catapult { namespace cache {
 		AddAll(cache, originalInfos);
 
 		// - add a cosignature
-		auto cosignature = GenerateRandomCosignature();
+		auto cosignature = test::CreateRandomCosignature();
 		EXPECT_TRUE(!!cache.modifier().add(originalInfos[3].EntityHash, cosignature));
 
 		// Sanity:
 		AssertCacheSize(cache, 5);
 
 		// Act: add another cosignature with the same signer
-		auto cosignature2 = GenerateRandomCosignature();
+		auto cosignature2 = test::CreateRandomCosignature();
 		cosignature2.SignerPublicKey = cosignature.SignerPublicKey;
 		EXPECT_FALSE(!!cache.modifier().add(originalInfos[3].EntityHash, cosignature));
 
@@ -299,7 +293,7 @@ namespace catapult { namespace cache {
 		AssertCacheSize(cache, 5);
 
 		// Act + Assert: no transaction in the cache should match the random hash
-		auto cosignature = GenerateRandomCosignature();
+		auto cosignature = test::CreateRandomCosignature();
 		EXPECT_FALSE(!!cache.modifier().add(test::GenerateRandomByteArray<Hash256>(), cosignature));
 	}
 
