@@ -424,7 +424,7 @@ namespace catapult { namespace model {
 		MosaicRequiredNotification(const Address& owner, const ResolvableMosaicId& mosaicId, uint8_t propertyFlagMask = 0)
 				: Notification(Notification_Type, sizeof(MosaicRequiredNotification))
 				, Owner(owner)
-				, ResolvableMosaicId(mosaicId)
+				, MosaicId(mosaicId)
 				, PropertyFlagMask(propertyFlagMask)
 		{}
 
@@ -433,7 +433,7 @@ namespace catapult { namespace model {
 		Address Owner;
 
 		/// Mosaic id (resolvable).
-		model::ResolvableMosaicId ResolvableMosaicId;
+		ResolvableMosaicId MosaicId;
 
 		/// Mask of required property flags that must be set on the mosaic.
 		uint8_t PropertyFlagMask;

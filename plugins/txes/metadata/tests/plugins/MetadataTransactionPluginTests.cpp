@@ -94,8 +94,8 @@ namespace catapult { namespace plugins {
 			static void AddCustomExpectations(PublishTestBuilder& builder, const TTransaction& transaction) {
 				builder.template addExpectation<MosaicRequiredNotification>([&transaction](const auto& notification) {
 					EXPECT_EQ(transaction.TargetAddress, notification.Owner);
-					EXPECT_FALSE(notification.ResolvableMosaicId.isResolved());
-					EXPECT_EQ(transaction.TargetMosaicId, notification.ResolvableMosaicId.unresolved());
+					EXPECT_FALSE(notification.MosaicId.isResolved());
+					EXPECT_EQ(transaction.TargetMosaicId, notification.MosaicId.unresolved());
 					EXPECT_EQ(0u, notification.PropertyFlagMask);
 				});
 			}

@@ -65,8 +65,10 @@ namespace catapult { namespace mocks {
 		}
 
 		/// Returns \c true if \a address was visited.
-		bool contains(const UnresolvedAddress& address) const {
-			return m_addresses.cend() != std::find(m_addresses.cbegin(), m_addresses.cend(), address);
+		bool contains(const model::ResolvableAddress& address) const {
+			return std::any_of(m_addresses.cbegin(), m_addresses.cend(), [&address](const auto& notifiedAddress) {
+				return address.isResolved() == notifiedAddress.isResolved() && address.unresolved() == notifiedAddress.unresolved();
+			});
 		}
 
 		/// Returns \c true if \a publicKey was visited.
@@ -128,7 +130,7 @@ namespace catapult { namespace mocks {
 
 	private:
 		std::vector<model::NotificationType> m_notificationTypes;
-		std::vector<UnresolvedAddress> m_addresses;
+		std::vector<model::ResolvableAddress> m_addresses;
 		std::vector<Key> m_keys;
 		std::vector<Transfer> m_transfers;
 	};
