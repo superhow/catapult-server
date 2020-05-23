@@ -19,6 +19,7 @@
 **/
 
 #include "catapult/model/Resolvable.h"
+#include "sdk/src/extensions/ConversionExtensions.h"
 #include "tests/test/core/ResolverTestUtils.h"
 #include "tests/TestHarness.h"
 
@@ -34,12 +35,10 @@ namespace catapult { namespace model {
 			using ResolvedType = Address;
 			using UnresolvedType = UnresolvedAddress;
 
+			static constexpr auto Unresolve = extensions::CopyToUnresolvedAddress;
+
 			static ResolvedType GenerateRandomResolvedValue() {
 				return test::GenerateRandomByteArray<ResolvedType>();
-			}
-
-			static UnresolvedType Unresolve(ResolvedType resolved) {
-				return resolved.copyTo<UnresolvedAddress>();
 			}
 		};
 
@@ -51,12 +50,10 @@ namespace catapult { namespace model {
 			using ResolvedType = MosaicId;
 			using UnresolvedType = UnresolvedMosaicId;
 
+			static constexpr auto Unresolve = extensions::CastToUnresolvedMosaicId;
+
 			static ResolvedType GenerateRandomResolvedValue() {
 				return test::GenerateRandomValue<ResolvedType>();
-			}
-
-			static UnresolvedType Unresolve(ResolvedType resolved) {
-				return UnresolvedType(resolved.unwrap());
 			}
 		};
 	}
