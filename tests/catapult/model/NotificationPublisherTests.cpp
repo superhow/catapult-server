@@ -23,6 +23,7 @@
 #include "tests/test/core/BlockTestUtils.h"
 #include "tests/test/core/mocks/MockNotificationSubscriber.h"
 #include "tests/test/core/mocks/MockTransaction.h"
+#include "tests/test/core/ResolverTestUtils.h"
 #include "tests/test/nodeps/NumericTestUtils.h"
 #include "tests/TestHarness.h"
 
@@ -138,20 +139,17 @@ namespace catapult { namespace model {
 		});
 	}
 
-	TEST(TEST_CLASS, CanRaiseBlockEntityNotifications) {
+	TEST(TEST_CLASS, CanRaiseBeneficiaryAccountNotification) {
 		// Arrange:
 		auto pBlock = test::GenerateEmptyRandomBlock();
-		pBlock->Version = 0x5A;
-		pBlock->Network = static_cast<NetworkIdentifier>(0x11);
+		test::FillWithRandomData(pBlock->SignerPublicKey);
+		test::FillWithRandomData(pBlock->BeneficiaryAddress);
 
 		// Act:
-		PublishOne<EntityNotification>(*pBlock, [](const auto& notification) {
+		PublishOne<AccountAddressNotification>(*pBlock, [&beneficiaryAddress = pBlock->BeneficiaryAddress](const auto& notification) {
 			// Assert:
-			auto expectedVersion = Block::Current_Version;
-			EXPECT_EQ(static_cast<NetworkIdentifier>(0x11), notification.NetworkIdentifier);
-			EXPECT_EQ(0x5Au, notification.EntityVersion);
-			EXPECT_EQ(expectedVersion, notification.MinVersion);
-			EXPECT_EQ(expectedVersion, notification.MaxVersion);
+			EXPECT_TRUE(notification.Address.isResolved());
+			EXPECT_EQ(beneficiaryAddress, notification.Address.resolved(test::CreateResolverContextXor()));
 		});
 	}
 

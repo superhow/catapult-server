@@ -95,7 +95,7 @@ namespace catapult { namespace model {
 				// raise an account public key notification
 				auto blockSignerAddress = GetSignerAddress(block);
 				if (blockSignerAddress != block.BeneficiaryAddress)
-					sub.notify(AccountAddressNotification(block.BeneficiaryAddress.copyTo<UnresolvedAddress>()));
+					sub.notify(AccountAddressNotification(block.BeneficiaryAddress));
 
 				// raise an entity notification
 				sub.notify(EntityNotification(block.Network, block.Version, Block::Current_Version, Block::Current_Version));
