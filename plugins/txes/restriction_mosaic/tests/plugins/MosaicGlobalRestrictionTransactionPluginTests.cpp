@@ -54,10 +54,9 @@ namespace catapult { namespace plugins {
 			});
 			builder.template addExpectation<MosaicRequiredNotification>([&transaction](const auto& notification) {
 				EXPECT_EQ(model::GetSignerAddress(transaction), notification.Owner);
-				EXPECT_EQ(MosaicId(), notification.MosaicId);
-				EXPECT_EQ(transaction.MosaicId, notification.UnresolvedMosaicId);
+				EXPECT_FALSE(notification.ResolvableMosaicId.isResolved());
+				EXPECT_EQ(transaction.MosaicId, notification.ResolvableMosaicId.unresolved());
 				EXPECT_EQ(0x04u, notification.PropertyFlagMask);
-				EXPECT_EQ(MosaicRequiredNotification::MosaicType::Unresolved, notification.ProvidedMosaicType);
 			});
 			builder.template addExpectation<MosaicGlobalRestrictionModificationPreviousValueNotification>([&transaction](
 					const auto& notification) {

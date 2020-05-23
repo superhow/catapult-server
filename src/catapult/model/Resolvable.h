@@ -63,6 +63,6 @@ namespace catapult { namespace model {
 	extern template class Resolvable<UnresolvedAddress, Address>;
 
 	/// Resolvable mosaic id.
-	using MosaicResolutionStatement = Resolvable<UnresolvedMosaicId, MosaicId>;
+	using ResolvableMosaicId = Resolvable<UnresolvedMosaicId, MosaicId>;
 	extern template class Resolvable<UnresolvedMosaicId, MosaicId>;
 }}

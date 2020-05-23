@@ -22,6 +22,7 @@
 #include "src/model/AliasNotifications.h"
 #include "src/model/MosaicAliasTransaction.h"
 #include "src/model/NamespaceNotifications.h"
+#include "tests/test/core/ResolverTestUtils.h"
 #include "tests/test/plugins/TransactionPluginTestUtils.h"
 #include "tests/TestHarness.h"
 
@@ -80,10 +81,9 @@ namespace catapult { namespace plugins {
 		});
 		builder.template addExpectation<MosaicRequiredNotification>([&transaction](const auto& notification) {
 			EXPECT_EQ(model::GetSignerAddress(transaction), notification.Owner);
-			EXPECT_EQ(transaction.MosaicId, notification.MosaicId);
-			EXPECT_EQ(UnresolvedMosaicId(), notification.UnresolvedMosaicId);
+			EXPECT_FALSE(notification.ResolvableMosaicId.isResolved());
+			EXPECT_EQ(transaction.MosaicId, notification.ResolvableMosaicId.resolved(test::CreateResolverContextXor()));
 			EXPECT_EQ(0u, notification.PropertyFlagMask);
-			EXPECT_EQ(MosaicRequiredNotification::MosaicType::Resolved, notification.ProvidedMosaicType);
 		});
 
 		// Act + Assert:

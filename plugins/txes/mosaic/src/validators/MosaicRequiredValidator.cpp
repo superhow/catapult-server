@@ -28,10 +28,7 @@ namespace catapult { namespace validators {
 
 	DEFINE_STATEFUL_VALIDATOR(RequiredMosaic, [](const Notification& notification, const ValidatorContext& context) {
 		auto view = ActiveMosaicView(context.Cache);
-
-		auto mosaicId = notification.MosaicId;
-		if (Notification::MosaicType::Unresolved == notification.ProvidedMosaicType)
-			mosaicId = context.Resolvers.resolve(notification.UnresolvedMosaicId);
+		auto mosaicId = notification.ResolvableMosaicId.resolved(context.Resolvers);
 
 		ActiveMosaicView::FindIterator mosaicIter;
 		auto result = view.tryGet(mosaicId, context.Height, notification.Owner, mosaicIter);
