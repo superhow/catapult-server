@@ -21,6 +21,7 @@
 #include "src/plugins/AccountKeyLinkTransactionPlugin.h"
 #include "src/model/AccountKeyLinkTransaction.h"
 #include "src/model/AccountLinkNotifications.h"
+#include "catapult/model/Address.h"
 #include "tests/test/core/mocks/MockNotificationSubscriber.h"
 #include "tests/test/plugins/TransactionPluginTestUtils.h"
 #include "tests/TestHarness.h"
@@ -51,6 +52,12 @@ namespace catapult { namespace plugins {
 			builder.template addExpectation<KeyLinkActionNotification>([&transaction](const auto& notification) {
 				EXPECT_EQ(transaction.LinkAction, notification.LinkAction);
 			});
+			builder.template addExpectation<AddressInteractionNotification>([&transaction](const auto& notification) {
+				auto linkedAddress = PublicKeyToAddress(transaction.LinkedPublicKey, transaction.Network);
+				EXPECT_EQ(GetSignerAddress(transaction), notification.Source);
+				EXPECT_EQ(transaction.Type, notification.TransactionType);
+				EXPECT_EQ(UnresolvedAddressSet{ linkedAddress.template copyTo<UnresolvedAddress>() }, notification.ParticipantsByAddress);
+			});
 			builder.template addExpectation<RemoteAccountKeyLinkNotification>([&transaction](const auto& notification) {
 				EXPECT_EQ(transaction.SignerPublicKey, notification.MainAccountPublicKey);
 				EXPECT_EQ(transaction.LinkedPublicKey, notification.LinkedPublicKey);
@@ -70,6 +77,7 @@ namespace catapult { namespace plugins {
 			NewRemoteAccountNotification::Notification_Type,
 			AccountPublicKeyNotification::Notification_Type,
 			KeyLinkActionNotification::Notification_Type,
+			AddressInteractionNotification::Notification_Type,
 			RemoteAccountKeyLinkNotification::Notification_Type
 		});
 	}
@@ -106,6 +114,7 @@ namespace catapult { namespace plugins {
 		// Act + Assert:
 		test::TransactionPluginTestUtils<TTraits>::AssertNotificationTypes(transaction, {
 			KeyLinkActionNotification::Notification_Type,
+			AddressInteractionNotification::Notification_Type,
 			RemoteAccountKeyLinkNotification::Notification_Type
 		});
 	}
