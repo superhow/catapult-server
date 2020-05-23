@@ -35,9 +35,9 @@ namespace catapult { namespace mocks {
 
 			// use if/else instead of switch to work around VS warning
 			if (model::Core_Register_Account_Address_Notification == notification.Type)
-				m_addresses.push_back(test::CastToDerivedNotification<model::AccountAddressNotification>(notification).Address);
+				addAccount(test::CastToDerivedNotification<model::AccountAddressNotification>(notification));
 			else if (model::Core_Register_Account_Public_Key_Notification == notification.Type)
-				m_keys.push_back(test::CastToDerivedNotification<model::AccountPublicKeyNotification>(notification).PublicKey);
+				addPublicKey(test::CastToDerivedNotification<model::AccountPublicKeyNotification>(notification));
 			else if (model::Core_Balance_Transfer_Notification == notification.Type)
 				addTransfer(test::CastToDerivedNotification<model::BalanceTransferNotification>(notification));
 		}
@@ -75,6 +75,14 @@ namespace catapult { namespace mocks {
 		}
 
 	private:
+		void addAccount(const model::AccountAddressNotification& notification) {
+			m_addresses.push_back(notification.Address.unresolved());
+		}
+
+		void addPublicKey(const model::AccountPublicKeyNotification& notification) {
+			m_keys.push_back(notification.PublicKey);
+		}
+
 		void addTransfer(const model::BalanceTransferNotification& notification) {
 			CATAPULT_LOG(debug) << "visited " << notification.MosaicId << " transfer of " << notification.Amount << " units";
 			m_transfers.push_back(Transfer(notification));

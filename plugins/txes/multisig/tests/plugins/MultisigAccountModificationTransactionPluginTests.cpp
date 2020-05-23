@@ -23,6 +23,7 @@
 #include "src/model/MultisigNotifications.h"
 #include "catapult/utils/MemoryUtils.h"
 #include "tests/test/core/mocks/MockNotificationSubscriber.h"
+#include "tests/test/core/ResolverTestUtils.h"
 #include "tests/test/plugins/TransactionPluginTestUtils.h"
 #include "tests/TestHarness.h"
 #include <random>
@@ -128,7 +129,8 @@ namespace catapult { namespace plugins {
 
 		for (auto i = 0u; i < 2; ++i) {
 			builder.template addExpectation<AccountAddressNotification>(i, [&transaction, i](const auto& notification) {
-				EXPECT_EQ(transaction.AddressAdditionsPtr()[i].template copyTo<UnresolvedAddress>(), notification.Address);
+				EXPECT_TRUE(notification.Address.isResolved());
+				EXPECT_EQ(transaction.AddressAdditionsPtr()[i], notification.Address.resolved(test::CreateResolverContextXor()));
 			});
 
 			builder.template addExpectation<MultisigNewCosignatoryNotification>(i, [&transaction, i](const auto& notification) {
@@ -226,7 +228,8 @@ namespace catapult { namespace plugins {
 
 		for (auto i = 0u; i < 2; ++i) {
 			builder.template addExpectation<AccountAddressNotification>(i, [&transaction, i](const auto& notification) {
-				EXPECT_EQ(transaction.AddressAdditionsPtr()[i].template copyTo<UnresolvedAddress>(), notification.Address);
+				EXPECT_TRUE(notification.Address.isResolved());
+				EXPECT_EQ(transaction.AddressAdditionsPtr()[i], notification.Address.resolved(test::CreateResolverContextXor()));
 			});
 
 			builder.template addExpectation<MultisigNewCosignatoryNotification>(i, [&transaction, i](const auto& notification) {

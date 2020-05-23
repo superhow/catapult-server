@@ -64,14 +64,14 @@ namespace catapult { namespace model {
 
 	public:
 		/// Creates a notification around \a address.
-		explicit AccountAddressNotification(const UnresolvedAddress& address)
+		explicit AccountAddressNotification(const ResolvableAddress& address)
 				: Notification(Notification_Type, sizeof(AccountAddressNotification))
 				, Address(address)
 		{}
 
 	public:
-		/// Address.
-		UnresolvedAddress Address;
+		/// Address (resolvable).
+		ResolvableAddress Address;
 	};
 
 	/// Notification of use of an account public key.

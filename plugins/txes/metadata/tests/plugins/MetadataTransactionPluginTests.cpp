@@ -25,6 +25,7 @@
 #include "src/model/NamespaceMetadataTransaction.h"
 #include "plugins/txes/namespace/src/model/NamespaceNotifications.h"
 #include "catapult/utils/MemoryUtils.h"
+#include "tests/test/core/ResolverTestUtils.h"
 #include "tests/test/plugins/TransactionPluginTestUtils.h"
 #include "tests/TestHarness.h"
 
@@ -62,7 +63,8 @@ namespace catapult { namespace plugins {
 
 			static void AddCustomExpectations(PublishTestBuilder& builder, const TTransaction& transaction) {
 				builder.template addExpectation<AccountAddressNotification>([&transaction](const auto& notification) {
-					EXPECT_EQ(transaction.TargetAddress.template copyTo<UnresolvedAddress>(), notification.Address);
+					EXPECT_TRUE(notification.Address.isResolved());
+					EXPECT_EQ(transaction.TargetAddress, notification.Address.resolved(test::CreateResolverContextXor()));
 				});
 			}
 		};
