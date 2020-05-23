@@ -78,7 +78,7 @@ namespace catapult { namespace mocks {
 
 	private:
 		void addAccount(const model::AccountAddressNotification& notification) {
-			m_addresses.push_back(notification.Address.unresolved());
+			m_addresses.push_back(notification.Address);
 		}
 
 		void addPublicKey(const model::AccountPublicKeyNotification& notification) {
