@@ -53,14 +53,14 @@ namespace catapult { namespace test {
 	/// Creates a multisig account modification transaction from \a signer with \a addressAdditions and \a addressDeletions.
 	std::unique_ptr<model::EmbeddedMultisigAccountModificationTransaction> CreateMultisigAccountModificationTransaction(
 			const Key& signer,
-			const std::vector<Address>& addressAdditions,
-			const std::vector<Address>& addressDeletions);
+			const std::vector<UnresolvedAddress>& addressAdditions,
+			const std::vector<UnresolvedAddress>& addressDeletions);
 
 	/// Creates a multisig cosignatories notification around \a multisig, \a addressAdditions and \a addressDeletions.
 	model::MultisigCosignatoriesNotification CreateMultisigCosignatoriesNotification(
 			const Address& multisig,
-			const std::vector<Address>& addressAdditions,
-			const std::vector<Address>& addressDeletions);
+			const std::vector<UnresolvedAddress>& addressAdditions,
+			const std::vector<UnresolvedAddress>& addressDeletions);
 
 	/// Makes \a multisig in \a cache a multisig account with \a cosignatories and required limits
 	/// \a minApproval and \a minRemoval.

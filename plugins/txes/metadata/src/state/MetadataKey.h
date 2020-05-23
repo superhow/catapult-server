@@ -79,7 +79,7 @@ namespace catapult { namespace state {
 
 	/// Uses \a resolvers to merge \a partialKey and \a target into a (resolved) metadata key.
 	MetadataKey ResolveMetadataKey(
-			const model::PartialMetadataKey& partialKey,
+			const model::UnresolvedPartialMetadataKey& partialKey,
 			const model::MetadataTarget& target,
 			const model::ResolverContext& resolvers);
 }}

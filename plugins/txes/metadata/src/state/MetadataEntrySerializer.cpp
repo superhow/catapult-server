@@ -47,7 +47,7 @@ namespace catapult { namespace state {
 
 	MetadataEntry MetadataEntrySerializer::Load(io::InputStream& input) {
 		// 1. read partial key
-		model::PartialMetadataKey partialKey;
+		model::UnresolvedPartialMetadataKey partialKey;
 		input.read(partialKey.SourceAddress);
 		input.read(partialKey.TargetAddress);
 		partialKey.ScopedMetadataKey = io::Read64(input);

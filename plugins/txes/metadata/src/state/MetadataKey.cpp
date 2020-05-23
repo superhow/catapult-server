@@ -108,19 +108,29 @@ namespace catapult { namespace state {
 		return uniqueKey;
 	}
 
+	// namespace {
+	// 	void Resolve()
+	// }
+
 	MetadataKey ResolveMetadataKey(
-			const model::PartialMetadataKey& partialKey,
+			const model::UnresolvedPartialMetadataKey& partialKey,
 			const model::MetadataTarget& target,
 			const model::ResolverContext& resolvers) {
+		auto resolvedPartialKey = model::PartialMetadataKey{
+			partialKey.SourceAddress,
+			resolvers.resolve(partialKey.TargetAddress),
+			partialKey.ScopedMetadataKey
+		};
+
 		switch (target.Type) {
 		case model::MetadataType::Account:
-			return MetadataKey(partialKey);
+			return MetadataKey(resolvedPartialKey);
 
 		case model::MetadataType::Mosaic:
-			return MetadataKey(partialKey, resolvers.resolve(UnresolvedMosaicId(target.Id)));
+			return MetadataKey(resolvedPartialKey, resolvers.resolve(UnresolvedMosaicId(target.Id)));
 
 		case model::MetadataType::Namespace:
-			return MetadataKey(partialKey, NamespaceId(target.Id));
+			return MetadataKey(resolvedPartialKey, NamespaceId(target.Id));
 		}
 
 		CATAPULT_THROW_INVALID_ARGUMENT_1("cannot resolve metadata key with unsupported type", static_cast<uint16_t>(target.Type));
