@@ -37,25 +37,9 @@ namespace catapult { namespace validators {
 	namespace {
 		constexpr auto Failure_Result = Failure_Aggregate_Ineligible_Cosignatories;
 
-		Address ToAddress(const Key& publicKey) {
-			return model::PublicKeyToAddress(publicKey, model::NetworkIdentifier::Zero);
-		}
-
-		std::vector<Address> ToAddresses(const std::vector<Key>& publicKeys) {
-			std::vector<Address> addresses;
-			for (const auto& publicKey : publicKeys)
-				addresses.push_back(ToAddress(publicKey));
-
-			return addresses;
-		}
-
-		std::vector<UnresolvedAddress> ToUnresolvedAddresses(const std::vector<Key>& publicKeys) {
-			std::vector<UnresolvedAddress> addresses;
-			for (const auto& publicKey : publicKeys)
-				addresses.push_back(test::UnresolveXor(ToAddress(publicKey)));
-
-			return addresses;
-		}
+		constexpr auto ToAddress = test::NetworkAddressConversions<>::ToAddress;
+		constexpr auto ToAddresses = test::NetworkAddressConversions<>::ToAddresses;
+		constexpr auto ToUnresolvedAddresses = test::NetworkAddressConversions<>::ToUnresolvedAddresses;
 
 		auto CreateTransactionRegistry() {
 			// use a registry with mock and multilevel multisig transactions registered

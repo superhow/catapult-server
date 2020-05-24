@@ -21,8 +21,10 @@
 #pragma once
 #include "src/model/MultisigAccountModificationTransaction.h"
 #include "src/model/MultisigNotifications.h"
+#include "catapult/model/Address.h"
 #include "catapult/model/Cosignature.h"
 #include "catapult/utils/HexFormatter.h"
+#include "tests/test/core/ResolverTestUtils.h"
 #include "tests/TestHarness.h"
 
 namespace catapult {
@@ -40,6 +42,34 @@ namespace catapult { namespace test {
 		for (const auto& address : expectedAddresses)
 			EXPECT_CONTAINS(addresses, address);
 	}
+
+	/// Functions for performing network address conversions.
+	template<model::NetworkIdentifier Network_Identifier = model::NetworkIdentifier::Zero>
+	struct NetworkAddressConversions {
+	public:
+		/// Converts \a publicKey to an address.
+		static Address ToAddress(const Key& publicKey) {
+			return model::PublicKeyToAddress(publicKey, Network_Identifier);
+		}
+
+		/// Converts \a publicKeys to (resolved) addresses.
+		static std::vector<Address> ToAddresses(const std::vector<Key>& publicKeys) {
+			std::vector<Address> addresses;
+			for (const auto& publicKey : publicKeys)
+				addresses.push_back(ToAddress(publicKey));
+
+			return addresses;
+		}
+
+		/// Converts \a publicKeys to (unresolved) addresses.
+		static std::vector<UnresolvedAddress> ToUnresolvedAddresses(const std::vector<Key>& publicKeys) {
+			std::vector<UnresolvedAddress> addresses;
+			for (const auto& publicKey : publicKeys)
+				addresses.push_back(test::UnresolveXor(ToAddress(publicKey)));
+
+			return addresses;
+		}
+	};
 
 	/// Generates random cosignatures from \a cosignatories.
 	std::vector<model::Cosignature> GenerateCosignaturesFromCosignatories(const std::vector<Key>& cosignatories);

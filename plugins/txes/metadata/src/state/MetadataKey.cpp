@@ -108,10 +108,6 @@ namespace catapult { namespace state {
 		return uniqueKey;
 	}
 
-	// namespace {
-	// 	void Resolve()
-	// }
-
 	MetadataKey ResolveMetadataKey(
 			const model::UnresolvedPartialMetadataKey& partialKey,
 			const model::MetadataTarget& target,
