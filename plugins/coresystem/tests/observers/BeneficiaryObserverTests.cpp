@@ -161,9 +161,9 @@ namespace catapult { namespace observers {
 			auto harvesterAddress = test::GenerateRandomByteArray<Address>();
 			auto beneficiaryPublicKey = test::GenerateRandomByteArray<Key>();
 			auto beneficiaryRemotePublicKey = test::GenerateRandomByteArray<Key>();
-			auto harvesterAccountStateIter = context.addAccount(harvesterPublicKey);
-			auto beneficiaryAccountStateIter = context.addAccount(beneficiaryAddress);
-			auto beneficiaryRemoteStateIter = context.setupRemote(beneficiaryAddress, beneficiaryRemotePublicKey);
+			auto harvesterAccountStateIter = context.addAccount(harvesterAddress);
+			auto beneficiaryAccountStateIter = context.addAccount(beneficiaryPublicKey);
+			auto beneficiaryRemoteStateIter = context.setupRemote(beneficiaryPublicKey, beneficiaryRemotePublicKey);
 			SeedAccount(beneficiaryAccountStateIter.get());
 
 			auto notification = test::CreateBlockNotification(harvesterAddress, ToAddress(beneficiaryPublicKey));
@@ -192,7 +192,7 @@ namespace catapult { namespace observers {
 		// Arrange:
 		RunBeneficiaryObserverTest(TTraits::Notify_Mode, [](auto& context, auto& observer) {
 			auto harvesterAddress = test::GenerateRandomByteArray<Address>();
-			auto harvesterAccountStateIter = context.addAccount(harvesterPublicKey);
+			auto harvesterAccountStateIter = context.addAccount(harvesterAddress);
 			SeedAccount(harvesterAccountStateIter.get());
 
 			auto notification = test::CreateBlockNotification(harvesterAddress, harvesterAddress);
