@@ -36,7 +36,7 @@ namespace catapult { namespace validators {
 		}
 	}
 
-	// notice that redundant checks by this validator are not authoritative and there is another validator that will
+	// notice that redundant checks by this validator are not comprehensive and there is another validator that will
 	// check against current state and resolved addresses
 
 	DEFINE_STATELESS_VALIDATOR(MultisigCosignatories, [](const Notification& notification) {

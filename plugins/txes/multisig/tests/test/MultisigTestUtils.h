@@ -65,7 +65,7 @@ namespace catapult { namespace test {
 		static std::vector<UnresolvedAddress> ToUnresolvedAddresses(const std::vector<Key>& publicKeys) {
 			std::vector<UnresolvedAddress> addresses;
 			for (const auto& publicKey : publicKeys)
-				addresses.push_back(test::UnresolveXor(ToAddress(publicKey)));
+				addresses.push_back(UnresolveXor(ToAddress(publicKey)));
 
 			return addresses;
 		}
