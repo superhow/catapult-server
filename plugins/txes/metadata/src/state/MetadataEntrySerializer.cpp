@@ -20,7 +20,6 @@
 
 #include "MetadataEntrySerializer.h"
 #include "catapult/io/PodIoUtils.h"
-#include "catapult/model/ResolverContext.h"
 #include "catapult/utils/Casting.h"
 #include "catapult/exceptions.h"
 
@@ -47,7 +46,7 @@ namespace catapult { namespace state {
 
 	MetadataEntry MetadataEntrySerializer::Load(io::InputStream& input) {
 		// 1. read partial key
-		model::UnresolvedPartialMetadataKey partialKey;
+		model::PartialMetadataKey partialKey;
 		input.read(partialKey.SourceAddress);
 		input.read(partialKey.TargetAddress);
 		partialKey.ScopedMetadataKey = io::Read64(input);
@@ -55,7 +54,7 @@ namespace catapult { namespace state {
 		// 2. read target information and create entry (note that only resolved values are serialized)
 		auto targetId = io::Read64(input);
 		auto metadataType = static_cast<model::MetadataType>(io::Read8(input));
-		MetadataEntry entry(ResolveMetadataKey(partialKey, { metadataType, targetId }, model::ResolverContext()));
+		MetadataEntry entry(CreateMetadataKey(partialKey, { metadataType, targetId }));
 
 		// 3. read and set value
 		auto valueSize = io::Read16(input);

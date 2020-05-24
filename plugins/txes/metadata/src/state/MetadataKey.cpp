@@ -108,6 +108,32 @@ namespace catapult { namespace state {
 		return uniqueKey;
 	}
 
+	namespace {
+		MetadataKey ResolveMetadataKey(
+				const model::PartialMetadataKey& partialKey,
+				const model::MetadataTarget& target,
+				const std::function<MosaicId (uint64_t)>& idToMosaicIdResolver) {
+			switch (target.Type) {
+			case model::MetadataType::Account:
+				return MetadataKey(partialKey);
+
+			case model::MetadataType::Mosaic:
+				return MetadataKey(partialKey, idToMosaicIdResolver(target.Id));
+
+			case model::MetadataType::Namespace:
+				return MetadataKey(partialKey, NamespaceId(target.Id));
+			}
+
+			CATAPULT_THROW_INVALID_ARGUMENT_1("cannot resolve metadata key with unsupported type", static_cast<uint16_t>(target.Type));
+		}
+	}
+
+	MetadataKey CreateMetadataKey(const model::PartialMetadataKey& partialKey, const model::MetadataTarget& target) {
+		return ResolveMetadataKey(partialKey, target, [](auto id) {
+			return MosaicId(id);
+		});
+	}
+
 	MetadataKey ResolveMetadataKey(
 			const model::UnresolvedPartialMetadataKey& partialKey,
 			const model::MetadataTarget& target,
@@ -117,18 +143,8 @@ namespace catapult { namespace state {
 			resolvers.resolve(partialKey.TargetAddress),
 			partialKey.ScopedMetadataKey
 		};
-
-		switch (target.Type) {
-		case model::MetadataType::Account:
-			return MetadataKey(resolvedPartialKey);
-
-		case model::MetadataType::Mosaic:
-			return MetadataKey(resolvedPartialKey, resolvers.resolve(UnresolvedMosaicId(target.Id)));
-
-		case model::MetadataType::Namespace:
-			return MetadataKey(resolvedPartialKey, NamespaceId(target.Id));
-		}
-
-		CATAPULT_THROW_INVALID_ARGUMENT_1("cannot resolve metadata key with unsupported type", static_cast<uint16_t>(target.Type));
+		return ResolveMetadataKey(resolvedPartialKey, target, [&resolvers](auto id) {
+			return resolvers.resolve(UnresolvedMosaicId(id));
+		});
 	}
 }}
