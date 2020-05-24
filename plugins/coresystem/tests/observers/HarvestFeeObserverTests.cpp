@@ -448,11 +448,11 @@ namespace catapult { namespace observers {
 
 				// Assert: if beneficiary is remote, it should have an unchanged balance
 				const auto& mainHarvesterPublicKey = harvesterAccountStateIter.get().PublicKey;
-				const auto& mainBeneficiaryAddress = beneficiaryAccountStateIter.get().PublicKey;
-				if (beneficiary != mainBeneficiaryAddress)
+				const auto& mainBeneficiaryPublicKey = beneficiaryAccountStateIter.get().PublicKey;
+				if (beneficiary != mainBeneficiaryPublicKey)
 					test::AssertBalances(context.cache(), beneficiary, {});
 
-				assertBalancesAndReceipts(context, mainHarvesterPublicKey, mainBeneficiaryAddress);
+				assertBalancesAndReceipts(context, mainHarvesterPublicKey, mainBeneficiaryPublicKey);
 			});
 		}
 	}

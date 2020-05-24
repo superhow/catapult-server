@@ -82,7 +82,7 @@ namespace catapult { namespace harvesting {
 
 	// region custom parsing
 
-	TEST(TEST_CLASS, CanMapToConsoleLoggerOptions) {
+	TEST(TEST_CLASS, CanParseEmptyBeneficiaryAddress) {
 		// Arrange: clear beneficiary address
 		auto properties = HarvestingConfigurationTraits::CreateProperties();
 		for (auto& pair : properties["harvesting"]) {

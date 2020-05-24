@@ -125,7 +125,7 @@ namespace catapult { namespace model {
 		// Arrange:
 		auto pBlock = test::GenerateEmptyRandomBlock();
 		test::FillWithRandomData(pBlock->SignerPublicKey);
-		pBlock->BeneficiaryAddress = model::GetSignerAddress(*pBlock);
+		pBlock->BeneficiaryAddress = GetSignerAddress(*pBlock);
 
 		// Act:
 		PublishAll(*pBlock, [&block = *pBlock](const auto& sub) {
@@ -150,6 +150,23 @@ namespace catapult { namespace model {
 			EXPECT_TRUE(notification.Address.isResolved());
 
 			EXPECT_EQ(beneficiaryAddress, notification.Address.resolved());
+		});
+	}
+
+	TEST(TEST_CLASS, CanRaiseBlockEntityNotifications) {
+		// Arrange:
+		auto pBlock = test::GenerateEmptyRandomBlock();
+		pBlock->Version = 0x5A;
+		pBlock->Network = static_cast<NetworkIdentifier>(0x11);
+
+		// Act:
+		PublishOne<EntityNotification>(*pBlock, [](const auto& notification) {
+			// Assert:
+			auto expectedVersion = Block::Current_Version;
+			EXPECT_EQ(static_cast<NetworkIdentifier>(0x11), notification.NetworkIdentifier);
+			EXPECT_EQ(0x5Au, notification.EntityVersion);
+			EXPECT_EQ(expectedVersion, notification.MinVersion);
+			EXPECT_EQ(expectedVersion, notification.MaxVersion);
 		});
 	}
 

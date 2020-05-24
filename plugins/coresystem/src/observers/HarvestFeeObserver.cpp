@@ -79,10 +79,10 @@ namespace catapult { namespace observers {
 			auto inflationAmount = calculator.getSpotAmount(context.Height);
 			auto totalAmount = notification.TotalFee + inflationAmount;
 
+			auto networkAmount = Amount(totalAmount.unwrap() * options.HarvestNetworkPercentage / 100);
 			auto beneficiaryAmount = ShouldShareFees(notification, options.HarvestBeneficiaryPercentage)
 					? Amount(totalAmount.unwrap() * options.HarvestBeneficiaryPercentage / 100)
 					: Amount();
-			auto networkAmount = Amount(totalAmount.unwrap() * options.HarvestNetworkPercentage / 100);
 			auto harvesterAmount = totalAmount - networkAmount - beneficiaryAmount;
 
 			// always create receipt for harvester
