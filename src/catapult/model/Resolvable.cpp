@@ -25,23 +25,17 @@
 namespace catapult { namespace model {
 
 	namespace {
-		UnresolvedMosaicId Unresolve(MosaicId mosaicId) {
-			return UnresolvedMosaicId(mosaicId.unwrap());
-		}
-
 		UnresolvedAddress Unresolve(const Address& address) {
 			return address.copyTo<UnresolvedAddress>();
+		}
+
+		UnresolvedMosaicId Unresolve(MosaicId mosaicId) {
+			return UnresolvedMosaicId(mosaicId.unwrap());
 		}
 	}
 
 	template<typename TUnresolved, typename TResolved>
 	Resolvable<TUnresolved, TResolved>::Resolvable() : m_type(Type::Resolved)
-	{}
-
-	template<typename TUnresolved, typename TResolved>
-	Resolvable<TUnresolved, TResolved>::Resolvable(const TResolved& resolved)
-			: m_resolved(resolved)
-			, m_type(Type::Resolved)
 	{}
 
 	template<typename TUnresolved, typename TResolved>
@@ -51,9 +45,15 @@ namespace catapult { namespace model {
 	{}
 
 	template<typename TUnresolved, typename TResolved>
+	Resolvable<TUnresolved, TResolved>::Resolvable(const TResolved& resolved)
+			: m_resolved(resolved)
+			, m_type(Type::Resolved)
+	{}
+
+	template<typename TUnresolved, typename TResolved>
 	bool Resolvable<TUnresolved, TResolved>::isResolved() const {
-			return Type::Resolved == m_type;
-		}
+		return Type::Resolved == m_type;
+	}
 
 	template<typename TUnresolved, typename TResolved>
 	TUnresolved Resolvable<TUnresolved, TResolved>::unresolved() const {

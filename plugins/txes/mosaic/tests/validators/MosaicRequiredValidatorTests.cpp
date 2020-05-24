@@ -110,8 +110,7 @@ namespace catapult { namespace validators {
 
 	MOSAIC_ID_TRAITS_BASED_TEST(SuccessWhenMosaicIsActiveAndOwnerMatches_UnresolvedAddress) {
 		auto owner = test::CreateRandomOwner();
-		auto unresolvedOwner = test::UnresolveXor(owner);
-		AssertValidationResult(ValidationResult::Success, TTraits::Default_Id, Height(100), unresolvedOwner, owner);
+		AssertValidationResult(ValidationResult::Success, TTraits::Default_Id, Height(100), test::UnresolveXor(owner), owner);
 	}
 
 	// endregion

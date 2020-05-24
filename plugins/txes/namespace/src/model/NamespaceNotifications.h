@@ -215,7 +215,7 @@ namespace catapult { namespace model {
 		{}
 
 	public:
-		/// Namespace owner.
+		/// Namespace owner (resolvable).
 		ResolvableAddress Owner;
 
 		/// Namespace id.

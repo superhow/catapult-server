@@ -25,8 +25,8 @@ namespace catapult { namespace model { class ResolverContext; } }
 
 namespace catapult { namespace model {
 
-	/// Allows unified handling of resolved and unresolved types.
-	/// \note Single parameters are not explicit to allow this class to be a stand-in for those types.
+	/// Allows unified handling of unresolved and resolved types.
+	/// \note Single parameter constructors are not explicit in order to allow this class to be a stand-in for those types.
 	template<typename TUnresolved, typename TResolved>
 	class Resolvable {
 	private:
@@ -36,23 +36,23 @@ namespace catapult { namespace model {
 		/// Creates a default resolvable.
 		Resolvable();
 
-		/// Creates a resolvable around \a resolved value.
-		Resolvable(const TResolved& resolved);
-
 		/// Creates a resolvable around \a unresolved value.
 		Resolvable(const TUnresolved& unresolved);
 
+		/// Creates a resolvable around \a resolved value.
+		Resolvable(const TResolved& resolved);
+
 	public:
-		/// Returns \c true if underlying value is resolved.
+		/// Returns \c true if the underlying value is resolved.
 		bool isResolved() const;
 
-		/// Gets an unresolved representation of underlying value.
+		/// Gets an unresolved representation of the underlying value.
 		TUnresolved unresolved() const;
 
-		/// Gets a resolved representation of underlying value if and only if it is isResolved returns \c true.
+		/// Gets a resolved representation of the underlying value if and only if isResolved returns \c true.
 		TResolved resolved() const;
 
-		/// Gets a resolved representation of underlying value using \a resolvers.
+		/// Gets a resolved representation of the underlying value using \a resolvers.
 		TResolved resolved(const ResolverContext& resolvers) const;
 
 	private:

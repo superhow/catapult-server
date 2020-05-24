@@ -42,9 +42,6 @@ namespace catapult { namespace model {
 			}
 		};
 
-		using ResolvableMosaicId = Resolvable<UnresolvedMosaicId, MosaicId>;
-		using ResolvableAddress = Resolvable<UnresolvedAddress, Address>;
-
 		struct MosaicTraits {
 			using ResolvableType = ResolvableMosaicId;
 			using ResolvedType = MosaicId;
@@ -71,7 +68,7 @@ namespace catapult { namespace model {
 	namespace {
 		template<typename TTraits>
 		typename TTraits::ResolvedType ThrowingResolver(const typename TTraits::UnresolvedType& unresolved) {
-			CATAPULT_THROW_INVALID_ARGUMENT_1("throwing resolver cannot unresolve value", unresolved);
+			CATAPULT_THROW_INVALID_ARGUMENT_1("throwing resolver cannot resolve value", unresolved);
 		}
 
 		model::ResolverContext CreateThrowingResolverContext() {
@@ -84,38 +81,38 @@ namespace catapult { namespace model {
 	// region tests
 
 	RESOLVABLE_TEST(CanCreateDefault) {
-		// Arrange:
+		// Act:
 		auto resolvable = typename TTraits::ResolvableType();
 
-		// Act:
+		// Assert:
 		EXPECT_TRUE(resolvable.isResolved());
 		EXPECT_EQ(typename TTraits::UnresolvedType(), resolvable.unresolved());
 		EXPECT_EQ(typename TTraits::ResolvedType(), resolvable.resolved());
 		EXPECT_EQ(typename TTraits::ResolvedType(), resolvable.resolved(CreateThrowingResolverContext()));
 	}
 
-	RESOLVABLE_TEST(CanCreateFromResolved) {
-		// Arrange:
-		auto resolvedValue = TTraits::GenerateRandomResolvedValue();
-		auto resolvable = typename TTraits::ResolvableType(resolvedValue);
-
-		// Act:
-		EXPECT_TRUE(resolvable.isResolved());
-		EXPECT_EQ(TTraits::Unresolve(resolvedValue), resolvable.unresolved());
-		EXPECT_EQ(resolvedValue, resolvable.resolved());
-		EXPECT_EQ(resolvedValue, resolvable.resolved(CreateThrowingResolverContext()));
-	}
-
 	RESOLVABLE_TEST(CanCreateFromUnresolved) {
-		// Arrange:
+		// Act:
 		auto resolvedValue = TTraits::GenerateRandomResolvedValue();
 		auto resolvable = typename TTraits::ResolvableType(test::UnresolveXor(resolvedValue));
 
-		// Act:
+		// Assert:
 		EXPECT_FALSE(resolvable.isResolved());
 		EXPECT_EQ(test::UnresolveXor(resolvedValue), resolvable.unresolved());
 		EXPECT_THROW(resolvable.resolved(), catapult_invalid_argument);
 		EXPECT_EQ(resolvedValue, resolvable.resolved(test::CreateResolverContextXor()));
+	}
+
+	RESOLVABLE_TEST(CanCreateFromResolved) {
+		// Act:
+		auto resolvedValue = TTraits::GenerateRandomResolvedValue();
+		auto resolvable = typename TTraits::ResolvableType(resolvedValue);
+
+		// Assert:
+		EXPECT_TRUE(resolvable.isResolved());
+		EXPECT_EQ(TTraits::Unresolve(resolvedValue), resolvable.unresolved());
+		EXPECT_EQ(resolvedValue, resolvable.resolved());
+		EXPECT_EQ(resolvedValue, resolvable.resolved(CreateThrowingResolverContext()));
 	}
 
 	// endregion

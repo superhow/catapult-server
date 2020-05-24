@@ -429,7 +429,7 @@ namespace catapult { namespace model {
 		{}
 
 	public:
-		/// Mosaic owner.
+		/// Mosaic owner (resolvable).
 		ResolvableAddress Owner;
 
 		/// Mosaic id (resolvable).

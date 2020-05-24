@@ -80,6 +80,7 @@ namespace catapult { namespace plugins {
 				const typename TTraits::TransactionType& transaction) {
 			builder.template addExpectation<AccountAddressNotification>([&config](const auto& notification) {
 				EXPECT_FALSE(notification.Address.isResolved());
+
 				EXPECT_EQ(config.SinkAddress, notification.Address.unresolved());
 			});
 			builder.template addExpectation<NamespaceRegistrationNotification>([&transaction](const auto& notification) {
@@ -237,6 +238,7 @@ namespace catapult { namespace plugins {
 				const typename TTraits::TransactionType& transaction) {
 			builder.template addExpectation<AccountAddressNotification>([&config](const auto& notification) {
 				EXPECT_FALSE(notification.Address.isResolved());
+
 				EXPECT_EQ(config.SinkAddress, notification.Address.unresolved());
 			});
 			builder.template addExpectation<NamespaceRegistrationNotification>([&transaction](const auto& notification) {

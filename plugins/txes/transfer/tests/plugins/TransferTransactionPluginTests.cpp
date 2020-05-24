@@ -69,6 +69,7 @@ namespace catapult { namespace plugins {
 			});
 			builder.template addExpectation<AccountAddressNotification>([&transaction](const auto& notification) {
 				EXPECT_FALSE(notification.Address.isResolved());
+
 				EXPECT_EQ(transaction.RecipientAddress, notification.Address.unresolved());
 			});
 			builder.template addExpectation<AddressInteractionNotification>([&transaction](const auto& notification) {
