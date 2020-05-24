@@ -23,7 +23,6 @@
 #include "tests/test/core/BlockTestUtils.h"
 #include "tests/test/core/mocks/MockNotificationSubscriber.h"
 #include "tests/test/core/mocks/MockTransaction.h"
-#include "tests/test/core/ResolverTestUtils.h"
 #include "tests/test/nodeps/NumericTestUtils.h"
 #include "tests/TestHarness.h"
 
@@ -118,7 +117,7 @@ namespace catapult { namespace model {
 			EXPECT_EQ(1u, sub.numKeys());
 
 			EXPECT_TRUE(sub.contains(block.SignerPublicKey));
-			EXPECT_TRUE(sub.contains(block.BeneficiaryAddress.copyTo<UnresolvedAddress>()));
+			EXPECT_TRUE(sub.contains(block.BeneficiaryAddress));
 		});
 	}
 
@@ -149,7 +148,8 @@ namespace catapult { namespace model {
 		PublishOne<AccountAddressNotification>(*pBlock, [&beneficiaryAddress = pBlock->BeneficiaryAddress](const auto& notification) {
 			// Assert:
 			EXPECT_TRUE(notification.Address.isResolved());
-			EXPECT_EQ(beneficiaryAddress, notification.Address.resolved(test::CreateResolverContextXor()));
+
+			EXPECT_EQ(beneficiaryAddress, notification.Address.resolved());
 		});
 	}
 
