@@ -66,6 +66,21 @@ namespace catapult { namespace model {
 
 	// endregion
 
+	// region test utils
+
+	namespace {
+		template<typename TTraits>
+		typename TTraits::ResolvedType ThrowingResolver(const typename TTraits::UnresolvedType& unresolved) {
+			CATAPULT_THROW_INVALID_ARGUMENT_1("throwing resolver cannot unresolve value", unresolved);
+		}
+
+		model::ResolverContext CreateThrowingResolverContext() {
+			return model::ResolverContext(ThrowingResolver<MosaicTraits>, ThrowingResolver<AddressTraits>);
+		}
+	}
+
+	// endregion
+
 	// region tests
 
 	RESOLVABLE_TEST(CanCreateDefault) {
@@ -74,8 +89,9 @@ namespace catapult { namespace model {
 
 		// Act:
 		EXPECT_TRUE(resolvable.isResolved());
-		EXPECT_EQ(typename TTraits::ResolvedType(), resolvable.resolved(test::CreateResolverContextXor()));
 		EXPECT_EQ(typename TTraits::UnresolvedType(), resolvable.unresolved());
+		EXPECT_EQ(typename TTraits::ResolvedType(), resolvable.resolved());
+		EXPECT_EQ(typename TTraits::ResolvedType(), resolvable.resolved(CreateThrowingResolverContext()));
 	}
 
 	RESOLVABLE_TEST(CanCreateFromResolved) {
@@ -85,8 +101,9 @@ namespace catapult { namespace model {
 
 		// Act:
 		EXPECT_TRUE(resolvable.isResolved());
-		EXPECT_EQ(resolvedValue, resolvable.resolved(test::CreateResolverContextXor()));
 		EXPECT_EQ(TTraits::Unresolve(resolvedValue), resolvable.unresolved());
+		EXPECT_EQ(resolvedValue, resolvable.resolved());
+		EXPECT_EQ(resolvedValue, resolvable.resolved(CreateThrowingResolverContext()));
 	}
 
 	RESOLVABLE_TEST(CanCreateFromUnresolved) {
@@ -96,8 +113,9 @@ namespace catapult { namespace model {
 
 		// Act:
 		EXPECT_FALSE(resolvable.isResolved());
-		EXPECT_EQ(resolvedValue, resolvable.resolved(test::CreateResolverContextXor()));
 		EXPECT_EQ(test::UnresolveXor(resolvedValue), resolvable.unresolved());
+		EXPECT_THROW(resolvable.resolved(), catapult_invalid_argument);
+		EXPECT_EQ(resolvedValue, resolvable.resolved(test::CreateResolverContextXor()));
 	}
 
 	// endregion

@@ -31,7 +31,7 @@ namespace catapult { namespace validators {
 		auto mosaicId = notification.MosaicId.resolved(context.Resolvers);
 
 		ActiveMosaicView::FindIterator mosaicIter;
-		auto result = view.tryGet(mosaicId, context.Height, notification.Owner, mosaicIter);
+		auto result = view.tryGet(mosaicId, context.Height, notification.Owner.resolved(context.Resolvers), mosaicIter);
 		if (IsValidationResultFailure(result))
 			return result;
 

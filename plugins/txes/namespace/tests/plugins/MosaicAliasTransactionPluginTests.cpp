@@ -22,7 +22,6 @@
 #include "src/model/AliasNotifications.h"
 #include "src/model/MosaicAliasTransaction.h"
 #include "src/model/NamespaceNotifications.h"
-#include "tests/test/core/ResolverTestUtils.h"
 #include "tests/test/plugins/TransactionPluginTestUtils.h"
 #include "tests/TestHarness.h"
 
@@ -67,7 +66,9 @@ namespace catapult { namespace plugins {
 
 		typename test::TransactionPluginTestUtils<TTraits>::PublishTestBuilder builder;
 		builder.template addExpectation<NamespaceRequiredNotification>([&transaction](const auto& notification) {
-			EXPECT_EQ(model::GetSignerAddress(transaction), notification.Owner);
+			EXPECT_TRUE(notification.Owner.isResolved());
+
+			EXPECT_EQ(model::GetSignerAddress(transaction), notification.Owner.resolved());
 			EXPECT_EQ(transaction.NamespaceId, notification.NamespaceId);
 		});
 		builder.template addExpectation<AliasLinkNotification>([&transaction](const auto& notification) {
@@ -80,9 +81,11 @@ namespace catapult { namespace plugins {
 			EXPECT_EQ(transaction.MosaicId, notification.AliasedData);
 		});
 		builder.template addExpectation<MosaicRequiredNotification>([&transaction](const auto& notification) {
-			EXPECT_EQ(model::GetSignerAddress(transaction), notification.Owner);
+			EXPECT_TRUE(notification.Owner.isResolved());
 			EXPECT_TRUE(notification.MosaicId.isResolved());
-			EXPECT_EQ(transaction.MosaicId, notification.MosaicId.resolved(test::CreateResolverContextXor()));
+
+			EXPECT_EQ(model::GetSignerAddress(transaction), notification.Owner.resolved());
+			EXPECT_EQ(transaction.MosaicId, notification.MosaicId.resolved());
 			EXPECT_EQ(0u, notification.PropertyFlagMask);
 		});
 
@@ -112,7 +115,9 @@ namespace catapult { namespace plugins {
 
 		typename test::TransactionPluginTestUtils<TTraits>::PublishTestBuilder builder;
 		builder.template addExpectation<NamespaceRequiredNotification>([&transaction](const auto& notification) {
-			EXPECT_EQ(model::GetSignerAddress(transaction), notification.Owner);
+			EXPECT_TRUE(notification.Owner.isResolved());
+
+			EXPECT_EQ(model::GetSignerAddress(transaction), notification.Owner.resolved());
 			EXPECT_EQ(transaction.NamespaceId, notification.NamespaceId);
 		});
 		builder.template addExpectation<AliasLinkNotification>([&transaction](const auto& notification) {

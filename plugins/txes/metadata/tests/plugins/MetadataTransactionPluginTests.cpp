@@ -25,7 +25,6 @@
 #include "src/model/NamespaceMetadataTransaction.h"
 #include "plugins/txes/namespace/src/model/NamespaceNotifications.h"
 #include "catapult/utils/MemoryUtils.h"
-#include "tests/test/core/ResolverTestUtils.h"
 #include "tests/test/plugins/TransactionPluginTestUtils.h"
 #include "tests/TestHarness.h"
 
@@ -64,7 +63,8 @@ namespace catapult { namespace plugins {
 			static void AddCustomExpectations(PublishTestBuilder& builder, const TTransaction& transaction) {
 				builder.template addExpectation<AccountAddressNotification>([&transaction](const auto& notification) {
 					EXPECT_TRUE(notification.Address.isResolved());
-					EXPECT_EQ(transaction.TargetAddress, notification.Address.resolved(test::CreateResolverContextXor()));
+
+					EXPECT_EQ(transaction.TargetAddress, notification.Address.resolved());
 				});
 			}
 		};
@@ -93,8 +93,10 @@ namespace catapult { namespace plugins {
 
 			static void AddCustomExpectations(PublishTestBuilder& builder, const TTransaction& transaction) {
 				builder.template addExpectation<MosaicRequiredNotification>([&transaction](const auto& notification) {
-					EXPECT_EQ(transaction.TargetAddress, notification.Owner);
+					EXPECT_TRUE(notification.Owner.isResolved());
 					EXPECT_FALSE(notification.MosaicId.isResolved());
+
+					EXPECT_EQ(transaction.TargetAddress, notification.Owner.resolved());
 					EXPECT_EQ(transaction.TargetMosaicId, notification.MosaicId.unresolved());
 					EXPECT_EQ(0u, notification.PropertyFlagMask);
 				});
@@ -125,7 +127,9 @@ namespace catapult { namespace plugins {
 
 			static void AddCustomExpectations(PublishTestBuilder& builder, const TTransaction& transaction) {
 				builder.template addExpectation<NamespaceRequiredNotification>([&transaction](const auto& notification) {
-					EXPECT_EQ(transaction.TargetAddress, notification.Owner);
+					EXPECT_TRUE(notification.Owner.isResolved());
+
+					EXPECT_EQ(transaction.TargetAddress, notification.Owner.resolved());
 					EXPECT_EQ(transaction.TargetNamespaceId, notification.NamespaceId);
 				});
 			}

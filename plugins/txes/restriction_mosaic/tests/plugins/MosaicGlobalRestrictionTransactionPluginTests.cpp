@@ -53,8 +53,10 @@ namespace catapult { namespace plugins {
 				EXPECT_EQ(transaction.NewRestrictionType, notification.RestrictionType);
 			});
 			builder.template addExpectation<MosaicRequiredNotification>([&transaction](const auto& notification) {
-				EXPECT_EQ(model::GetSignerAddress(transaction), notification.Owner);
+				EXPECT_TRUE(notification.Owner.isResolved());
 				EXPECT_FALSE(notification.MosaicId.isResolved());
+
+				EXPECT_EQ(model::GetSignerAddress(transaction), notification.Owner.resolved());
 				EXPECT_EQ(transaction.MosaicId, notification.MosaicId.unresolved());
 				EXPECT_EQ(0x04u, notification.PropertyFlagMask);
 			});

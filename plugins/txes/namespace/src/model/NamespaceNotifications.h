@@ -208,7 +208,7 @@ namespace catapult { namespace model {
 
 	public:
 		/// Creates a notification around \a owner and \a namespaceId.
-		NamespaceRequiredNotification(const Address& owner, NamespaceId namespaceId)
+		NamespaceRequiredNotification(const ResolvableAddress& owner, NamespaceId namespaceId)
 				: Notification(Notification_Type, sizeof(NamespaceRequiredNotification))
 				, Owner(owner)
 				, NamespaceId(namespaceId)
@@ -216,7 +216,7 @@ namespace catapult { namespace model {
 
 	public:
 		/// Namespace owner.
-		Address Owner;
+		ResolvableAddress Owner;
 
 		/// Namespace id.
 		catapult::NamespaceId NamespaceId;

@@ -23,7 +23,6 @@
 #include "src/model/MosaicNotifications.h"
 #include "catapult/utils/MemoryUtils.h"
 #include "tests/test/core/AddressTestUtils.h"
-#include "tests/test/core/ResolverTestUtils.h"
 #include "tests/test/core/mocks/MockNotificationSubscriber.h"
 #include "tests/test/plugins/TransactionPluginTestUtils.h"
 #include "tests/TestHarness.h"

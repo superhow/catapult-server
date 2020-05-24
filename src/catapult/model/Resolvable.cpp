@@ -20,6 +20,7 @@
 
 #include "Resolvable.h"
 #include "ResolverContext.h"
+#include "catapult/exceptions.h"
 
 namespace catapult { namespace model {
 
@@ -57,6 +58,14 @@ namespace catapult { namespace model {
 	template<typename TUnresolved, typename TResolved>
 	TUnresolved Resolvable<TUnresolved, TResolved>::unresolved() const {
 		return isResolved() ? Unresolve(m_resolved) : m_unresolved;
+	}
+
+	template<typename TUnresolved, typename TResolved>
+	TResolved Resolvable<TUnresolved, TResolved>::resolved() const {
+		if (!isResolved())
+			CATAPULT_THROW_INVALID_ARGUMENT("underlying value is not resolved and requires ResolverContext");
+
+		return m_resolved;
 	}
 
 	template<typename TUnresolved, typename TResolved>

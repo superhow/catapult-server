@@ -49,6 +49,9 @@ namespace catapult { namespace model {
 		/// Gets an unresolved representation of underlying value.
 		TUnresolved unresolved() const;
 
+		/// Gets a resolved representation of underlying value if and only if it is isResolved returns \c true.
+		TResolved resolved() const;
+
 		/// Gets a resolved representation of underlying value using \a resolvers.
 		TResolved resolved(const ResolverContext& resolvers) const;
 

@@ -421,7 +421,7 @@ namespace catapult { namespace model {
 
 	public:
 		/// Creates a notification around \a owner, \a mosaicId and optional \a propertyFlagMask.
-		MosaicRequiredNotification(const Address& owner, const ResolvableMosaicId& mosaicId, uint8_t propertyFlagMask = 0)
+		MosaicRequiredNotification(const ResolvableAddress& owner, const ResolvableMosaicId& mosaicId, uint8_t propertyFlagMask = 0)
 				: Notification(Notification_Type, sizeof(MosaicRequiredNotification))
 				, Owner(owner)
 				, MosaicId(mosaicId)
@@ -430,7 +430,7 @@ namespace catapult { namespace model {
 
 	public:
 		/// Mosaic owner.
-		Address Owner;
+		ResolvableAddress Owner;
 
 		/// Mosaic id (resolvable).
 		ResolvableMosaicId MosaicId;
